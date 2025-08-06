@@ -13,7 +13,6 @@ import java.util.*
 @Entity
 @Table(name = "products")
 open class Product (
-
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
@@ -27,4 +26,7 @@ open class Product (
 
     @get:Column(name = "image_url")
     open var imageUrl: String,
+
+    @get:Column(name = "description")
+    open var description: String
 )

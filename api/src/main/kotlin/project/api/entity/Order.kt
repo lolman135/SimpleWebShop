@@ -7,7 +7,6 @@ import java.util.*
 @Entity
 @Table(name = "orders")
 open class Order(
-
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")

@@ -22,5 +22,13 @@ open class User(
     open var password: String,
 
     @get:OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    open var orders: MutableSet<Order> = mutableSetOf()
+    open var orders: MutableSet<Order> = mutableSetOf(),
+
+    @get:ManyToMany
+    @get:JoinTable(
+        name = "user_role",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    open var roles: MutableSet<Role> = mutableSetOf()
 )
