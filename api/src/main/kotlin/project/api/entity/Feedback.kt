@@ -50,6 +50,5 @@ class Feedback(
     override fun toString(): String {
         return "Feedback(id=$id, message=$message, rate=$rate)"
     }
-
 }
 

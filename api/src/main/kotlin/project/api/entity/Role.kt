@@ -1,6 +1,7 @@
 package project.api.entity
 
 import jakarta.persistence.*
+import java.util.UUID
 
 @Entity
 @Table(name = "roles")
@@ -8,9 +9,9 @@ class Role (
     @get:Id
     @get:Column(name = "id", nullable = false)
     @get:GeneratedValue()
-    open var id: String?,
+    open var id: UUID?,
 
-    @get:Column(name = "name", nullable = false, length = 20)
+    @get:Column(name = "name", nullable = false)
     open var name: String,
 ) {
     override fun equals(other: Any?): Boolean {

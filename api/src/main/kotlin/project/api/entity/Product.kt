@@ -23,7 +23,7 @@ class Product (
     @get:Column(name = "description")
     open var description: String,
 
-    @get:OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @get:OneToMany(mappedBy = "feedback", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     open var feedbacks: MutableSet<Feedback> = mutableSetOf()
 ) {
     override fun equals(other: Any?): Boolean {

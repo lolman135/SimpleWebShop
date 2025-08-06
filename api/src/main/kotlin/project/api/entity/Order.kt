@@ -1,7 +1,7 @@
 package project.api.entity
 
 import jakarta.persistence.*
-import java.time.LocalTime
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -12,10 +12,10 @@ class Order(
     @get:Column(name = "id")
     open var id: UUID?,
 
-    @get:Column(name = "created_at")
-    open var createdAt: LocalTime,
+    @get:Column(name = "created_at",  nullable = false)
+    open var createdAt: LocalDateTime,
 
-    @get:Column(name = "total_cost")
+    @get:Column(name = "total_cost",  nullable = false)
     open var totalCost: Int,
 
     @get:ManyToOne

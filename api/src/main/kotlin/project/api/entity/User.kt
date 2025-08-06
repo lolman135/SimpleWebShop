@@ -31,7 +31,7 @@ class User(
     )
     open var roles: MutableSet<Role> = mutableSetOf(),
 
-    @get:OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @get:OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     open var feedbacks: MutableSet<Feedback> = mutableSetOf()
 ) {
     override fun equals(other: Any?): Boolean {
