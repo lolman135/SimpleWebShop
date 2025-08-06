@@ -5,8 +5,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "users")
-open class User(
-
+class User(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
@@ -30,5 +29,25 @@ open class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    open var roles: MutableSet<Role> = mutableSetOf()
-)
+    open var roles: MutableSet<Role> = mutableSetOf(),
+
+    @get:OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    open var feedbacks: MutableSet<Feedback> = mutableSetOf()
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is User) return false
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+    override fun toString(): String {
+        return "User(email='$email', id=$id, username='$username')"
+    }
+}

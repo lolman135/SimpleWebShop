@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity
 @Table(name = "orders")
-open class Order(
+class Order(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
@@ -29,4 +29,22 @@ open class Order(
         inverseJoinColumns = [JoinColumn(name = "product_id")]
     )
     open var products: MutableSet<Product> = mutableSetOf()
-)
+
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Order) return false
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+    override fun toString(): String {
+        return "Order(id=$id, createdAt=$createdAt, totalCost=$totalCost)"
+    }
+}
