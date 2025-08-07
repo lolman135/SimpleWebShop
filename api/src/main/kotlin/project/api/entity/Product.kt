@@ -5,11 +5,11 @@ import java.util.*
 
 @Entity
 @Table(name = "products")
-class Product (
+class Product(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID?,
+    open var id: UUID? = null,
 
     @get:Column(name = "name")
     open var name: String,

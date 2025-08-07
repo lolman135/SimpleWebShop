@@ -1,15 +1,15 @@
 package project.api.entity
 
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "roles")
-class Role (
+class Role(
     @get:Id
     @get:Column(name = "id", nullable = false)
     @get:GeneratedValue()
-    open var id: UUID?,
+    open var id: UUID? = null,
 
     @get:Column(name = "name", nullable = false)
     open var name: String,

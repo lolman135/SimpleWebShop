@@ -1,15 +1,6 @@
 package project.api.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.util.*
 
 @Entity
@@ -18,22 +9,22 @@ class Feedback(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID?,
+    open var id: UUID? = null,
 
     @get:Column(name = "message")
-    open var message: String?,
+    open var message: String? = null,
 
     @get:Column(name = "rate")
     open var rate: Int,
 
     @get:ManyToOne
-    @get:JoinColumn(name="user_id", nullable = false)
+    @get:JoinColumn(name = "user_id", nullable = false)
     open var user: User,
 
     @get:ManyToOne
-    @get:JoinColumn(name="product_id", nullable = false)
+    @get:JoinColumn(name = "product_id", nullable = false)
     open var product: Product
-){
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Feedback) return false

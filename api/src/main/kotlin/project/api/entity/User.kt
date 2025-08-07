@@ -1,7 +1,7 @@
 package project.api.entity
 
 import jakarta.persistence.*
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "users")
@@ -9,7 +9,7 @@ class User(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID?,
+    open var id: UUID? = null,
 
     @get:Column(name = "username", nullable = false)
     open var username: String,

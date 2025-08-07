@@ -10,17 +10,17 @@ class Order(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID?,
+    open var id: UUID? = null,
 
-    @get:Column(name = "created_at",  nullable = false)
-    open var createdAt: LocalDateTime,
+    @get:Column(name = "created_at", nullable = false)
+    open var createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @get:Column(name = "total_cost",  nullable = false)
-    open var totalCost: Int,
+    @get:Column(name = "total_cost", nullable = false)
+    open var totalCost: Int = 0,
 
     @get:ManyToOne
     @get:JoinColumn(name = "user_id", nullable = false)
-    open var user: User,
+    open var user: User? = null,
 
     @get:ManyToMany
     @get:JoinTable(
