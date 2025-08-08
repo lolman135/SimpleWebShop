@@ -14,6 +14,11 @@ class OrderMapperImpl(val productRepository: ProductRepository) : OrderMapper {
         val order = Order()
 
         order.user = user
+
+        if(orderDto.items.isEmpty()){
+            throw IllegalArgumentException("Wrong data provided!")
+        }
+
         val productsWithAmount = orderDto.items.map {
             val product = productRepository.findById(it.productId).orElseThrow {
                 IllegalArgumentException("Wrong Id!")

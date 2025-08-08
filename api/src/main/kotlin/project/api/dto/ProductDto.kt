@@ -8,7 +8,7 @@ import java.util.*
 
 data class ProductDto(
 
-    @Pattern(regexp = "^[a-zA-Z\\d-_:]{2,50}$", message = "Invalid name!")
+    @Pattern(regexp = "^[a-zA-Z\\d\\s-_:]{2,50}$", message = "Invalid name!")
     val name: String,
 
     @NotBlank(message = "Description can't be empty!")
@@ -17,9 +17,6 @@ data class ProductDto(
     @Min(0)
     val price: Int,
 
-    @NotNull
     val imageUrl: String,
-
-    @NotNull
-    val feedbackIds: MutableList<UUID>
+    val feedbackIds: MutableList<UUID> = mutableListOf()
 )

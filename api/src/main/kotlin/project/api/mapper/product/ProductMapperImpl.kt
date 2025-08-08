@@ -19,7 +19,7 @@ class ProductMapperImpl(val feedbackRepository: FeedbackRepository) : ProductMap
 
         product.feedbacks = productDto.feedbackIds.map {
             feedbackRepository.findById(it).orElseThrow {
-                IllegalArgumentException("Invalid id!")
+                IllegalArgumentException("Invalid id provided!")
             }
         }.toMutableSet()
 

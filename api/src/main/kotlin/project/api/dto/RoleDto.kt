@@ -5,11 +5,10 @@ import java.util.*
 
 
 data class RoleDto(
-    val id: UUID? = null,
 
     @Pattern(
         regexp = "^[A-Z]{2,30}$",
-        message = "Name of role can use only capital latin letters"
+        message = "Invalid name"
     )
     val name: String
 )

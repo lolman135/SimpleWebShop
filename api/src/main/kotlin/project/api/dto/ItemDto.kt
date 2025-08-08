@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull
 import java.util.*
 
 data class ItemDto(
-    @NotNull
     val productId: UUID,
 
     @Min(0)

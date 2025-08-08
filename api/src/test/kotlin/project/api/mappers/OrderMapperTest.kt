@@ -30,6 +30,8 @@ class OrderMapperTest {
     private lateinit var testUser: User
     private lateinit var testProduct: Product
     private lateinit var orderDto: OrderDto
+    private lateinit var productId: UUID
+
 
     @BeforeEach
     fun setUp() {
@@ -41,7 +43,7 @@ class OrderMapperTest {
             password = "testPassword"
         )
 
-        val productId = UUID.randomUUID()
+        productId = UUID.randomUUID()
 
         testProduct = Product(
             id = productId,
@@ -54,17 +56,19 @@ class OrderMapperTest {
         orderDto = OrderDto(
             mutableListOf(ItemDto(productId, 3))
         )
-        lenient().`when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
     }
 
     @Test
     fun testOrderMapperShouldContainsCorrectData() {
+        `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
+
         val order = orderMapper.mapToOrder(orderDto, testUser)
 
         assertEquals(testUser, order.user)
         assertEquals(1, order.products.size)
         assertEquals(30, order.totalCost)
+        assertEquals(null, order.id)
     }
 
     @Test
