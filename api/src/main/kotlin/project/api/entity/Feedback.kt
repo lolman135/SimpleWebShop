@@ -11,8 +11,8 @@ class Feedback(
     @get:Column(name = "id")
     open var id: UUID? = null,
 
-    @get:Column(name = "message")
-    open var message: String? = null,
+    @get:Column(name = "review")
+    open var review: String? = null,
 
     @get:Column(name = "rate")
     open var rate: Int,
@@ -39,7 +39,7 @@ class Feedback(
     }
 
     override fun toString(): String {
-        return "Feedback(id=$id, message=$message, rate=$rate)"
+        return "Feedback(id=$id, review=$review, rate=$rate)"
     }
 }
 

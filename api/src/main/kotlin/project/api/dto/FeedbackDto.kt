@@ -7,7 +7,7 @@ import java.util.UUID
 
 data class FeedbackDto(
     @NotBlank(message = "Shouldn't be empty")
-    val message: String? = null,
+    val review: String? = null,
 
     @Min(0) @Max(5)
     val rate: Int,

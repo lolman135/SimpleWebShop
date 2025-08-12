@@ -15,6 +15,7 @@ class Order(
     @get:Column(name = "created_at", nullable = false)
     open var createdAt: LocalDateTime = LocalDateTime.now(),
 
+    //the price is indicated in cents
     @get:Column(name = "total_cost", nullable = false)
     open var totalCost: Int = 0,
 

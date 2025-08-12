@@ -1,6 +1,7 @@
 package project.api.dto
 
 import jakarta.validation.constraints.Pattern
+import java.util.*
 
 data class UserDto(
 
@@ -14,5 +15,9 @@ data class UserDto(
     val email: String,
 
     @Pattern(regexp = "^[a-zA-Z-_:#\\d%+]{7,30}", message = "Invalid input")
-    val password: String
+    val password: String,
+
+    val orderIds: List<UUID> = listOf(),
+    val roleIds: List<UUID> = listOf(),
+    val feedbackIds: List<UUID> = listOf(),
 )

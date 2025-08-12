@@ -19,7 +19,7 @@ class FeedbackMapperImpl(
         }
 
         val feedback = Feedback(
-            message = feedbackDto.message,
+            review = feedbackDto.review,
             rate = feedbackDto.rate,
             user = user,
             product = product

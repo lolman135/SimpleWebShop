@@ -14,6 +14,7 @@ class Product(
     @get:Column(name = "name")
     open var name: String,
 
+    //the price is indicated in cents
     @get:Column(name = "price")
     open var price: Int,
 

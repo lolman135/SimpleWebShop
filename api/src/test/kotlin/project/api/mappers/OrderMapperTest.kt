@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.lenient
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.ItemDto
@@ -72,11 +71,20 @@ class OrderMapperTest {
     }
 
     @Test
-    fun testThrowsExceptionForInvalidProductId() {
+    fun testOrderMapperThrowsExceptionForInvalidProductId() {
         val invalidProductId = UUID.randomUUID()
         val invalidOrderDto = OrderDto(mutableListOf(ItemDto(invalidProductId, 1)))
 
         `when`(productRepository.findById(invalidProductId)).thenReturn(Optional.empty())
+
+        assertFailsWith<IllegalArgumentException> {
+            orderMapper.mapToOrder(invalidOrderDto, testUser)
+        }
+    }
+
+    @Test
+    fun testOrderMapperShouldFailsByProvidingEmptyList(){
+        val invalidOrderDto = OrderDto()
 
         assertFailsWith<IllegalArgumentException> {
             orderMapper.mapToOrder(invalidOrderDto, testUser)

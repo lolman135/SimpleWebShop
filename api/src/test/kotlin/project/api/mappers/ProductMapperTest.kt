@@ -8,13 +8,13 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.ProductDto
-import project.api.entity.Feedback
-import project.api.mapper.product.ProductMapper
 import project.api.mapper.product.ProductMapperImpl
 import project.api.repository.feedback.FeedbackRepository
-import project.api.repository.product.ProductRepository
 import java.util.UUID
 import kotlin.test.Test
+import org.mockito.Mockito.`when`
+import kotlin.test.assertFailsWith
+
 
 @ExtendWith(MockitoExtension::class)
 class ProductMapperTest {
@@ -35,7 +35,6 @@ class ProductMapperTest {
             description = "Test description",
             price = 30,
             imageUrl = "https://imgBase:/testImg.com",
-            feedbackIds = mutableListOf()
         )
     }
 
@@ -54,6 +53,23 @@ class ProductMapperTest {
     fun testProductMapperShouldCreateProductWithoutFeedbacks(){
         val product = productMapper.mapToProduct(productDto)
         assertTrue(product.feedbacks.isEmpty())
+    }
+
+    @Test
+    fun testProductMapperShouldFailsWithIllegalArgumentException(){
+        val invalidFeedbackId = UUID.randomUUID()
+        val invalidProductDto = ProductDto(
+            name = "Test product",
+            description = "Test description",
+            price = 30,
+            imageUrl = "https://imgBase:/testImg.com",
+            feedbackIds = mutableListOf(invalidFeedbackId)
+        )
+        `when`(feedbackRepository.findById(invalidFeedbackId)).thenThrow(IllegalArgumentException("Wrong id provided"))
+
+        assertFailsWith<IllegalArgumentException> {
+            productMapper.mapToProduct(invalidProductDto)
+        }
     }
 
 }
