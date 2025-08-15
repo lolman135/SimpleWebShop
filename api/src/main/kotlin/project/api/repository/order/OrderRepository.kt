@@ -6,5 +6,4 @@ import project.api.entity.Order
 import java.util.*
 
 @Repository
-interface OrderRepository : JpaRepository<Order, UUID> {
-}
+interface OrderRepository : JpaRepository<Order, UUID>

@@ -6,5 +6,4 @@ import project.api.entity.Role
 import java.util.*
 
 @Repository
-interface RoleRepository : JpaRepository<Role, UUID> {
-}
+interface RoleRepository : JpaRepository<Role, UUID>

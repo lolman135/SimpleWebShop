@@ -6,5 +6,4 @@ import project.api.entity.Product
 import java.util.*
 
 @Repository
-interface ProductRepository : JpaRepository<Product, UUID> {
-}
+interface ProductRepository : JpaRepository<Product, UUID>

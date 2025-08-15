@@ -6,5 +6,4 @@ import project.api.entity.Feedback
 import java.util.*
 
 @Repository
-interface FeedbackRepository : JpaRepository<Feedback, UUID> {
-}
+interface FeedbackRepository : JpaRepository<Feedback, UUID>
