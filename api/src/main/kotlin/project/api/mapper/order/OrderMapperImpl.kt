@@ -10,11 +10,6 @@ import project.api.repository.product.ProductRepository
 class OrderMapperImpl(val productRepository: ProductRepository) : OrderMapper {
 
     override fun mapToOrder(orderDto: OrderDto, user: User): Order {
-
-        val order = Order()
-
-        order.user = user
-
         if(orderDto.items.isEmpty()){
             throw IllegalArgumentException("Wrong data provided!")
         }
@@ -26,11 +21,13 @@ class OrderMapperImpl(val productRepository: ProductRepository) : OrderMapper {
             product to it.productsAmount
         }
 
-        order.products = productsWithAmount.map { it.first }.toMutableSet()
-
-        order.totalCost = productsWithAmount.sumOf { (product, amount) ->
+        val totalCost = productsWithAmount.sumOf { (product, amount) ->
             product.price * amount
         }
+
+        val order = Order(user = user, totalCost = totalCost)
+
+        order.products = productsWithAmount.map { it.first }.toMutableSet()
 
         return order
     }

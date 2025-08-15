@@ -21,7 +21,7 @@ class Order(
 
     @get:ManyToOne
     @get:JoinColumn(name = "user_id", nullable = false)
-    open var user: User? = null,
+    open var user: User,
 
     @get:ManyToMany
     @get:JoinTable(

@@ -3,7 +3,6 @@ package project.api.dto
 import jakarta.validation.constraints.Pattern
 import java.util.*
 
-
 data class RoleDto(
 
     @Pattern(
