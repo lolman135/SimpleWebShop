@@ -7,7 +7,7 @@ import java.util.*
 interface RoleService {
     fun save(dto: RoleDto): Role
     fun findAll(): List<Role>
-    fun findById(): Role
+    fun findById(id: UUID): Role
     fun updateById(id: UUID, dto: RoleDto): Role
     fun deleteById(id: UUID): Boolean
 }

@@ -9,7 +9,7 @@ import project.api.repository.feedback.FeedbackRepository
 class ProductMapperImpl(val feedbackRepository: FeedbackRepository) : ProductMapper {
 
 
-    override fun mapToProduct(productDto: ProductDto): Product {
+    override fun toProduct(productDto: ProductDto): Product {
         val product = Product(
             name = productDto.name,
             description = productDto.description,

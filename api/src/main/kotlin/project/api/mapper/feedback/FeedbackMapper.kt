@@ -5,5 +5,5 @@ import project.api.entity.Feedback
 import project.api.entity.User
 
 interface FeedbackMapper {
-    fun mapToFeedback(feedbackDto: FeedbackDto, user: User): Feedback
+    fun toFeedback(feedbackDto: FeedbackDto, user: User): Feedback
 }

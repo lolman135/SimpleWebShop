@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.ItemDto
@@ -62,12 +63,13 @@ class OrderMapperTest {
     fun testOrderMapperShouldContainsCorrectData() {
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
-        val order = orderMapper.mapToOrder(orderDto, testUser)
+        val order = orderMapper.toOrder(orderDto, testUser)
 
         assertEquals(testUser, order.user)
         assertEquals(1, order.products.size)
         assertEquals(30, order.totalCost)
         assertEquals(null, order.id)
+        verify(productRepository).findById(productId)
     }
 
     @Test
@@ -78,8 +80,10 @@ class OrderMapperTest {
         `when`(productRepository.findById(invalidProductId)).thenReturn(Optional.empty())
 
         assertFailsWith<IllegalArgumentException> {
-            orderMapper.mapToOrder(invalidOrderDto, testUser)
+            orderMapper.toOrder(invalidOrderDto, testUser)
         }
+
+        verify(productRepository).findById(invalidProductId)
     }
 
     @Test
@@ -87,7 +91,7 @@ class OrderMapperTest {
         val invalidOrderDto = OrderDto()
 
         assertFailsWith<IllegalArgumentException> {
-            orderMapper.mapToOrder(invalidOrderDto, testUser)
+            orderMapper.toOrder(invalidOrderDto, testUser)
         }
     }
 }

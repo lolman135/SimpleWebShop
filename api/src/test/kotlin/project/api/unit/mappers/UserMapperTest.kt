@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.UserDto
 import project.api.entity.*
@@ -74,20 +75,21 @@ class UserMapperTest {
             imageUrl = "https://imgBase:/testImg2.com"
         )
 
+        val testUser = User(
+            id = UUID.randomUUID(),
+            username = "test_user",
+            email = "test_user@email.com",
+            password = "testPassword"
+        )
+
         testOrder = Order(
             id = orderId,
             totalCost = 440,
             products = mutableSetOf(
                 testProduct1,
                 testProduct2
-            )
-        )
-
-        val testUser = User(
-            id = UUID.randomUUID(),
-            username = "test_user",
-            email = "test_user@email.com",
-            password = "testPassword"
+            ),
+            user = testUser
         )
 
         testFeedback = Feedback(
@@ -138,6 +140,9 @@ class UserMapperTest {
         assertEquals("TEST_USER", user.roles.first().name)
 
         assertEquals("Test name", user.orders.first().products.first().name)
+        verify(orderRepository).findById(orderId)
+        verify(feedbackRepository).findById(feedbackId)
+        verify(roleRepository).findById(roleId)
     }
 
     @Test
@@ -154,6 +159,7 @@ class UserMapperTest {
         assertFailsWith<IllegalArgumentException> {
             userMapper.toUser(invalidOrderIdsUserDto)
         }
+        verify(orderRepository).findById(invalidOrderId)
     }
 
     @Test
@@ -170,6 +176,7 @@ class UserMapperTest {
         assertFailsWith<IllegalArgumentException> {
             userMapper.toUser(invalidOrderIdsUserDto)
         }
+        verify(roleRepository).findById(invalidRoleId)
     }
 
     @Test
@@ -186,5 +193,6 @@ class UserMapperTest {
         assertFailsWith<IllegalArgumentException> {
             userMapper.toUser(invalidOrderIdsUserDto)
         }
+        verify(feedbackRepository).findById(invalidFeedbackId)
     }
 }

@@ -5,5 +5,5 @@ import project.api.entity.Order
 import project.api.entity.User
 
 interface OrderMapper {
-    fun mapToOrder(orderDto: OrderDto, user: User): Order
+    fun toOrder(orderDto: OrderDto, user: User): Order
 }

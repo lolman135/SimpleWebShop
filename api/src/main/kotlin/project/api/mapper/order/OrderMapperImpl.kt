@@ -9,7 +9,7 @@ import project.api.repository.product.ProductRepository
 @Component
 class OrderMapperImpl(val productRepository: ProductRepository) : OrderMapper {
 
-    override fun mapToOrder(orderDto: OrderDto, user: User): Order {
+    override fun toOrder(orderDto: OrderDto, user: User): Order {
         if(orderDto.items.isEmpty()){
             throw IllegalArgumentException("Wrong data provided!")
         }

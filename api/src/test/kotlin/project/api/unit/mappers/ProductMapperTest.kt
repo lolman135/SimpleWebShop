@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.ProductDto
 import project.api.mapper.product.ProductMapperImpl
@@ -40,7 +41,7 @@ class ProductMapperTest {
 
     @Test
     fun testProductMapperShouldCreateProductWithCorrectData(){
-        val product = productMapper.mapToProduct(productDto)
+        val product = productMapper.toProduct(productDto)
 
         assertEquals("Test product", product.name)
         assertEquals("Test description", product.description)
@@ -51,7 +52,7 @@ class ProductMapperTest {
 
     @Test
     fun testProductMapperShouldCreateProductWithoutFeedbacks(){
-        val product = productMapper.mapToProduct(productDto)
+        val product = productMapper.toProduct(productDto)
         assertTrue(product.feedbacks.isEmpty())
     }
 
@@ -68,8 +69,9 @@ class ProductMapperTest {
         `when`(feedbackRepository.findById(invalidFeedbackId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
-            productMapper.mapToProduct(invalidProductDto)
+            productMapper.toProduct(invalidProductDto)
         }
+        verify(feedbackRepository).findById(invalidFeedbackId)
     }
 
 }

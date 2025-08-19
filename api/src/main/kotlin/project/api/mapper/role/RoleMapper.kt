@@ -5,5 +5,5 @@ import project.api.entity.Role
 
 interface RoleMapper {
 
-    fun mapToRole(roleDto: RoleDto): Role
+    fun toRole(roleDto: RoleDto): Role
 }

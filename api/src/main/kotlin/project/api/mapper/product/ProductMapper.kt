@@ -5,5 +5,5 @@ import project.api.entity.Product
 
 interface ProductMapper {
 
-    fun mapToProduct(productDto: ProductDto): Product
+    fun toProduct(productDto: ProductDto): Product
 }

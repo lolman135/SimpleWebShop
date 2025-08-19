@@ -6,5 +6,5 @@ import project.api.entity.Role
 
 @Component
 class RoleMapperImpl : RoleMapper {
-    override fun mapToRole(roleDto: RoleDto) = Role(name = roleDto.name)
+    override fun toRole(roleDto: RoleDto) = Role(name = roleDto.name)
 }

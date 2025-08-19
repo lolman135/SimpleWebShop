@@ -13,7 +13,7 @@ class FeedbackMapperImpl(
     val productRepository: ProductRepository
 ) : FeedbackMapper {
 
-    override fun mapToFeedback(feedbackDto: FeedbackDto, user: User): Feedback {
+    override fun toFeedback(feedbackDto: FeedbackDto, user: User): Feedback {
         val product = productRepository.findById(feedbackDto.productId).orElseThrow{
             IllegalArgumentException("Wrong data provided")
         }

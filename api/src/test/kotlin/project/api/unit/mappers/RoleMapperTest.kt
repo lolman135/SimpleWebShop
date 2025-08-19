@@ -28,7 +28,7 @@ class RoleMapperTest {
 
     @Test
     fun testRoleMapperShouldReturnCorrectRoleName(){
-        var role = roleMapper.mapToRole(roleDto)
+        var role = roleMapper.toRole(roleDto)
 
         assertEquals("USER", roleDto.name)
     }
@@ -36,7 +36,7 @@ class RoleMapperTest {
     @Test
     fun testRoleMapperShouldThrowException(){
         assertFailsWith<Exception> {
-            roleMapper.mapToRole(null!!)
+            roleMapper.toRole(null!!)
         }
     }
 

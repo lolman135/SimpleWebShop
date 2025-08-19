@@ -6,6 +6,7 @@ import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.FeedbackDto
 import project.api.entity.Product
@@ -66,12 +67,13 @@ class FeedbackMapperTest {
     fun testFeedbackMapperShouldReturnCorrectData(){
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
-        val feedback = feedbackMapper.mapToFeedback(feedbackDto, testUser)
+        val feedback = feedbackMapper.toFeedback(feedbackDto, testUser)
 
         assertEquals(testProduct, feedback.product)
         assertEquals(4, feedback.rate)
         assertEquals("test review", feedback.review)
         assertEquals(userId, feedback.user.id)
+        verify(productRepository).findById(productId)
     }
 
     @Test
@@ -87,8 +89,9 @@ class FeedbackMapperTest {
         `when`(productRepository.findById(notExistedProductId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
-            val feedback = feedbackMapper.mapToFeedback(invalidFeedbackDto, testUser)
+            val feedback = feedbackMapper.toFeedback(invalidFeedbackDto, testUser)
         }
+        verify(productRepository).findById(notExistedProductId)
     }
 
     @Test
@@ -101,9 +104,10 @@ class FeedbackMapperTest {
 
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
-        val feedback = feedbackMapper.mapToFeedback(feedbackDtoWithoutReview, testUser)
+        val feedback = feedbackMapper.toFeedback(feedbackDtoWithoutReview, testUser)
 
         assertNull(feedback.review)
+        verify(productRepository).findById(productId)
     }
 
 }
