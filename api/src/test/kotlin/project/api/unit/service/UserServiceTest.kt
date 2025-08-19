@@ -1,6 +1,7 @@
 package project.api.unit.service
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,6 +23,7 @@ class UserServiceTest {
 
     @Mock
     private lateinit var userRepository: UserRepository
+
     @Mock
     private lateinit var userMapper: UserMapper
 

@@ -5,7 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.*
+import org.mockito.InjectMocks
+import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.RoleDto
@@ -23,6 +24,7 @@ class RoleServiceTest {
 
     @Mock
     private lateinit var roleRepository: RoleRepository
+
     @Mock
     private lateinit var roleMapper: RoleMapper
 
@@ -34,14 +36,14 @@ class RoleServiceTest {
     private lateinit var role: Role
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         roleId = UUID.randomUUID()
         roleDto = RoleDto(name = "TEST_ROLE")
         role = Role(id = roleId, name = "TEST_ROLE")
     }
 
     @Test
-    fun saveShouldMapDtoToRoleAndSaveEntity(){
+    fun saveShouldMapDtoToRoleAndSaveEntity() {
         `when`(roleMapper.toRole(roleDto)).thenReturn(role)
         `when`(roleRepository.save(role)).thenReturn(role)
 
@@ -52,7 +54,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun findAllShouldReturnListOfRoles(){
+    fun findAllShouldReturnListOfRoles() {
         val roles = listOf(role)
         `when`(roleRepository.findAll()).thenReturn(roles)
 
@@ -62,7 +64,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun findByIdShouldReturnRoleIfExist(){
+    fun findByIdShouldReturnRoleIfExist() {
         `when`(roleRepository.findById(roleId)).thenReturn(Optional.of(role))
 
         val result = roleService.findById(roleId)
@@ -72,7 +74,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun findByIdShouldThrowExceptionWhenRoleDoesNotExist(){
+    fun findByIdShouldThrowExceptionWhenRoleDoesNotExist() {
         `when`(roleRepository.findById(roleId)).thenReturn(Optional.empty())
 
         assertThrows<EntityNotFoundException> {
@@ -82,7 +84,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun updateByIdShouldUpdateRoleWhenExists(){
+    fun updateByIdShouldUpdateRoleWhenExists() {
         `when`(roleRepository.existsById(roleId)).thenReturn(true)
         `when`(roleMapper.toRole(roleDto)).thenReturn(role)
         `when`(roleRepository.save(role)).thenReturn(role)
@@ -108,7 +110,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun deleteByIdShouldDeleteRoleWhenExists(){
+    fun deleteByIdShouldDeleteRoleWhenExists() {
         `when`(roleRepository.existsById(roleId)).thenReturn(true)
 
         val result = roleService.deleteById(roleId)
@@ -119,7 +121,7 @@ class RoleServiceTest {
     }
 
     @Test
-    fun deleteByIdShouldThrowExceptionWhenRoleDoesNotExists(){
+    fun deleteByIdShouldThrowExceptionWhenRoleDoesNotExists() {
         `when`(roleRepository.existsById(roleId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
