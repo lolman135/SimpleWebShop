@@ -78,20 +78,12 @@ class FeedbackMapperTest {
 
     @Test
     fun testFeedbackMapperShouldThrowException(){
-        val notExistedProductId = UUID.randomUUID()
-        val invalidFeedbackDto = FeedbackDto (
-            rate = 4,
-            productId = notExistedProductId,
-            userId = userId,
-            review = "test review"
-        )
-
-        `when`(productRepository.findById(notExistedProductId)).thenThrow(IllegalArgumentException("Wrong id provided"))
+        `when`(productRepository.findById(productId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
-            val feedback = feedbackMapper.toFeedback(invalidFeedbackDto, testUser)
+            val feedback = feedbackMapper.toFeedback(feedbackDto, testUser)
         }
-        verify(productRepository).findById(notExistedProductId)
+        verify(productRepository).findById(productId)
     }
 
     @Test

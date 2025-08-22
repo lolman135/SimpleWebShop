@@ -74,16 +74,14 @@ class OrderMapperTest {
 
     @Test
     fun testOrderMapperThrowsExceptionForInvalidProductId() {
-        val invalidProductId = UUID.randomUUID()
-        val invalidOrderDto = OrderDto(mutableListOf(ItemDto(invalidProductId, 1)))
 
-        `when`(productRepository.findById(invalidProductId)).thenReturn(Optional.empty())
+        `when`(productRepository.findById(productId)).thenReturn(Optional.empty())
 
         assertFailsWith<IllegalArgumentException> {
-            orderMapper.toOrder(invalidOrderDto, testUser)
+            orderMapper.toOrder(orderDto, testUser)
         }
 
-        verify(productRepository).findById(invalidProductId)
+        verify(productRepository).findById(productId)
     }
 
     @Test
