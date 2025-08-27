@@ -6,10 +6,10 @@ import project.api.entity.User
 import java.util.UUID
 
 interface FeedbackService {
-    fun save(dto: FeedbackDto, user: User)
+    fun save(dto: FeedbackDto, user: User): Feedback
     fun findAll(): List<Feedback>
     fun findAllForUser(user: User): List<Feedback>
     fun findById(id: UUID): Feedback
-    fun updateById(id: UUID, feedbackDto: FeedbackDto): Feedback
+    fun updateById(id: UUID, feedbackDto: FeedbackDto, user: User): Feedback
     fun deleteById(id: UUID): Boolean
 }
