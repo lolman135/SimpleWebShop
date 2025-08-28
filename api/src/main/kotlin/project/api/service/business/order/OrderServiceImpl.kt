@@ -31,7 +31,6 @@ class OrderServiceImpl (
 
     override fun findAllForUser(user: User) = user.orders.toList()
 
-
     override fun findById(id: UUID) = orderRepository.findById(id).orElseThrow {
         EntityNotFoundException("Order with id=$id not found")
     }
