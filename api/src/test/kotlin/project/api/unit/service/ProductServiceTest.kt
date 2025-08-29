@@ -23,7 +23,6 @@ class ProductServiceTest {
 
     @Mock
     private lateinit var productRepository: ProductRepository
-
     @Mock
     private lateinit var productMapper: ProductMapper
 

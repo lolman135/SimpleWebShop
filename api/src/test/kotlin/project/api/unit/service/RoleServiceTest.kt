@@ -24,7 +24,6 @@ class RoleServiceTest {
 
     @Mock
     private lateinit var roleRepository: RoleRepository
-
     @Mock
     private lateinit var roleMapper: RoleMapper
 

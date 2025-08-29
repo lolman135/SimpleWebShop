@@ -64,7 +64,7 @@ class FeedbackMapperTest {
     }
 
     @Test
-    fun testFeedbackMapperShouldReturnCorrectData(){
+    fun toFeedbackShouldReturnCorrectData(){
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
         val feedback = feedbackMapper.toFeedback(feedbackDto, testUser)
@@ -77,7 +77,7 @@ class FeedbackMapperTest {
     }
 
     @Test
-    fun testFeedbackMapperShouldThrowException(){
+    fun toFeedbackShouldThrowException(){
         `when`(productRepository.findById(productId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
@@ -87,7 +87,7 @@ class FeedbackMapperTest {
     }
 
     @Test
-    fun testFeedbackMapperReviewShouldBeNull(){
+    fun toFeedbackReviewShouldBeNull(){
         val feedbackDtoWithoutReview = FeedbackDto(
             rate = 4,
             userId = userId,

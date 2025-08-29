@@ -26,7 +26,6 @@ class OrderServiceTest {
 
     @Mock
     private lateinit var orderRepository: OrderRepository
-
     @Mock
     private lateinit var orderMapper: OrderMapper
 

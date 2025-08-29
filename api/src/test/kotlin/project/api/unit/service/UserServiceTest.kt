@@ -23,7 +23,6 @@ class UserServiceTest {
 
     @Mock
     private lateinit var userRepository: UserRepository
-
     @Mock
     private lateinit var userMapper: UserMapper
 

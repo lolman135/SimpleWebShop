@@ -102,7 +102,7 @@ class UserMapperTest {
     }
 
     @Test
-    fun testUserMapperShouldReturnNewUserWithValidData(){
+    fun toRoleShouldReturnNewUserWithValidData(){
         val user = userMapper.toUser(userDto)
 
         assertEquals("test_username", user.username)

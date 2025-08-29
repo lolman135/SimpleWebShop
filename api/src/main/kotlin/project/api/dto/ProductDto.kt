@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Pattern
 import java.util.*
 
 data class ProductDto(
-
     @Pattern(regexp = "^[a-zA-Z\\d\\s-_:]{2,50}$", message = "Invalid name!")
     val name: String,
 

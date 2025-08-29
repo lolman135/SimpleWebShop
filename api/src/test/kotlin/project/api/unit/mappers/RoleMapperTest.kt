@@ -27,14 +27,14 @@ class RoleMapperTest {
     }
 
     @Test
-    fun testRoleMapperShouldReturnCorrectRoleName(){
+    fun toRoleShouldReturnCorrectRoleName(){
         var role = roleMapper.toRole(roleDto)
 
         assertEquals("USER", roleDto.name)
     }
 
     @Test
-    fun testRoleMapperShouldThrowException(){
+    fun toRoleShouldThrowException(){
         assertFailsWith<Exception> {
             roleMapper.toRole(null!!)
         }

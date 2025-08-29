@@ -35,6 +35,7 @@ class OrderMapperTest {
 
     @BeforeEach
     fun setUp() {
+        productId = UUID.randomUUID()
 
         testUser = User(
             id = UUID.randomUUID(),
@@ -42,9 +43,6 @@ class OrderMapperTest {
             email = "test@mail.com",
             password = "testPassword"
         )
-
-        productId = UUID.randomUUID()
-
         testProduct = Product(
             id = productId,
             name = "testName",
@@ -52,15 +50,13 @@ class OrderMapperTest {
             imageUrl = "https://imgBase:/testImg.com",
             price = 10
         )
-
         orderDto = OrderDto(
             mutableListOf(ItemDto(productId, 3))
         )
-
     }
 
     @Test
-    fun testOrderMapperShouldContainsCorrectData() {
+    fun toOrderShouldContainsCorrectData() {
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
         val order = orderMapper.toOrder(orderDto, testUser)
@@ -73,19 +69,17 @@ class OrderMapperTest {
     }
 
     @Test
-    fun testOrderMapperThrowsExceptionForInvalidProductId() {
-
+    fun toOrderThrowsExceptionForInvalidProductId() {
         `when`(productRepository.findById(productId)).thenReturn(Optional.empty())
 
         assertFailsWith<IllegalArgumentException> {
             orderMapper.toOrder(orderDto, testUser)
         }
-
         verify(productRepository).findById(productId)
     }
 
     @Test
-    fun testOrderMapperShouldFailsByProvidingEmptyList(){
+    fun toOrderShouldFailsByProvidingEmptyList(){
         val invalidOrderDto = OrderDto()
 
         assertFailsWith<IllegalArgumentException> {

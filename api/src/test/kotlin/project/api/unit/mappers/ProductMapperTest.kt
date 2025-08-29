@@ -30,7 +30,6 @@ class ProductMapperTest {
 
     @BeforeEach
     fun setUp(){
-
         productDto = ProductDto(
             name = "Test product",
             description = "Test description",
@@ -40,7 +39,7 @@ class ProductMapperTest {
     }
 
     @Test
-    fun testProductMapperShouldCreateProductWithCorrectData(){
+    fun toProductShouldCreateProductWithCorrectData(){
         val product = productMapper.toProduct(productDto)
 
         assertEquals("Test product", product.name)
@@ -51,13 +50,13 @@ class ProductMapperTest {
     }
 
     @Test
-    fun testProductMapperShouldCreateProductWithoutFeedbacks(){
+    fun toProductShouldCreateProductWithoutFeedbacks(){
         val product = productMapper.toProduct(productDto)
         assertTrue(product.feedbacks.isEmpty())
     }
 
     @Test
-    fun testProductMapperShouldFailsWithIllegalArgumentException(){
+    fun toProductShouldFailsWithIllegalArgumentException(){
         val invalidFeedbackId = UUID.randomUUID()
         val invalidProductDto = ProductDto(
             name = "Test product",
