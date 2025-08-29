@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-import project.api.dto.RoleDto
-import project.api.mapper.role.RoleMapper
+import project.api.dto.business.RoleDto
+import project.api.mapper.business.role.RoleMapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

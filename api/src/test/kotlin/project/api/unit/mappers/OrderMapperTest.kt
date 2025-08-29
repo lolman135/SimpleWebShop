@@ -7,11 +7,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.ItemDto
-import project.api.dto.OrderDto
+import project.api.dto.business.ItemDto
+import project.api.dto.business.OrderDto
 import project.api.entity.Product
 import project.api.entity.User
-import project.api.mapper.order.OrderMapperImpl
+import project.api.mapper.business.order.OrderMapperImpl
 import project.api.repository.product.ProductRepository
 import java.util.*
 import kotlin.test.Test

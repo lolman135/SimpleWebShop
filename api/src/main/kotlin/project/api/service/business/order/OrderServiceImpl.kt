@@ -1,11 +1,11 @@
 package project.api.service.business.order
 
 import org.springframework.stereotype.Service
-import project.api.dto.OrderDto
+import project.api.dto.business.OrderDto
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.order.OrderMapper
+import project.api.mapper.business.order.OrderMapper
 import project.api.repository.order.OrderRepository
 import java.util.*
 

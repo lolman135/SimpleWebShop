@@ -1,11 +1,11 @@
 package project.api.service.business.feedback
 
 import org.springframework.stereotype.Service
-import project.api.dto.FeedbackDto
+import project.api.dto.business.FeedbackDto
 import project.api.entity.Feedback
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.feedback.FeedbackMapper
+import project.api.mapper.business.feedback.FeedbackMapper
 import project.api.repository.feedback.FeedbackRepository
 import java.util.*
 

@@ -1,10 +1,10 @@
 package project.api.service.business.prodcut
 
 import org.springframework.stereotype.Service
-import project.api.dto.ProductDto
+import project.api.dto.business.ProductDto
 import project.api.entity.Product
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.product.ProductMapper
+import project.api.mapper.business.product.ProductMapper
 import project.api.repository.product.ProductRepository
 import java.util.*
 

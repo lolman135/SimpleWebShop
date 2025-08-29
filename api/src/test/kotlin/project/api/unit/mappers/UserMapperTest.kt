@@ -7,9 +7,9 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.UserDto
+import project.api.dto.business.UserDto
 import project.api.entity.*
-import project.api.mapper.user.UserMapperImpl
+import project.api.mapper.business.user.UserMapperImpl
 import project.api.repository.feedback.FeedbackRepository
 import project.api.repository.order.OrderRepository
 import project.api.repository.role.RoleRepository

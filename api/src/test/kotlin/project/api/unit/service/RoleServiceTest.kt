@@ -9,10 +9,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.RoleDto
+import project.api.dto.business.RoleDto
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.role.RoleMapper
+import project.api.mapper.business.role.RoleMapper
 import project.api.repository.role.RoleRepository
 import project.api.service.business.role.RoleServiceImpl
 import java.util.*

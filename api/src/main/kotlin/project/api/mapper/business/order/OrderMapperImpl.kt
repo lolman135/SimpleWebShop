@@ -1,7 +1,7 @@
-package project.api.mapper.order
+package project.api.mapper.business.order
 
 import org.springframework.stereotype.Component
-import project.api.dto.OrderDto
+import project.api.dto.business.OrderDto
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.repository.product.ProductRepository

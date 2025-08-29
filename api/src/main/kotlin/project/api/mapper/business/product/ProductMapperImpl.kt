@@ -1,7 +1,7 @@
-package project.api.mapper.product
+package project.api.mapper.business.product
 
 import org.springframework.stereotype.Component
-import project.api.dto.ProductDto
+import project.api.dto.business.ProductDto
 import project.api.entity.Product
 import project.api.repository.feedback.FeedbackRepository
 

@@ -1,4 +1,4 @@
-package project.api.dto
+package project.api.dto.business
 
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min

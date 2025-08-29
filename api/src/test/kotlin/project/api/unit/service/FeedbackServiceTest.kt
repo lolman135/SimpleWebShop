@@ -9,12 +9,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.FeedbackDto
+import project.api.dto.business.FeedbackDto
 import project.api.entity.Feedback
 import project.api.entity.Product
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.feedback.FeedbackMapper
+import project.api.mapper.business.feedback.FeedbackMapper
 import project.api.repository.feedback.FeedbackRepository
 import project.api.service.business.feedback.FeedbackServiceImpl
 import java.util.*

@@ -1,7 +1,7 @@
-package project.api.mapper.user
+package project.api.mapper.business.user
 
 import org.springframework.stereotype.Component
-import project.api.dto.UserDto
+import project.api.dto.business.UserDto
 import project.api.entity.User
 import project.api.repository.role.RoleRepository
 import project.api.repository.order.OrderRepository

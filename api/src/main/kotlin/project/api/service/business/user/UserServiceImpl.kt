@@ -1,10 +1,10 @@
 package project.api.service.business.user
 
 import org.springframework.stereotype.Service
-import project.api.dto.UserDto
+import project.api.dto.business.UserDto
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.user.UserMapper
+import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
 import java.util.*
 

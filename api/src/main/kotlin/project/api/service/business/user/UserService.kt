@@ -1,6 +1,6 @@
 package project.api.service.business.user
 
-import project.api.dto.UserDto
+import project.api.dto.business.UserDto
 import project.api.entity.User
 import java.util.*
 

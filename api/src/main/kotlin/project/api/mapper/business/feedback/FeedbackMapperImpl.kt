@@ -1,11 +1,10 @@
-package project.api.mapper.feedback
+package project.api.mapper.business.feedback
 
 import org.springframework.stereotype.Component
-import project.api.dto.FeedbackDto
+import project.api.dto.business.FeedbackDto
 import project.api.entity.Feedback
 import project.api.entity.User
 import project.api.repository.product.ProductRepository
-import project.api.repository.user.UserRepository
 import java.lang.IllegalArgumentException
 
 @Component

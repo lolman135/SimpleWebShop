@@ -1,6 +1,6 @@
 package project.api.service.business.prodcut
 
-import project.api.dto.ProductDto
+import project.api.dto.business.ProductDto
 import project.api.entity.Product
 import java.util.*
 

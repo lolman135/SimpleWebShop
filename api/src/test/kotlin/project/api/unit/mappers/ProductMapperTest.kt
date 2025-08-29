@@ -8,8 +8,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.ProductDto
-import project.api.mapper.product.ProductMapperImpl
+import project.api.dto.business.ProductDto
+import project.api.mapper.business.product.ProductMapperImpl
 import project.api.repository.feedback.FeedbackRepository
 import java.util.UUID
 import kotlin.test.Test

@@ -1,10 +1,8 @@
-package project.api.dto
+package project.api.dto.auth
 
 import jakarta.validation.constraints.Pattern
-import java.util.*
 
-data class UserDto(
-
+data class RegisterRequest(
     @Pattern(regexp = "^[a-zA-Z-_\\d]{3,40}\$", message = "Invalid input")
     val username: String,
 
@@ -15,9 +13,5 @@ data class UserDto(
     val email: String,
 
     @Pattern(regexp = "^[a-zA-Z-_:#\\d%+]{7,30}", message = "Invalid input")
-    val password: String,
-
-    val orderIds: List<UUID> = listOf(),
-    val roleIds: List<UUID> = listOf(),
-    val feedbackIds: List<UUID> = listOf(),
+    val password: String
 )

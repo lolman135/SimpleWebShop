@@ -1,10 +1,10 @@
 package project.api.service.business.role
 
 import org.springframework.stereotype.Service
-import project.api.dto.RoleDto
+import project.api.dto.business.RoleDto
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.role.RoleMapper
+import project.api.mapper.business.role.RoleMapper
 import project.api.repository.role.RoleRepository
 import java.util.*
 

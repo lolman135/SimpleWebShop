@@ -1,6 +1,6 @@
-package project.api.mapper.product
+package project.api.mapper.business.product
 
-import project.api.dto.ProductDto
+import project.api.dto.business.ProductDto
 import project.api.entity.Product
 
 interface ProductMapper {

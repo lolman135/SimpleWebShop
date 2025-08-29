@@ -1,6 +1,6 @@
 package project.api.service.business.role
 
-import project.api.dto.RoleDto
+import project.api.dto.business.RoleDto
 import project.api.entity.Role
 import java.util.*
 

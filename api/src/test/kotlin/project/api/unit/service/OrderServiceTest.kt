@@ -8,12 +8,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.ItemDto
-import project.api.dto.OrderDto
+import project.api.dto.business.ItemDto
+import project.api.dto.business.OrderDto
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.order.OrderMapper
+import project.api.mapper.business.order.OrderMapper
 import project.api.repository.order.OrderRepository
 import project.api.service.business.order.OrderServiceImpl
 import java.time.LocalDateTime

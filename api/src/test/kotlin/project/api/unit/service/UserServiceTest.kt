@@ -10,10 +10,10 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.UserDto
+import project.api.dto.business.UserDto
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.mapper.user.UserMapper
+import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
 import project.api.service.business.user.UserServiceImpl
 import java.util.*

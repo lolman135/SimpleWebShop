@@ -8,13 +8,13 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.FeedbackDto
+import project.api.dto.business.FeedbackDto
 import project.api.entity.Product
 import project.api.entity.User
 import project.api.repository.product.ProductRepository
 import java.util.*
 import org.mockito.Mockito.`when`
-import project.api.mapper.feedback.FeedbackMapperImpl
+import project.api.mapper.business.feedback.FeedbackMapperImpl
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
