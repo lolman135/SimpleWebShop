@@ -1,4 +1,4 @@
-package project.api.util
+package project.api.security
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

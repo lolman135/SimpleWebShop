@@ -1,4 +1,4 @@
-package project.api.config
+package project.api.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
