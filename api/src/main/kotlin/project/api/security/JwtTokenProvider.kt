@@ -30,7 +30,7 @@ class JwtTokenProvider(
     fun getUsernameFromToken(token: String): String = Jwts.parserBuilder()
             .setSigningKey(secretKey)
             .build()
-            .parseClaimsJwt(token)
+            .parseClaimsJws(token)
             .body
             .subject
 
@@ -38,7 +38,7 @@ class JwtTokenProvider(
             Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
             true
         } catch (e: Exception) {
             false
