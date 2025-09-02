@@ -18,18 +18,18 @@ import java.util.UUID
 class UserController(private val userService: UserService, ) {
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id:UUID) = ResponseEntity.ok(userService.findById(id))
+    fun getUserById(@PathVariable id:UUID) = ResponseEntity.ok(userService.findById(id))
 
     @GetMapping
-    fun getAll() = ResponseEntity.ok(userService.findAll())
+    fun getAllUsers() = ResponseEntity.ok(userService.findAll())
 
     @GetMapping("/find")
-    fun getByName(@RequestParam username: String) = ResponseEntity.ok(userService.findByUsername(username))
+    fun getUserByName(@RequestParam username: String) = ResponseEntity.ok(userService.findByUsername(username))
 
     @PutMapping("/{id}")
-    fun updateById(@PathVariable id: UUID, @RequestParam request: UserDto) =
+    fun updateUserById(@PathVariable id: UUID, @RequestParam request: UserDto) =
         ResponseEntity.ok(userService.updateById(id, request))
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id:UUID) = ResponseEntity.ok(userService.deleteById(id))
+    fun deleteUserById(@PathVariable id:UUID) = ResponseEntity.ok(userService.deleteById(id))
 }

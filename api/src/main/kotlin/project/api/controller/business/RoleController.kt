@@ -33,5 +33,5 @@ class RoleController(private val roleService: RoleService) {
         ResponseEntity.ok(roleService.updateById(id, request))
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.deleteById(id))
+    fun deleteRoleById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.deleteById(id))
 }
