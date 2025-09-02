@@ -3,8 +3,8 @@ package project.api.dto.auth
 import jakarta.validation.constraints.Pattern
 
 data class LoginRequest(
-    @Pattern(regexp = "^[a-zA-Z-_\\d]{3,40}\$", message = "Invalid input")
+    @field:Pattern(regexp = "^[a-zA-Z-_\\d]{3,40}\$", message = "Invalid input")
     val username: String,
-    @Pattern(regexp = "^[a-zA-Z-_:#\\d%+]{7,30}", message = "Invalid input")
+    @field:Pattern(regexp = "^[a-zA-Z-_:#\\d%+]{7,30}", message = "Invalid input")
     val password: String
 )

@@ -6,13 +6,13 @@ import jakarta.validation.constraints.Pattern
 import java.util.*
 
 data class ProductDto(
-    @Pattern(regexp = "^[a-zA-Z\\d\\s-_:]{2,50}$", message = "Invalid name!")
+    @field:Pattern(regexp = "^[a-zA-Z\\d\\s-_:]{2,50}$", message = "Invalid name!")
     val name: String,
 
-    @NotBlank(message = "Description can't be empty!")
+    @field:NotBlank(message = "Description can't be empty!")
     val description: String,
 
-    @Min(0)
+    @field:Min(0)
     val price: Int,
 
     val imageUrl: String,

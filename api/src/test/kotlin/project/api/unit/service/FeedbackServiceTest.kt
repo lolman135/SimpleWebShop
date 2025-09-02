@@ -46,7 +46,6 @@ class FeedbackServiceTest {
         userId = UUID.randomUUID()
 
         feedbackDto = FeedbackDto(
-            userId = userId,
             productId = productId,
             rate = 5,
             review = "Test review"

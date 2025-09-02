@@ -4,9 +4,6 @@ import jakarta.validation.constraints.Pattern
 
 data class RoleDto(
 
-    @Pattern(
-        regexp = "^[A-Z_]{2,30}$",
-        message = "Invalid name"
-    )
+    @field:Pattern(regexp = "^[A-Z_]{2,30}$", message = "Invalid name")
     val name: String
 )

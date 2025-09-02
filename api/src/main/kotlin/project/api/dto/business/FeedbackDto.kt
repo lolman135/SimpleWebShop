@@ -6,10 +6,9 @@ import jakarta.validation.constraints.NotBlank
 import java.util.UUID
 
 data class FeedbackDto(
-    @NotBlank(message = "Shouldn't be empty")
+    @field:NotBlank(message = "Shouldn't be empty") @field:Min(3)
     val review: String? = null,
-    @Min(0) @Max(5)
+    @field:Min(0) @field:Max(5)
     val rate: Int,
-    val userId: UUID,
     val productId: UUID,
 )

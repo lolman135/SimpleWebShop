@@ -58,7 +58,6 @@ class FeedbackMapperTest {
         feedbackDto = FeedbackDto(
             rate = 4,
             productId = productId,
-            userId = userId,
             review = "test review"
         )
     }
@@ -90,7 +89,6 @@ class FeedbackMapperTest {
     fun toFeedbackReviewShouldBeNull(){
         val feedbackDtoWithoutReview = FeedbackDto(
             rate = 4,
-            userId = userId,
             productId = productId
         )
 
