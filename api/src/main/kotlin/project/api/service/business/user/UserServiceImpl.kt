@@ -1,9 +1,12 @@
 package project.api.service.business.user
 
 import org.springframework.stereotype.Service
+import project.api.dto.auth.RegisterRequest
 import project.api.dto.business.UserDto
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
+import project.api.exception.UserAlreadyExistsException
+import project.api.mapper.auth.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
 import java.util.*
@@ -22,8 +25,14 @@ class UserServiceImpl(
         return true
     }
 
-    override fun save(dto: UserDto): User {
-        val user = userMapper.toUser(dto)
+    override fun save(request: RegisterRequest): User {
+        if(userRepository.existsUserByUsername(request.username))
+            throw UserAlreadyExistsException("User with username ${request.username} already exists")
+
+        if(userRepository.existsUserByEmail(request.email))
+            throw UserAlreadyExistsException("User with email ${request.email} already exists")
+
+        val user = request.toUser()
         return userRepository.save(user)
     }
 

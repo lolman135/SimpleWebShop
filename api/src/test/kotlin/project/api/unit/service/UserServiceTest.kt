@@ -10,9 +10,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
+import project.api.dto.auth.RegisterRequest
 import project.api.dto.business.UserDto
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
+import project.api.exception.UserAlreadyExistsException
+import project.api.mapper.auth.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
 import project.api.service.business.user.UserServiceImpl
@@ -32,6 +35,7 @@ class UserServiceTest {
     private lateinit var userId: UUID
     private lateinit var userDto: UserDto
     private lateinit var user: User
+    private lateinit var request: RegisterRequest
 
     @BeforeEach
     fun setUp() {
@@ -47,18 +51,57 @@ class UserServiceTest {
             email = "john@example.com",
             password = "securePass123",
         )
+        request = RegisterRequest(
+            username = "JohnDoe",
+            email = "john@example.com",
+            password = "securePass123"
+        )
     }
 
     @Test
-    fun saveShouldMapDtoToUserAndSaveEntity() {
-        `when`(userMapper.toUser(userDto)).thenReturn(user)
-        `when`(userRepository.save(user)).thenReturn(user)
+    fun saveShouldSaveUserWhenUsernameAndEmailAreUnique() {
+        val user = request.toUser()
 
-        val result = userService.save(userDto)
+        `when`(userRepository.existsUserByUsername(request.username)).thenReturn(false)
+        `when`(userRepository.existsUserByEmail(request.email)).thenReturn(false)
+        `when`(userRepository.save(any(User::class.java))).thenReturn(user)
 
-        assertEquals(user, result)
-        verify(userMapper).toUser(userDto)
-        verify(userRepository).save(user)
+        val result = userService.save(request)
+
+        assertEquals(user.username, result.username)
+        assertEquals(user.email, result.email)
+        assertEquals(user.password, result.password)
+
+        verify(userRepository).existsUserByUsername(request.username)
+        verify(userRepository).existsUserByEmail(request.email)
+        verify(userRepository).save(any(User::class.java))
+    }
+
+    @Test
+    fun saveShouldThrowExceptionWhenUsernameExists() {
+        `when`(userRepository.existsUserByUsername(request.username)).thenReturn(true)
+
+        assertThrows<UserAlreadyExistsException> {
+            userService.save(request)
+        }
+
+        verify(userRepository).existsUserByUsername(request.username)
+        verify(userRepository, never()).existsUserByEmail(request.email)
+        verify(userRepository, never()).save(any(User::class.java))
+    }
+
+    @Test
+    fun saveShouldThrowExceptionWhenEmailExists() {
+        `when`(userRepository.existsUserByUsername(request.username)).thenReturn(false)
+        `when`(userRepository.existsUserByEmail(request.email)).thenReturn(true)
+
+        assertThrows<UserAlreadyExistsException> {
+            userService.save(request)
+        }
+
+        verify(userRepository).existsUserByUsername(request.username)
+        verify(userRepository).existsUserByEmail(request.email)
+        verify(userRepository, never()).save(any(User::class.java))
     }
 
     @Test
