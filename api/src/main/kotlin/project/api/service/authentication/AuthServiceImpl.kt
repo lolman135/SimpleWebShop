@@ -22,14 +22,12 @@ class AuthServiceImpl(
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(request.username, request.password)
         )
-
         SecurityContextHolder.getContext().authentication = authentication
         return jwtTokenProvider.generateToken(request.username)
     }
 
     override fun register(request: RegisterRequest): String {
         val encryptedRequest = request.copy(password = passwordEncoder.encode(request.password))
-
         val registeredUser = userService.save(encryptedRequest)
         return jwtTokenProvider.generateToken(registeredUser.username)
     }

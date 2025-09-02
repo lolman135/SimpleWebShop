@@ -29,7 +29,6 @@ class JwtAuthFilter(
                 UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
 
             authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-
             SecurityContextHolder.getContext().authentication = authentication
         }
 

@@ -14,14 +14,11 @@ class CustomUserDetailService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
+        if (username == null) throw UsernameNotFoundException("Invalid name provided")
 
-        if (username == null) {
-            throw UsernameNotFoundException("Invalid name provided")
-        }
+        val user = userRepository.findUserByUsername(username)
+            .orElseThrow { UsernameNotFoundException("User with username=$username not found") }
 
-        val user = userRepository.findUserByUsername(username).orElseThrow {
-            UsernameNotFoundException("User with username=$username not found")
-        }
         val authorities = user.roles.map { SimpleGrantedAuthority(it.name) }
 
         //This User class from rg.springframework.security.core, not my custom User entity
