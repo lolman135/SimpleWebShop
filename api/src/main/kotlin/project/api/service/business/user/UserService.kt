@@ -11,4 +11,5 @@ interface UserService {
     fun findById(id: UUID): User
     fun updateById(id: UUID, dto: UserDto): User
     fun deleteById(id: UUID): Boolean
+    fun findByUsername(username: String): User
 }

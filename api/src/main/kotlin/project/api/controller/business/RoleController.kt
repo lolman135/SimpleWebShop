@@ -2,9 +2,11 @@ package project.api.controller.business
 
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -18,17 +20,18 @@ import java.util.UUID
 class RoleController(private val roleService: RoleService) {
 
     @PostMapping
-    fun addRole(@RequestBody @Valid request: RoleDto): ResponseEntity<Role>{
-        val role = roleService.save(request)
-        return ResponseEntity.ok(role)
-    }
+    fun addRole(@RequestBody @Valid request: RoleDto) = ResponseEntity.ok(roleService.save(request))
 
     @GetMapping("/{id}")
-    fun getRole(@PathVariable id: UUID): ResponseEntity<Role>{
-        val role = roleService.findById(id)
-        return ResponseEntity.ok(role)
-    }
+    fun getRoleById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.findById(id))
 
     @GetMapping
-    fun getAllRoles(): ResponseEntity<List<Role>> = ResponseEntity.ok(roleService.findAll())
+    fun getAllRoles() = ResponseEntity.ok(roleService.findAll())
+
+    @PutMapping("/{id}")
+    fun updateRoleById(@PathVariable id: UUID, @RequestBody @Valid request: RoleDto) =
+        ResponseEntity.ok(roleService.updateById(id, request))
+
+    @DeleteMapping("/{id}")
+    fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.deleteById(id))
 }

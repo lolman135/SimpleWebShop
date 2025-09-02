@@ -28,10 +28,10 @@ class UserServiceImpl(
     }
 
     override fun save(request: RegisterRequest): User {
-        if(userRepository.existsUserByUsername(request.username))
+        if (userRepository.existsUserByUsername(request.username))
             throw UserAlreadyExistsException("User with username ${request.username} already exists")
 
-        if(userRepository.existsUserByEmail(request.email))
+        if (userRepository.existsUserByEmail(request.email))
             throw UserAlreadyExistsException("User with email ${request.email} already exists")
 
         val user = request.toUser()
@@ -41,9 +41,8 @@ class UserServiceImpl(
 
     override fun findAll(): List<User> = userRepository.findAll()
 
-    override fun findById(id: UUID): User = userRepository.findById(id).orElseThrow {
-        EntityNotFoundException("User with id=$id not found")
-    }
+    override fun findById(id: UUID): User = userRepository.findById(id)
+        .orElseThrow { EntityNotFoundException("User with id=$id not found") }
 
     override fun updateById(id: UUID, dto: UserDto): User {
         if (!userRepository.existsById(id))
@@ -53,4 +52,7 @@ class UserServiceImpl(
         user.id = id
         return userRepository.save(user)
     }
+
+    override fun findByUsername(username: String): User = userRepository.findUserByUsername(username)
+        .orElseThrow { EntityNotFoundException("User with username=$username not found") }
 }

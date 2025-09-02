@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import project.api.dto.auth.LoginRequest
 import project.api.dto.auth.RegisterRequest
+import project.api.exception.InvalidCredentialsException
 import project.api.security.JwtTokenProvider
 import project.api.service.business.user.UserService
 
@@ -19,11 +20,15 @@ class AuthServiceImpl(
 ) : AuthService {
 
     override fun login(request: LoginRequest): String {
-        val authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(request.username, request.password)
-        )
-        SecurityContextHolder.getContext().authentication = authentication
-        return jwtTokenProvider.generateToken(request.username)
+        try {
+            val authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(request.username, request.password)
+            )
+            SecurityContextHolder.getContext().authentication = authentication
+            return jwtTokenProvider.generateToken(request.username)
+        } catch (ex: Exception){
+            throw InvalidCredentialsException("Invalid username or password")
+        }
     }
 
     override fun register(request: RegisterRequest): String {

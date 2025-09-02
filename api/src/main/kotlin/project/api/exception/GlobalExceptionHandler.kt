@@ -44,6 +44,16 @@ class GlobalExceptionHandler {
         return ResponseEntity(response, HttpStatus.BAD_REQUEST)
     }
 
+    @ExceptionHandler(InvalidCredentialsException::class)
+    fun handleInvalidCredentials(ex: InvalidCredentialsException): ResponseEntity<ErrorResponse> {
+        val response = ErrorResponse(
+            status = HttpStatus.UNAUTHORIZED.value(),
+            error = "Unauthorized",
+            message = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.UNAUTHORIZED)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleAll(ex: Exception): ResponseEntity<ErrorResponse> {
         val response = ErrorResponse(

@@ -2,7 +2,6 @@ package project.api.controller.auth
 
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,5 +27,4 @@ class AuthController(
         val token = authService.register(request)
         return ResponseEntity.ok(token)
     }
-
 }
