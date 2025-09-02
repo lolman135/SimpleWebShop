@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface RoleRepository : JpaRepository<Role, UUID> {
-    fun id(id: UUID): MutableList<Role>
+    fun findRoleByName(name: String): Optional<Role>
 }

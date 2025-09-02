@@ -41,4 +41,8 @@ class RoleServiceImpl(
         role.id = id
         return roleRepository.save(role)
     }
+
+    override fun getDefaultRole(): Role =
+         roleRepository.findRoleByName("ROLE_USER")
+             .orElseThrow { EntityNotFoundException("Default role not found") }
 }

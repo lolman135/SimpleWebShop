@@ -12,12 +12,14 @@ import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.auth.RegisterRequest
 import project.api.dto.business.UserDto
+import project.api.entity.Role
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.exception.UserAlreadyExistsException
 import project.api.mapper.auth.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
+import project.api.service.business.role.RoleService
 import project.api.service.business.user.UserServiceImpl
 import java.util.*
 
@@ -28,6 +30,8 @@ class UserServiceTest {
     private lateinit var userRepository: UserRepository
     @Mock
     private lateinit var userMapper: UserMapper
+    @Mock
+    private lateinit var roleService: RoleService
 
     @InjectMocks
     private lateinit var userService: UserServiceImpl
@@ -36,10 +40,12 @@ class UserServiceTest {
     private lateinit var userDto: UserDto
     private lateinit var user: User
     private lateinit var request: RegisterRequest
+    private lateinit var defaultRole: Role
 
     @BeforeEach
     fun setUp() {
         userId = UUID.randomUUID()
+        defaultRole = Role(UUID.randomUUID(), "ROLE_USER")
         userDto = UserDto(
             username = "JohnDoe",
             email = "john@example.com",
@@ -74,6 +80,23 @@ class UserServiceTest {
 
         verify(userRepository).existsUserByUsername(request.username)
         verify(userRepository).existsUserByEmail(request.email)
+        verify(userRepository).save(any(User::class.java))
+    }
+
+    @Test
+    fun saveShouldAssignDefaultRoleToUser() {
+        val user = request.toUser()
+        `when`(userRepository.existsUserByUsername(request.username)).thenReturn(false)
+        `when`(userRepository.existsUserByEmail(request.email)).thenReturn(false)
+        `when`(roleService.getDefaultRole()).thenReturn(defaultRole)
+        `when`(userRepository.save(any(User::class.java))).thenAnswer { it.arguments[0] as User }
+
+        val result = userService.save(request)
+
+        assertEquals(1, result.roles.size)
+        assertTrue(result.roles.contains(defaultRole))
+
+        verify(roleService).getDefaultRole()
         verify(userRepository).save(any(User::class.java))
     }
 

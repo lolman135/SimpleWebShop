@@ -9,12 +9,14 @@ import project.api.exception.UserAlreadyExistsException
 import project.api.mapper.auth.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.user.UserRepository
+import project.api.service.business.role.RoleService
 import java.util.*
 
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
+    private val roleService: RoleService
 ) : UserService {
 
     override fun deleteById(id: UUID): Boolean {
@@ -33,6 +35,7 @@ class UserServiceImpl(
             throw UserAlreadyExistsException("User with email ${request.email} already exists")
 
         val user = request.toUser()
+        user.roles = mutableSetOf(roleService.getDefaultRole())
         return userRepository.save(user)
     }
 

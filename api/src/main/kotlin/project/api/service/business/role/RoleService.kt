@@ -10,4 +10,5 @@ interface RoleService {
     fun findById(id: UUID): Role
     fun updateById(id: UUID, dto: RoleDto): Role
     fun deleteById(id: UUID): Boolean
+    fun getDefaultRole(): Role
 }
