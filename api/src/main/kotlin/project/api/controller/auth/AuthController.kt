@@ -12,9 +12,7 @@ import project.api.service.authentication.AuthService
 
 @RestController
 @RequestMapping("/api/v1/auth")
-class AuthController(
-    private val authService: AuthService,
-) {
+class AuthController(private val authService: AuthService) {
 
     @PostMapping("/login")
     fun login(@RequestBody @Valid request: LoginRequest): ResponseEntity<String>{

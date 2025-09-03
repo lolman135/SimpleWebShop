@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.business.UserDto
-import project.api.entity.User
 import project.api.service.business.user.UserService
 import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/users")
-class UserController(private val userService: UserService, ) {
+class UserController(private val userService: UserService) {
 
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id:UUID) = ResponseEntity.ok(userService.findById(id))
