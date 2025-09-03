@@ -16,5 +16,6 @@ data class ProductDto(
     val price: Int,
 
     val imageUrl: String,
-    val feedbackIds: List<UUID> = listOf()
+    val feedbackIds: List<UUID> = listOf(),
+    val categoryId: UUID
 )

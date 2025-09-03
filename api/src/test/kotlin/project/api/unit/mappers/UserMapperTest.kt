@@ -41,9 +41,15 @@ class UserMapperTest {
     private lateinit var testFeedback: Feedback
     private lateinit var testProduct1: Product
     private lateinit var testProduct2: Product
+    private lateinit var testCategory: Category
 
     @BeforeEach
     fun setUp(){
+        testCategory = Category(
+            id = UUID.randomUUID(),
+            name = "Test category"
+        )
+
         userDto = UserDto(
             username = "test_username",
             password = "testPassword123",
@@ -64,7 +70,8 @@ class UserMapperTest {
             name = "Test name",
             price = 300,
             description = "Test description",
-            imageUrl = "https://imgBase:/testImg.com"
+            imageUrl = "https://imgBase:/testImg.com",
+            category = testCategory        // <-- добавили
         )
 
         testProduct2 = Product(
@@ -72,7 +79,8 @@ class UserMapperTest {
             name = "Test name 2",
             price = 200,
             description = "Test description 2",
-            imageUrl = "https://imgBase:/testImg2.com"
+            imageUrl = "https://imgBase:/testImg2.com",
+            category = testCategory        // <-- добавили
         )
 
         val testUser = User(

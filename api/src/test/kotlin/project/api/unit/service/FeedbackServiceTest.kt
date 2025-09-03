@@ -10,9 +10,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.business.FeedbackDto
-import project.api.entity.Feedback
-import project.api.entity.Product
-import project.api.entity.User
+import project.api.entity.*
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.feedback.FeedbackMapper
 import project.api.repository.feedback.FeedbackRepository
@@ -34,8 +32,10 @@ class FeedbackServiceTest {
     private lateinit var feedbackId: UUID
     private lateinit var userId: UUID
     private lateinit var productId: UUID
+    private lateinit var categoryId: UUID
     private lateinit var feedbackDto: FeedbackDto
     private lateinit var user: User
+    private lateinit var category: Category
     private lateinit var product: Product
     private lateinit var feedback: Feedback
 
@@ -44,25 +44,35 @@ class FeedbackServiceTest {
         feedbackId = UUID.randomUUID()
         productId = UUID.randomUUID()
         userId = UUID.randomUUID()
+        categoryId = UUID.randomUUID()
+
+        category = Category(
+            id = categoryId,
+            name = "Test category",
+        )
 
         feedbackDto = FeedbackDto(
             productId = productId,
             rate = 5,
             review = "Test review"
         )
+
         user = User(
             id = userId,
             username = "JohnDoe",
             email = "john@example.com",
             password = "securePass123",
         )
+
         product = Product(
             id = productId,
             name = "Test name",
             description = "Test description",
             price = 10,
-            imageUrl = "https://imgBase:/testImg.com"
+            imageUrl = "https://imgBase:/testImg.com",
+            category = category // добавляем обязательную категорию
         )
+
         feedback = Feedback(
             id = feedbackId,
             user = user,

@@ -14,10 +14,10 @@ import kotlin.test.assertFailsWith
 @SpringBootTest
 class RoleMapperTest {
 
-    lateinit var roleDto: RoleDto
+    private lateinit var roleDto: RoleDto
 
     @Autowired
-    lateinit var roleMapper: RoleMapper
+    private lateinit var roleMapper: RoleMapper
 
     @BeforeEach
     fun setUp(){

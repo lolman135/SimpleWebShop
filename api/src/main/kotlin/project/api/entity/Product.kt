@@ -25,7 +25,11 @@ class Product(
     open var description: String,
 
     @get:OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    open var feedbacks: MutableSet<Feedback> = mutableSetOf()
+    open var feedbacks: MutableSet<Feedback> = mutableSetOf(),
+
+    @get:ManyToOne()
+    @get:JoinColumn(name = "category_id", nullable = false)
+    open var category: Category
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

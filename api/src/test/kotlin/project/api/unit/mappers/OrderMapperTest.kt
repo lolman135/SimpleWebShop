@@ -9,6 +9,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.business.ItemDto
 import project.api.dto.business.OrderDto
+import project.api.entity.Category
 import project.api.entity.Product
 import project.api.entity.User
 import project.api.mapper.business.order.OrderMapperImpl
@@ -31,11 +32,15 @@ class OrderMapperTest {
     private lateinit var testProduct: Product
     private lateinit var orderDto: OrderDto
     private lateinit var productId: UUID
-
+    private lateinit var category: Category
 
     @BeforeEach
     fun setUp() {
         productId = UUID.randomUUID()
+        category = Category(
+            id = UUID.randomUUID(),
+            name = "Test category" // описание можно не указывать
+        )
 
         testUser = User(
             id = UUID.randomUUID(),
@@ -43,13 +48,16 @@ class OrderMapperTest {
             email = "test@mail.com",
             password = "testPassword"
         )
+
         testProduct = Product(
             id = productId,
             name = "testName",
             description = "TestDesc",
             imageUrl = "https://imgBase:/testImg.com",
-            price = 10
+            price = 10,
+            category = category // добавляем категорию
         )
+
         orderDto = OrderDto(
             mutableListOf(ItemDto(productId, 3))
         )

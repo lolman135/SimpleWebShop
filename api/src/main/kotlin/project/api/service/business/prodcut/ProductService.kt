@@ -1,5 +1,6 @@
 package project.api.service.business.prodcut
 
+import project.api.dto.business.CategoryDto
 import project.api.dto.business.ProductDto
 import project.api.entity.Product
 import java.util.*
@@ -10,4 +11,5 @@ interface ProductService {
     fun findById(id: UUID): Product
     fun updateById(id: UUID, dto: ProductDto): Product
     fun deleteById(id: UUID): Boolean
+    fun findProductsByCategory(dto: CategoryDto): List<Product>
 }

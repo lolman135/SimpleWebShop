@@ -14,6 +14,7 @@ import project.api.entity.User
 import project.api.repository.product.ProductRepository
 import java.util.*
 import org.mockito.Mockito.`when`
+import project.api.entity.Category
 import project.api.mapper.business.feedback.FeedbackMapperImpl
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -33,10 +34,12 @@ class FeedbackMapperTest {
     private lateinit var feedbackDto: FeedbackDto
     private lateinit var productId: UUID
     private lateinit var userId: UUID
+    private lateinit var testCategory: Category
 
     @BeforeEach
     fun setUp() {
         userId = UUID.randomUUID()
+        testCategory = Category(UUID.randomUUID(), "Test category")
 
         testUser = User(
             id = userId,
@@ -52,7 +55,8 @@ class FeedbackMapperTest {
             name = "testName",
             description = "TestDesc",
             imageUrl = "https://imgBase:/testImg.com",
-            price = 15
+            price = 15,
+            category = testCategory // <--- добавляем
         )
 
         feedbackDto = FeedbackDto(
