@@ -9,7 +9,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.RoleDto
+import project.api.dto.request.business.RoleDtoRequest
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.role.RoleMapper
@@ -31,24 +31,24 @@ class RoleServiceTest {
     private lateinit var roleService: RoleServiceImpl
 
     private lateinit var roleId: UUID
-    private lateinit var roleDto: RoleDto
+    private lateinit var roleDtoRequest: RoleDtoRequest
     private lateinit var role: Role
 
     @BeforeEach
     fun setUp() {
         roleId = UUID.randomUUID()
-        roleDto = RoleDto(name = "TEST_ROLE")
+        roleDtoRequest = RoleDtoRequest(name = "TEST_ROLE")
         role = Role(id = roleId, name = "TEST_ROLE")
     }
 
     @Test
     fun saveShouldMapDtoToRoleAndSaveEntity() {
-        `when`(roleMapper.toRole(roleDto)).thenReturn(role)
+        `when`(roleMapper.toRole(roleDtoRequest)).thenReturn(role)
         `when`(roleRepository.save(role)).thenReturn(role)
 
-        val savedRole = roleService.save(roleDto)
+        val savedRole = roleService.save(roleDtoRequest)
         assertEquals(role, savedRole)
-        verify(roleMapper).toRole(roleDto)
+        verify(roleMapper).toRole(roleDtoRequest)
         verify(roleRepository).save(role)
     }
 
@@ -85,14 +85,14 @@ class RoleServiceTest {
     @Test
     fun updateByIdShouldUpdateRoleWhenExists() {
         `when`(roleRepository.existsById(roleId)).thenReturn(true)
-        `when`(roleMapper.toRole(roleDto)).thenReturn(role)
+        `when`(roleMapper.toRole(roleDtoRequest)).thenReturn(role)
         `when`(roleRepository.save(role)).thenReturn(role)
 
-        val result = roleService.updateById(roleId, roleDto)
+        val result = roleService.updateById(roleId, roleDtoRequest)
 
         Assertions.assertEquals(role, result)
         verify(roleRepository).existsById(roleId)
-        verify(roleMapper).toRole(roleDto)
+        verify(roleMapper).toRole(roleDtoRequest)
         verify(roleRepository).save(role)
     }
 
@@ -101,10 +101,10 @@ class RoleServiceTest {
         `when`(roleRepository.existsById(roleId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
-            roleService.updateById(roleId, roleDto)
+            roleService.updateById(roleId, roleDtoRequest)
         }
         verify(roleRepository).existsById(roleId)
-        verify(roleMapper, never()).toRole(roleDto)
+        verify(roleMapper, never()).toRole(roleDtoRequest)
         verify(roleRepository, never()).save(any(Role::class.java))
     }
 

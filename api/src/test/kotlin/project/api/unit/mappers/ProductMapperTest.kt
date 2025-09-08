@@ -8,7 +8,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.ProductDto
+import project.api.dto.request.business.ProductDtoRequest
 import project.api.mapper.business.product.ProductMapperImpl
 import project.api.repository.feedback.FeedbackRepository
 import kotlin.test.Test
@@ -30,14 +30,14 @@ class ProductMapperTest {
     @InjectMocks
     private lateinit var productMapper: ProductMapperImpl
 
-    private lateinit var productDto: ProductDto
+    private lateinit var productDtoRequest: ProductDtoRequest
     private lateinit var categoryId: UUID
     private lateinit var category: Category
 
     @BeforeEach
     fun setUp(){
         categoryId = UUID.randomUUID()
-        productDto = ProductDto(
+        productDtoRequest = ProductDtoRequest(
             name = "Test product",
             description = "Test description",
             price = 30,
@@ -50,7 +50,7 @@ class ProductMapperTest {
 
     @Test
     fun toProductShouldCreateProductWithCorrectData(){
-        val product = productMapper.toProduct(productDto)
+        val product = productMapper.toProduct(productDtoRequest)
 
         assertEquals("Test product", product.name)
         assertEquals("Test description", product.description)
@@ -61,7 +61,7 @@ class ProductMapperTest {
 
     @Test
     fun toProductShouldCreateProductWithoutFeedbacks(){
-        val product = productMapper.toProduct(productDto)
+        val product = productMapper.toProduct(productDtoRequest)
         assertTrue(product.feedbacks.isEmpty())
     }
 
@@ -69,7 +69,7 @@ class ProductMapperTest {
     fun toProductShouldFailsWithIllegalArgumentException(){
         `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
         val invalidFeedbackId = UUID.randomUUID()
-        val invalidProductDto = ProductDto(
+        val invalidProductDtoRequest = ProductDtoRequest(
             name = "Test product",
             description = "Test description",
             price = 30,
@@ -80,7 +80,7 @@ class ProductMapperTest {
         `when`(feedbackRepository.findById(invalidFeedbackId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
-            productMapper.toProduct(invalidProductDto)
+            productMapper.toProduct(invalidProductDtoRequest)
         }
         verify(feedbackRepository).findById(invalidFeedbackId)
     }
@@ -89,7 +89,7 @@ class ProductMapperTest {
     fun toProductShouldCreateProductWithCorrectCategory() {
         `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
 
-        val product = productMapper.toProduct(productDto)
+        val product = productMapper.toProduct(productDtoRequest)
 
         assertEquals(category, product.category)
         verify(categoryRepository).findById(categoryId)
@@ -100,7 +100,7 @@ class ProductMapperTest {
         `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.empty())
 
         assertFailsWith<IllegalArgumentException> {
-            productMapper.toProduct(productDto)
+            productMapper.toProduct(productDtoRequest)
         }
         verify(categoryRepository).findById(categoryId)
     }
@@ -109,7 +109,7 @@ class ProductMapperTest {
     fun toProductShouldCreateProductWithCategoryAndWithoutFeedbacks() {
         `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
 
-        val product = productMapper.toProduct(productDto)
+        val product = productMapper.toProduct(productDtoRequest)
 
         assertEquals(category, product.category)
         assertTrue(product.feedbacks.isEmpty())

@@ -2,8 +2,8 @@ package project.api.service.business.user
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import project.api.dto.auth.RegisterRequest
-import project.api.dto.business.UserDto
+import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.business.UserDtoRequest
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.exception.UserAlreadyExistsException
@@ -49,7 +49,7 @@ class UserServiceImpl(
         .orElseThrow { EntityNotFoundException("User with id=$id not found") }
 
     @Transactional
-    override fun updateById(id: UUID, dto: UserDto): User {
+    override fun updateById(id: UUID, dto: UserDtoRequest): User {
         if (!userRepository.existsById(id))
             throw EntityNotFoundException("User with id=$id not found")
 

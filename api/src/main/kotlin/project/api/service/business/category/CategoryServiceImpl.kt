@@ -1,7 +1,7 @@
 package project.api.service.business.category
 
 import org.springframework.stereotype.Service
-import project.api.dto.business.CategoryDto
+import project.api.dto.request.business.CategoryDtoRequest
 import project.api.entity.Category
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
@@ -20,7 +20,7 @@ class CategoryServiceImpl(
         return true
     }
 
-    override fun save(dto: CategoryDto): Category {
+    override fun save(dto: CategoryDtoRequest): Category {
         val category = categoryMapper.toCategory(dto)
         return categoryRepository.save(category)
     }
@@ -30,7 +30,7 @@ class CategoryServiceImpl(
     override fun findById(id: UUID): Category = categoryRepository.findById(id)
         .orElseThrow{ EntityNotFoundException("Entity with id=$id not found") }
 
-    override fun updateById(id: UUID, dto: CategoryDto): Category {
+    override fun updateById(id: UUID, dto: CategoryDtoRequest): Category {
         if (!categoryRepository.existsById(id))
             throw EntityNotFoundException("Category with id=$id not found")
         val category = categoryMapper.toCategory(dto)

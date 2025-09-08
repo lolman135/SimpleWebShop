@@ -1,11 +1,11 @@
-package project.api.dto.business
+package project.api.dto.request.business
 
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import java.util.*
 
-data class ProductDto(
+data class ProductDtoRequest(
     @field:Pattern(regexp = "^[a-zA-Z\\d\\s-_:]{2,50}$", message = "Invalid name!")
     val name: String,
 

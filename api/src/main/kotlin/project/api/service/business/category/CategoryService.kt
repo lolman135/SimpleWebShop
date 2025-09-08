@@ -1,13 +1,13 @@
 package project.api.service.business.category
 
-import project.api.dto.business.CategoryDto
+import project.api.dto.request.business.CategoryDtoRequest
 import project.api.entity.Category
 import java.util.*
 
 interface CategoryService {
-    fun save(dto: CategoryDto): Category
+    fun save(dto: CategoryDtoRequest): Category
     fun findAll(): List<Category>
     fun findById(id: UUID): Category
-    fun updateById(id: UUID, dto: CategoryDto): Category
+    fun updateById(id: UUID, dto: CategoryDtoRequest): Category
     fun deleteById(id: UUID): Boolean
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.business.CategoryDto
+import project.api.dto.request.business.CategoryDtoRequest
 import project.api.service.business.category.CategoryService
 import java.util.UUID
 
@@ -18,7 +18,7 @@ import java.util.UUID
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
-    fun addCategory(@RequestBody request: CategoryDto) = ResponseEntity.ok(categoryService.save(request))
+    fun addCategory(@RequestBody request: CategoryDtoRequest) = ResponseEntity.ok(categoryService.save(request))
 
     @GetMapping
     fun getAllCategories() = ResponseEntity.ok(categoryService.findAll())
@@ -27,7 +27,7 @@ class CategoryController(private val categoryService: CategoryService) {
     fun getCategoryById(@PathVariable id:UUID) = ResponseEntity.ok(categoryService.findById(id))
 
     @PutMapping("/{id}")
-    fun updateCategoryById(@PathVariable id:UUID, @RequestBody request: CategoryDto) =
+    fun updateCategoryById(@PathVariable id:UUID, @RequestBody request: CategoryDtoRequest) =
         ResponseEntity.ok(categoryService.updateById(id, request))
 
     @DeleteMapping("/{id}")

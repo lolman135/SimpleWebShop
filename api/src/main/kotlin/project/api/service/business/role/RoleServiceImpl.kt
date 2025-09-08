@@ -1,7 +1,7 @@
 package project.api.service.business.role
 
 import org.springframework.stereotype.Service
-import project.api.dto.business.RoleDto
+import project.api.dto.request.business.RoleDtoRequest
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.role.RoleMapper
@@ -22,7 +22,7 @@ class RoleServiceImpl(
         return true
     }
 
-    override fun save(dto: RoleDto): Role {
+    override fun save(dto: RoleDtoRequest): Role {
         val role = roleMapper.toRole(dto)
         return roleRepository.save(role)
     }
@@ -33,7 +33,7 @@ class RoleServiceImpl(
         EntityNotFoundException("Role with id=$id not found")
     }
 
-    override fun updateById(id: UUID, dto: RoleDto): Role {
+    override fun updateById(id: UUID, dto: RoleDtoRequest): Role {
         if (!roleRepository.existsById(id))
             throw EntityNotFoundException("Role with id=$id not found")
 

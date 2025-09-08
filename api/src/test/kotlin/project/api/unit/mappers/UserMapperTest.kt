@@ -7,7 +7,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.UserDto
+import project.api.dto.request.business.UserDtoRequest
 import project.api.entity.*
 import project.api.mapper.business.user.UserMapperImpl
 import project.api.repository.feedback.FeedbackRepository
@@ -32,7 +32,7 @@ class UserMapperTest {
     @InjectMocks
     private lateinit var userMapper: UserMapperImpl
 
-    private lateinit var userDto: UserDto
+    private lateinit var userDtoRequest: UserDtoRequest
     private lateinit var roleId: UUID
     private lateinit var orderId: UUID
     private lateinit var feedbackId: UUID
@@ -50,7 +50,7 @@ class UserMapperTest {
             name = "Test category"
         )
 
-        userDto = UserDto(
+        userDtoRequest = UserDtoRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com"
@@ -111,7 +111,7 @@ class UserMapperTest {
 
     @Test
     fun toRoleShouldReturnNewUserWithValidData(){
-        val user = userMapper.toUser(userDto)
+        val user = userMapper.toUser(userDtoRequest)
 
         assertEquals("test_username", user.username)
         assertEquals("testPassword123", user.password)
@@ -128,7 +128,7 @@ class UserMapperTest {
         `when`(feedbackRepository.findById(feedbackId)).thenReturn(Optional.of(testFeedback))
         `when`(roleRepository.findById(roleId)).thenReturn(Optional.of(testRole))
 
-        val existUserDto = UserDto(
+        val existUserDtoRequest = UserDtoRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com",
@@ -137,7 +137,7 @@ class UserMapperTest {
             roleIds = listOf(roleId)
         )
 
-        val user = userMapper.toUser(existUserDto)
+        val user = userMapper.toUser(existUserDtoRequest)
 
         assertEquals("test_username", user.username)
         assertEquals("testPassword123", user.password)
@@ -158,14 +158,14 @@ class UserMapperTest {
         val invalidOrderId = UUID.randomUUID()
         `when`(orderRepository.findById(invalidOrderId)).thenThrow(IllegalArgumentException("Wrong Id!"))
 
-        val invalidOrderIdsUserDto = UserDto(
+        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com",
             orderIds = listOf(invalidOrderId),
         )
         assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDto)
+            userMapper.toUser(invalidOrderIdsUserDtoRequest)
         }
         verify(orderRepository).findById(invalidOrderId)
     }
@@ -175,14 +175,14 @@ class UserMapperTest {
         val invalidRoleId = UUID.randomUUID()
         `when`(roleRepository.findById(invalidRoleId)).thenThrow(IllegalArgumentException("Wrong Id!"))
 
-        val invalidOrderIdsUserDto = UserDto(
+        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com",
             roleIds = listOf(invalidRoleId),
         )
         assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDto)
+            userMapper.toUser(invalidOrderIdsUserDtoRequest)
         }
         verify(roleRepository).findById(invalidRoleId)
     }
@@ -192,14 +192,14 @@ class UserMapperTest {
         val invalidFeedbackId = UUID.randomUUID()
         `when`(feedbackRepository.findById(invalidFeedbackId)).thenThrow(IllegalArgumentException("Wrong Id!"))
 
-        val invalidOrderIdsUserDto = UserDto(
+        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com",
             feedbackIds = listOf(invalidFeedbackId),
         )
         assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDto)
+            userMapper.toUser(invalidOrderIdsUserDtoRequest)
         }
         verify(feedbackRepository).findById(invalidFeedbackId)
     }

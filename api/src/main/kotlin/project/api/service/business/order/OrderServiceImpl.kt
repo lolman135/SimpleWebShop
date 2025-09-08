@@ -2,7 +2,7 @@ package project.api.service.business.order
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import project.api.dto.business.OrderDto
+import project.api.dto.request.business.OrderDtoRequest
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
@@ -24,7 +24,7 @@ class OrderServiceImpl (
     }
 
     @Transactional
-    override fun save(dto: OrderDto, user: User): Order {
+    override fun save(dto: OrderDtoRequest, user: User): Order {
         val order = orderMapper.toOrder(dto, user)
         return orderRepository.save(order)
     }
@@ -41,7 +41,7 @@ class OrderServiceImpl (
     }
 
     @Transactional
-    override fun updateById(id: UUID, dto: OrderDto, user: User): Order {
+    override fun updateById(id: UUID, dto: OrderDtoRequest, user: User): Order {
         if (!orderRepository.existsById(id))
             throw EntityNotFoundException("Order with id=$id not found")
         val updatedOrder = orderMapper.toOrder(dto, user)

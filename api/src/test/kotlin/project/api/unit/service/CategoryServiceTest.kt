@@ -8,7 +8,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.CategoryDto
+import project.api.dto.request.business.CategoryDtoRequest
 import project.api.entity.Category
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
@@ -30,27 +30,27 @@ class CategoryServiceTest {
     private lateinit var categoryService: CategoryServiceImpl
 
     private lateinit var categoryId: UUID
-    private lateinit var categoryDto: CategoryDto
+    private lateinit var categoryDtoRequest: CategoryDtoRequest
     private lateinit var category: Category
     private lateinit var categoryList: List<Category>
 
     @BeforeEach
     fun setUp() {
         categoryId = UUID.randomUUID()
-        categoryDto = CategoryDto(name = "Test Category")
+        categoryDtoRequest = CategoryDtoRequest(name = "Test Category")
         category = Category(id = categoryId, name = "Test Category")
         categoryList = listOf(category)
     }
 
     @Test
     fun saveShouldMapDtoAndSaveCategory() {
-        `when`(categoryMapper.toCategory(categoryDto)).thenReturn(category)
+        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(categoryRepository.save(category)).thenReturn(category)
 
-        val result = categoryService.save(categoryDto)
+        val result = categoryService.save(categoryDtoRequest)
 
         assertEquals(category, result)
-        verify(categoryMapper).toCategory(categoryDto)
+        verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(categoryRepository).save(category)
         verifyNoMoreInteractions(categoryMapper, categoryRepository)
     }
@@ -92,15 +92,15 @@ class CategoryServiceTest {
     @Test
     fun updateByIdShouldUpdateCategoryWhenExists() {
         `when`(categoryRepository.existsById(categoryId)).thenReturn(true)
-        `when`(categoryMapper.toCategory(categoryDto)).thenReturn(category)
+        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(categoryRepository.save(category)).thenReturn(category)
 
-        val result = categoryService.updateById(categoryId, categoryDto)
+        val result = categoryService.updateById(categoryId, categoryDtoRequest)
 
         assertEquals(category, result)
         assertEquals(categoryId, category.id)
         verify(categoryRepository).existsById(categoryId)
-        verify(categoryMapper).toCategory(categoryDto)
+        verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(categoryRepository).save(category)
         verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }
@@ -110,11 +110,11 @@ class CategoryServiceTest {
         `when`(categoryRepository.existsById(categoryId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
-            categoryService.updateById(categoryId, categoryDto)
+            categoryService.updateById(categoryId, categoryDtoRequest)
         }
 
         verify(categoryRepository).existsById(categoryId)
-        verify(categoryMapper, never()).toCategory(categoryDto)
+        verify(categoryMapper, never()).toCategory(categoryDtoRequest)
         verify(categoryRepository, never()).save(category)
         verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }

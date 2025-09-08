@@ -8,8 +8,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.ItemDto
-import project.api.dto.business.OrderDto
+import project.api.dto.request.business.ItemDto
+import project.api.dto.request.business.OrderDtoRequest
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
@@ -35,7 +35,7 @@ class OrderServiceTest {
     private lateinit var orderId: UUID
     private lateinit var productId: UUID
     private lateinit var userId: UUID
-    private lateinit var orderDto: OrderDto
+    private lateinit var orderDto: OrderDtoRequest
     private lateinit var user: User
     private lateinit var order: Order
 
@@ -52,7 +52,7 @@ class OrderServiceTest {
             email = "john@example.com",
             password = "securePass123",
         )
-        orderDto = OrderDto(
+        orderDto = OrderDtoRequest(
             mutableListOf(ItemDto(productId, 3))
         )
         order = Order(

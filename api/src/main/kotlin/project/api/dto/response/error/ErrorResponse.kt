@@ -1,4 +1,4 @@
-package project.api.dto.response
+package project.api.dto.response.error
 
 import java.time.LocalDateTime
 

@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.business.RoleDto
-import project.api.entity.Role
+import project.api.dto.request.business.RoleDtoRequest
 import project.api.service.business.role.RoleService
 import java.util.UUID
 
@@ -20,7 +19,7 @@ import java.util.UUID
 class RoleController(private val roleService: RoleService) {
 
     @PostMapping
-    fun addRole(@RequestBody @Valid request: RoleDto) = ResponseEntity.ok(roleService.save(request))
+    fun addRole(@RequestBody @Valid request: RoleDtoRequest) = ResponseEntity.ok(roleService.save(request))
 
     @GetMapping("/{id}")
     fun getRoleById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.findById(id))
@@ -29,7 +28,7 @@ class RoleController(private val roleService: RoleService) {
     fun getAllRoles() = ResponseEntity.ok(roleService.findAll())
 
     @PutMapping("/{id}")
-    fun updateRoleById(@PathVariable id: UUID, @RequestBody @Valid request: RoleDto) =
+    fun updateRoleById(@PathVariable id: UUID, @RequestBody @Valid request: RoleDtoRequest) =
         ResponseEntity.ok(roleService.updateById(id, request))
 
     @DeleteMapping("/{id}")

@@ -10,8 +10,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.auth.RegisterRequest
-import project.api.dto.business.UserDto
+import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.business.UserDtoRequest
 import project.api.entity.Role
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
@@ -37,7 +37,7 @@ class UserServiceTest {
     private lateinit var userService: UserServiceImpl
 
     private lateinit var userId: UUID
-    private lateinit var userDto: UserDto
+    private lateinit var userDtoRequest: UserDtoRequest
     private lateinit var user: User
     private lateinit var request: RegisterRequest
     private lateinit var defaultRole: Role
@@ -46,7 +46,7 @@ class UserServiceTest {
     fun setUp() {
         userId = UUID.randomUUID()
         defaultRole = Role(UUID.randomUUID(), "ROLE_USER")
-        userDto = UserDto(
+        userDtoRequest = UserDtoRequest(
             username = "JohnDoe",
             email = "john@example.com",
             password = "securePass123",
@@ -161,14 +161,14 @@ class UserServiceTest {
     @Test
     fun updateByIdShouldUpdateUserWhenExists() {
         `when`(userRepository.existsById(userId)).thenReturn(true)
-        `when`(userMapper.toUser(userDto)).thenReturn(user)
+        `when`(userMapper.toUser(userDtoRequest)).thenReturn(user)
         `when`(userRepository.save(user)).thenReturn(user)
 
-        val result = userService.updateById(userId, userDto)
+        val result = userService.updateById(userId, userDtoRequest)
 
         assertEquals(user, result)
         verify(userRepository).existsById(userId)
-        verify(userMapper).toUser(userDto)
+        verify(userMapper).toUser(userDtoRequest)
         verify(userRepository).save(user)
     }
 
@@ -177,10 +177,10 @@ class UserServiceTest {
         `when`(userRepository.existsById(userId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
-            userService.updateById(userId, userDto)
+            userService.updateById(userId, userDtoRequest)
         }
         verify(userRepository).existsById(userId)
-        verify(userMapper, never()).toUser(userDto)
+        verify(userMapper, never()).toUser(userDtoRequest)
         verify(userRepository, never()).save(any(User::class.java))
     }
 

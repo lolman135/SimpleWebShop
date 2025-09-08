@@ -7,8 +7,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.ItemDto
-import project.api.dto.business.OrderDto
+import project.api.dto.request.business.ItemDto
+import project.api.dto.request.business.OrderDtoRequest
 import project.api.entity.Category
 import project.api.entity.Product
 import project.api.entity.User
@@ -30,7 +30,7 @@ class OrderMapperTest {
 
     private lateinit var testUser: User
     private lateinit var testProduct: Product
-    private lateinit var orderDto: OrderDto
+    private lateinit var orderDto: OrderDtoRequest
     private lateinit var productId: UUID
     private lateinit var category: Category
 
@@ -58,7 +58,7 @@ class OrderMapperTest {
             category = category // добавляем категорию
         )
 
-        orderDto = OrderDto(
+        orderDto = OrderDtoRequest(
             mutableListOf(ItemDto(productId, 3))
         )
     }
@@ -88,7 +88,7 @@ class OrderMapperTest {
 
     @Test
     fun toOrderShouldFailsByProvidingEmptyList(){
-        val invalidOrderDto = OrderDto()
+        val invalidOrderDto = OrderDtoRequest()
 
         assertFailsWith<IllegalArgumentException> {
             orderMapper.toOrder(invalidOrderDto, testUser)

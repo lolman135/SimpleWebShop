@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import project.api.dto.business.CategoryDto
+import project.api.dto.request.business.CategoryDtoRequest
 import project.api.entity.Category
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.category.CategoryMapperImpl
@@ -23,7 +23,7 @@ class CategoryMapperTest {
 
     @Test
     fun toCategoryShouldMapNameCorrectly() {
-        val dto = CategoryDto(name = "Test Category")
+        val dto = CategoryDtoRequest(name = "Test Category")
         val category: Category = categoryMapper.toCategory(dto)
 
         assertEquals("Test Category", category.name)
@@ -32,8 +32,8 @@ class CategoryMapperTest {
 
     @Test
     fun toCategoryShouldCreateDistinctInstances() {
-        val dto1 = CategoryDto(name = "Category One")
-        val dto2 = CategoryDto(name = "Category Two")
+        val dto1 = CategoryDtoRequest(name = "Category One")
+        val dto2 = CategoryDtoRequest(name = "Category Two")
 
         val cat1 = categoryMapper.toCategory(dto1)
         val cat2 = categoryMapper.toCategory(dto2)
@@ -45,7 +45,7 @@ class CategoryMapperTest {
 
     @Test
     fun toCategoryShouldHandleNamesWithSpecialCharacters() {
-        val dto = CategoryDto(name = "Category-Name_123")
+        val dto = CategoryDtoRequest(name = "Category-Name_123")
         val category = categoryMapper.toCategory(dto)
 
         assertEquals("Category-Name_123", category.name)

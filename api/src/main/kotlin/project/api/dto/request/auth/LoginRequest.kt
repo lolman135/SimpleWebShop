@@ -1,4 +1,4 @@
-package project.api.dto.auth
+package project.api.dto.request.auth
 
 import jakarta.validation.constraints.Pattern
 

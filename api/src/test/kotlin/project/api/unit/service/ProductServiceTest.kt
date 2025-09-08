@@ -8,8 +8,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.CategoryDto
-import project.api.dto.business.ProductDto
+import project.api.dto.request.business.CategoryDtoRequest
+import project.api.dto.request.business.ProductDtoRequest
 import project.api.entity.Category
 import project.api.entity.Product
 import project.api.exception.EntityNotFoundException
@@ -37,9 +37,9 @@ class ProductServiceTest {
     private lateinit var productId: UUID
     private lateinit var categoryId: UUID
     private lateinit var category: Category
-    private lateinit var productDto: ProductDto
+    private lateinit var productDtoRequest: ProductDtoRequest
     private lateinit var product: Product
-    private lateinit var categoryDto: CategoryDto
+    private lateinit var categoryDtoRequest: CategoryDtoRequest
     private lateinit var productList: List<Product>
 
 
@@ -47,12 +47,12 @@ class ProductServiceTest {
     fun setUp() {
         productId = UUID.randomUUID()
         categoryId = UUID.randomUUID()
-        categoryDto = CategoryDto(name = "Test category")
+        categoryDtoRequest = CategoryDtoRequest(name = "Test category")
         category = Category(
             id = categoryId,
             name = "Test category",
         )
-        productDto = ProductDto(
+        productDtoRequest = ProductDtoRequest(
             name = "Test name",
             description = "Test description",
             price = 10,
@@ -67,19 +67,19 @@ class ProductServiceTest {
             imageUrl = "https://imgBase:/testImg.com",
             category = category
         )
-        categoryDto = CategoryDto(name = "Test category")
+        categoryDtoRequest = CategoryDtoRequest(name = "Test category")
         productList = listOf(product)
     }
 
     @Test
     fun saveShouldMapToDtoAndSaveEntity() {
-        `when`(productMapper.toProduct(productDto)).thenReturn(product)
+        `when`(productMapper.toProduct(productDtoRequest)).thenReturn(product)
         `when`(productRepository.save(product)).thenReturn(product)
 
-        val savedProduct = productService.save(productDto)
+        val savedProduct = productService.save(productDtoRequest)
 
         assertEquals(product, savedProduct)
-        verify(productMapper).toProduct(productDto)
+        verify(productMapper).toProduct(productDtoRequest)
         verify(productRepository).save(product)
         verifyNoMoreInteractions(productMapper, productRepository)
     }
@@ -122,14 +122,14 @@ class ProductServiceTest {
     @Test
     fun updateByIdShouldUpdateProductWhenExists() {
         `when`(productRepository.existsById(productId)).thenReturn(true)
-        `when`(productMapper.toProduct(productDto)).thenReturn(product)
+        `when`(productMapper.toProduct(productDtoRequest)).thenReturn(product)
         `when`(productRepository.save(product)).thenReturn(product)
 
-        val result = productService.updateById(productId, productDto)
+        val result = productService.updateById(productId, productDtoRequest)
 
         assertEquals(product, result)
         verify(productRepository).existsById(productId)
-        verify(productMapper).toProduct(productDto)
+        verify(productMapper).toProduct(productDtoRequest)
         verify(productRepository).save(product)
         verifyNoMoreInteractions(productRepository, productMapper)
     }
@@ -139,11 +139,11 @@ class ProductServiceTest {
         `when`(productRepository.existsById(productId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
-            productService.updateById(productId, productDto)
+            productService.updateById(productId, productDtoRequest)
         }
 
         verify(productRepository).existsById(productId)
-        verify(productMapper, never()).toProduct(productDto)
+        verify(productMapper, never()).toProduct(productDtoRequest)
         verify(productRepository, never()).save(product)
         verifyNoMoreInteractions(productRepository, productMapper)
     }
@@ -176,26 +176,26 @@ class ProductServiceTest {
 
     @Test
     fun findProductsByCategoryShouldReturnListOfProducts() {
-        `when`(categoryMapper.toCategory(categoryDto)).thenReturn(category)
+        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(productRepository.findProductsByCategory(category)).thenReturn(productList)
 
-        val result = productService.findProductsByCategory(categoryDto)
+        val result = productService.findProductsByCategory(categoryDtoRequest)
 
         assertEquals(productList, result)
-        verify(categoryMapper).toCategory(categoryDto)
+        verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(productRepository).findProductsByCategory(category)
         verifyNoMoreInteractions(categoryMapper, productRepository)
     }
 
     @Test
     fun findProductsByCategoryShouldReturnEmptyListWhenNoProducts() {
-        `when`(categoryMapper.toCategory(categoryDto)).thenReturn(category)
+        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(productRepository.findProductsByCategory(category)).thenReturn(emptyList())
 
-        val result = productService.findProductsByCategory(categoryDto)
+        val result = productService.findProductsByCategory(categoryDtoRequest)
 
         assertTrue(result.isEmpty())
-        verify(categoryMapper).toCategory(categoryDto)
+        verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(productRepository).findProductsByCategory(category)
         verifyNoMoreInteractions(categoryMapper, productRepository)
     }

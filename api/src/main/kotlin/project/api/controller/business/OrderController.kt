@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.business.OrderDto
+import project.api.dto.request.business.OrderDtoRequest
 import project.api.entity.Order
 import project.api.security.CustomUserDetails
 import project.api.service.business.order.OrderService
@@ -22,7 +22,7 @@ class OrderController(private val orderService: OrderService, ) {
 
     @PostMapping
     fun createOrder(
-        @RequestBody request: OrderDto,
+        @RequestBody request: OrderDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<Order> {
         val order = orderService.save(request, userDetails.user)
@@ -38,7 +38,7 @@ class OrderController(private val orderService: OrderService, ) {
     @PutMapping("/{id}")
     fun updateOrderById(
         @PathVariable id: UUID,
-        @RequestBody request: OrderDto,
+        @RequestBody request: OrderDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<Order> {
         val order = orderService.updateById(id, request, userDetails.user)

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.business.FeedbackDto
+import project.api.dto.request.business.FeedbackDtoRequest
 import project.api.entity.Feedback
 import project.api.security.CustomUserDetails
 import project.api.service.business.feedback.FeedbackService
@@ -22,7 +22,7 @@ class FeedbackController(private val feedbackService: FeedbackService) {
 
     @PostMapping
     fun leaveFeedback(
-        @RequestBody request: FeedbackDto,
+        @RequestBody request: FeedbackDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ): ResponseEntity<Feedback> {
         val feedback = feedbackService.save(request, userDetails.user)
@@ -38,7 +38,7 @@ class FeedbackController(private val feedbackService: FeedbackService) {
     @PutMapping("/{id}")
     fun updateFeedbackById(
         @PathVariable id: UUID,
-        @RequestBody request: FeedbackDto,
+        @RequestBody request: FeedbackDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<Feedback> {
         val feedback = feedbackService.updateById(id, request, userDetails.user)

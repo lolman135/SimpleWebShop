@@ -8,7 +8,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.FeedbackDto
+import project.api.dto.request.business.FeedbackDtoRequest
 import project.api.entity.Product
 import project.api.entity.User
 import project.api.repository.product.ProductRepository
@@ -31,7 +31,7 @@ class FeedbackMapperTest {
 
     private lateinit var testUser: User
     private lateinit var testProduct: Product
-    private lateinit var feedbackDto: FeedbackDto
+    private lateinit var feedbackDtoRequest: FeedbackDtoRequest
     private lateinit var productId: UUID
     private lateinit var userId: UUID
     private lateinit var testCategory: Category
@@ -56,10 +56,10 @@ class FeedbackMapperTest {
             description = "TestDesc",
             imageUrl = "https://imgBase:/testImg.com",
             price = 15,
-            category = testCategory // <--- добавляем
+            category = testCategory
         )
 
-        feedbackDto = FeedbackDto(
+        feedbackDtoRequest = FeedbackDtoRequest(
             rate = 4,
             productId = productId,
             review = "test review"
@@ -70,7 +70,7 @@ class FeedbackMapperTest {
     fun toFeedbackShouldReturnCorrectData(){
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
-        val feedback = feedbackMapper.toFeedback(feedbackDto, testUser)
+        val feedback = feedbackMapper.toFeedback(feedbackDtoRequest, testUser)
 
         assertEquals(testProduct, feedback.product)
         assertEquals(4, feedback.rate)
@@ -84,21 +84,21 @@ class FeedbackMapperTest {
         `when`(productRepository.findById(productId)).thenThrow(IllegalArgumentException("Wrong id provided"))
 
         assertFailsWith<IllegalArgumentException> {
-            val feedback = feedbackMapper.toFeedback(feedbackDto, testUser)
+            val feedback = feedbackMapper.toFeedback(feedbackDtoRequest, testUser)
         }
         verify(productRepository).findById(productId)
     }
 
     @Test
     fun toFeedbackReviewShouldBeNull(){
-        val feedbackDtoWithoutReview = FeedbackDto(
+        val feedbackDtoRequestWithoutReview = FeedbackDtoRequest(
             rate = 4,
             productId = productId
         )
 
         `when`(productRepository.findById(productId)).thenReturn(Optional.of(testProduct))
 
-        val feedback = feedbackMapper.toFeedback(feedbackDtoWithoutReview, testUser)
+        val feedback = feedbackMapper.toFeedback(feedbackDtoRequestWithoutReview, testUser)
 
         assertNull(feedback.review)
         verify(productRepository).findById(productId)

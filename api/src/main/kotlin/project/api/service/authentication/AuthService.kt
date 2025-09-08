@@ -1,7 +1,7 @@
 package project.api.service.authentication
 
-import project.api.dto.auth.LoginRequest
-import project.api.dto.auth.RegisterRequest
+import project.api.dto.request.auth.LoginRequest
+import project.api.dto.request.auth.RegisterRequest
 
 interface AuthService {
     fun login(request: LoginRequest): String

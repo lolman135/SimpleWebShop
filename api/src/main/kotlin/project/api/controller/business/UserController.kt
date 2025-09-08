@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.business.UserDto
+import project.api.dto.request.business.UserDtoRequest
 import project.api.service.business.user.UserService
 import java.util.UUID
 
@@ -26,7 +26,7 @@ class UserController(private val userService: UserService) {
     fun getUserByName(@RequestParam username: String) = ResponseEntity.ok(userService.findByUsername(username))
 
     @PutMapping("/{id}")
-    fun updateUserById(@PathVariable id: UUID, @RequestParam request: UserDto) =
+    fun updateUserById(@PathVariable id: UUID, @RequestParam request: UserDtoRequest) =
         ResponseEntity.ok(userService.updateById(id, request))
 
     @DeleteMapping("/{id}")

@@ -1,14 +1,14 @@
 package project.api.service.business.role
 
-import project.api.dto.business.RoleDto
+import project.api.dto.request.business.RoleDtoRequest
 import project.api.entity.Role
 import java.util.*
 
 interface RoleService {
-    fun save(dto: RoleDto): Role
+    fun save(dto: RoleDtoRequest): Role
     fun findAll(): List<Role>
     fun findById(id: UUID): Role
-    fun updateById(id: UUID, dto: RoleDto): Role
+    fun updateById(id: UUID, dto: RoleDtoRequest): Role
     fun deleteById(id: UUID): Boolean
     fun getDefaultRole(): Role
 }

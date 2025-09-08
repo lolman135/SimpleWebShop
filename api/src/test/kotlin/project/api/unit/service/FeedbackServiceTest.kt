@@ -9,7 +9,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.business.FeedbackDto
+import project.api.dto.request.business.FeedbackDtoRequest
 import project.api.entity.*
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.feedback.FeedbackMapper
@@ -33,7 +33,7 @@ class FeedbackServiceTest {
     private lateinit var userId: UUID
     private lateinit var productId: UUID
     private lateinit var categoryId: UUID
-    private lateinit var feedbackDto: FeedbackDto
+    private lateinit var feedbackDtoRequest: FeedbackDtoRequest
     private lateinit var user: User
     private lateinit var category: Category
     private lateinit var product: Product
@@ -51,7 +51,7 @@ class FeedbackServiceTest {
             name = "Test category",
         )
 
-        feedbackDto = FeedbackDto(
+        feedbackDtoRequest = FeedbackDtoRequest(
             productId = productId,
             rate = 5,
             review = "Test review"
@@ -84,14 +84,14 @@ class FeedbackServiceTest {
 
     @Test
     fun saveShouldMapDtoToFeedbackAndSaveEntity(){
-        `when`(feedbackMapper.toFeedback(feedbackDto, user)).thenReturn(feedback)
+        `when`(feedbackMapper.toFeedback(feedbackDtoRequest, user)).thenReturn(feedback)
         `when`(feedbackRepository.save(feedback)).thenReturn(feedback)
 
-        val result = feedbackService.save(feedbackDto, user)
+        val result = feedbackService.save(feedbackDtoRequest, user)
 
         assertEquals(feedback, result)
         verify(feedbackRepository).save(feedback)
-        verify(feedbackMapper).toFeedback(feedbackDto, user)
+        verify(feedbackMapper).toFeedback(feedbackDtoRequest, user)
     }
 
     @Test
@@ -129,14 +129,14 @@ class FeedbackServiceTest {
     @Test
     fun updateByIdShouldUpdateFeedbackWhenExists() {
         `when`(feedbackRepository.existsById(feedbackId)).thenReturn(true)
-        `when`(feedbackMapper.toFeedback(feedbackDto, user)).thenReturn(feedback)
+        `when`(feedbackMapper.toFeedback(feedbackDtoRequest, user)).thenReturn(feedback)
         `when`(feedbackRepository.save(feedback)).thenReturn(feedback)
 
-        val result = feedbackService.updateById(feedbackId, feedbackDto, user)
+        val result = feedbackService.updateById(feedbackId, feedbackDtoRequest, user)
 
         assertEquals(feedback, result)
         verify(feedbackRepository).existsById(feedbackId)
-        verify(feedbackMapper).toFeedback(feedbackDto, user)
+        verify(feedbackMapper).toFeedback(feedbackDtoRequest, user)
         verify(feedbackRepository).save(feedback)
     }
 
@@ -145,11 +145,11 @@ class FeedbackServiceTest {
         `when`(feedbackRepository.existsById(feedbackId)).thenReturn(false)
 
         assertThrows<EntityNotFoundException> {
-            feedbackService.updateById(feedbackId, feedbackDto, user)
+            feedbackService.updateById(feedbackId, feedbackDtoRequest, user)
         }
 
         verify(feedbackRepository).existsById(feedbackId)
-        verify(feedbackMapper, never()).toFeedback(feedbackDto, user)
+        verify(feedbackMapper, never()).toFeedback(feedbackDtoRequest, user)
         verify(feedbackRepository, never()).save(feedback)
     }
 

@@ -1,10 +1,10 @@
-package project.api.dto.business
+package project.api.dto.request.business
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 import java.util.*
 
-data class UserDto(
+data class UserDtoRequest(
 
     @field:Pattern(regexp = "^[a-zA-Z-_\\d]{3,40}\$", message = "Invalid username")
     val username: String,

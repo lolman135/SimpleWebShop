@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-import project.api.dto.business.RoleDto
+import project.api.dto.request.business.RoleDtoRequest
 import project.api.mapper.business.role.RoleMapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,23 +14,23 @@ import kotlin.test.assertFailsWith
 @SpringBootTest
 class RoleMapperTest {
 
-    private lateinit var roleDto: RoleDto
+    private lateinit var roleDtoRequest: RoleDtoRequest
 
     @Autowired
     private lateinit var roleMapper: RoleMapper
 
     @BeforeEach
     fun setUp(){
-        roleDto = RoleDto(
+        roleDtoRequest = RoleDtoRequest(
             name = "USER"
         )
     }
 
     @Test
     fun toRoleShouldReturnCorrectRoleName(){
-        var role = roleMapper.toRole(roleDto)
+        var role = roleMapper.toRole(roleDtoRequest)
 
-        assertEquals("USER", roleDto.name)
+        assertEquals("USER", roleDtoRequest.name)
     }
 
     @Test

@@ -1,4 +1,4 @@
-package project.api.dto.business
+package project.api.dto.request.business
 
 import jakarta.validation.constraints.Min
 import java.util.*

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import project.api.dto.response.ErrorResponse
+import project.api.dto.response.error.ErrorResponse
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -52,6 +52,16 @@ class GlobalExceptionHandler {
             message = ex.message
         )
         return ResponseEntity(response, HttpStatus.UNAUTHORIZED)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorResponse>{
+        val response = ErrorResponse(
+            status = HttpStatus.NOT_FOUND.value(),
+            error = "Not found",
+            message = ex.message
+        )
+        return ResponseEntity(response, HttpStatus.NOT_FOUND)
     }
 
     @ExceptionHandler(Exception::class)
