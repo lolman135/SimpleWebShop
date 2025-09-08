@@ -1,5 +1,6 @@
 package project.api.security
 
+import jakarta.transaction.Transactional
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -11,6 +12,7 @@ class CustomUserDetailService(
     private val userRepository: UserRepository
 ) : UserDetailsService {
 
+    @Transactional
     override fun loadUserByUsername(username: String?): UserDetails {
         if (username == null) throw UsernameNotFoundException("Invalid name provided")
 

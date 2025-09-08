@@ -1,5 +1,6 @@
 package project.api.service.business.user
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.auth.RegisterRequest
 import project.api.dto.business.UserDto
@@ -27,6 +28,7 @@ class UserServiceImpl(
         return true
     }
 
+    @Transactional
     override fun save(request: RegisterRequest): User {
         if (userRepository.existsUserByUsername(request.username))
             throw UserAlreadyExistsException("User with username ${request.username} already exists")
@@ -39,11 +41,14 @@ class UserServiceImpl(
         return userRepository.save(user)
     }
 
+    @Transactional
     override fun findAll(): List<User> = userRepository.findAll()
 
+    @Transactional
     override fun findById(id: UUID): User = userRepository.findById(id)
         .orElseThrow { EntityNotFoundException("User with id=$id not found") }
 
+    @Transactional
     override fun updateById(id: UUID, dto: UserDto): User {
         if (!userRepository.existsById(id))
             throw EntityNotFoundException("User with id=$id not found")
@@ -53,6 +58,7 @@ class UserServiceImpl(
         return userRepository.save(user)
     }
 
+    @Transactional
     override fun findByUsername(username: String): User = userRepository.findUserByUsername(username)
         .orElseThrow { EntityNotFoundException("User with username=$username not found") }
 }

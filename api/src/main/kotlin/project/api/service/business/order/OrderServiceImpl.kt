@@ -1,5 +1,6 @@
 package project.api.service.business.order
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.business.OrderDto
 import project.api.entity.Order
@@ -22,19 +23,24 @@ class OrderServiceImpl (
         return true
     }
 
+    @Transactional
     override fun save(dto: OrderDto, user: User): Order {
         val order = orderMapper.toOrder(dto, user)
         return orderRepository.save(order)
     }
 
+    @Transactional
     override fun findAll() = orderRepository.findAll()
 
+    @Transactional
     override fun findAllForUser(user: User) = user.orders.toList()
 
+    @Transactional
     override fun findById(id: UUID) = orderRepository.findById(id).orElseThrow {
         EntityNotFoundException("Order with id=$id not found")
     }
 
+    @Transactional
     override fun updateById(id: UUID, dto: OrderDto, user: User): Order {
         if (!orderRepository.existsById(id))
             throw EntityNotFoundException("Order with id=$id not found")

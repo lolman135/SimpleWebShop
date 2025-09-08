@@ -11,20 +11,25 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
-class SecurityConfig {
+class SecurityConfig(
+    private val jwtAuthFilter: JwtAuthFilter,
+    private val userDetailService: CustomUserDetailService
+){
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain{
 
         http {
-            csrf {
-                disable()
-            }
+            csrf { disable() }
             authorizeHttpRequests {
-                authorize(anyRequest, permitAll)
+                authorize("/api/v1/auth/*", permitAll)
+                authorize(anyRequest, authenticated)
             }
-            formLogin {  }
-            httpBasic {  }
+            sessionManagement {
+                sessionCreationPolicy = org.springframework.security.config.http.SessionCreationPolicy.STATELESS
+            }
+            addFilterBefore<org.springframework.security.web
+                .authentication.UsernamePasswordAuthenticationFilter>(jwtAuthFilter)
         }
 
         return http.build()

@@ -1,4 +1,4 @@
-package project.api.controller
+package project.api.controller.ping
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

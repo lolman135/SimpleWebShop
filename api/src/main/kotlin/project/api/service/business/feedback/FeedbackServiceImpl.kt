@@ -1,5 +1,6 @@
 package project.api.service.business.feedback
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.business.FeedbackDto
 import project.api.entity.Feedback
@@ -22,19 +23,24 @@ class FeedbackServiceImpl(
         return true
     }
 
+    @Transactional
     override fun save(dto: FeedbackDto, user: User): Feedback {
         val feedback = feedbackMapper.toFeedback(dto, user)
         return feedbackRepository.save(feedback)
     }
 
+    @Transactional
     override fun findAll() = feedbackRepository.findAll()
 
+    @Transactional
     override fun findAllForUser(user: User) = user.feedbacks.toList()
 
+    @Transactional
     override fun findById(id: UUID) = feedbackRepository.findById(id).orElseThrow {
         EntityNotFoundException("Feedback with id=$id not found")
     }
 
+    @Transactional
     override fun updateById(id: UUID, feedbackDto: FeedbackDto, user: User): Feedback {
         if (!feedbackRepository.existsById(id))
             throw EntityNotFoundException("Feedback with id=$id not found")

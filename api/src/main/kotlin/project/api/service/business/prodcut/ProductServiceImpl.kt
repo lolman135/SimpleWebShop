@@ -1,5 +1,6 @@
 package project.api.service.business.prodcut
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.business.CategoryDto
 import project.api.dto.business.ProductDto
@@ -20,22 +21,25 @@ class ProductServiceImpl(
     override fun deleteById(id: UUID): Boolean {
         if (!productRepository.existsById(id))
             throw EntityNotFoundException("Product with id=$id not found")
-
         productRepository.deleteById(id)
         return true
     }
 
+    @Transactional
     override fun save(dto: ProductDto): Product {
         val product = productMapper.toProduct(dto)
         return productRepository.save(product)
     }
 
+    @Transactional
     override fun findAll(): List<Product> = productRepository.findAll()
 
+    @Transactional
     override fun findById(id: UUID): Product = productRepository.findById(id).orElseThrow{
         EntityNotFoundException("Product with id=$id not found")
     }
 
+    @Transactional
     override fun updateById(id: UUID, dto: ProductDto): Product {
         if (!productRepository.existsById(id))
             throw EntityNotFoundException("Product with id=$id not found")
@@ -45,6 +49,7 @@ class ProductServiceImpl(
         return productRepository.save(product)
     }
 
+    @Transactional
     override fun findProductsByCategory(dto: CategoryDto): List<Product> {
         val category = categoryMapper.toCategory(dto)
         return productRepository.findProductsByCategory(category)
