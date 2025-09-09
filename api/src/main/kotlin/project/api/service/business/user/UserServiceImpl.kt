@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.request.auth.RegisterRequest
 import project.api.dto.request.business.UserDtoRequest
+import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.exception.UserAlreadyExistsException
@@ -42,23 +43,30 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun findAll(): List<User> = userRepository.findAll()
+    override fun findAll(): List<UserDtoResponse> = userRepository.findAll().map { userMapper.toDto(it) }
 
     @Transactional
-    override fun findById(id: UUID): User = userRepository.findById(id)
-        .orElseThrow { EntityNotFoundException("User with id=$id not found") }
+    override fun findById(id: UUID): UserDtoResponse {
+        val user = userRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("User with id=$id not found") }
+        return userMapper.toDto(user)
+    }
 
     @Transactional
-    override fun updateById(id: UUID, dto: UserDtoRequest): User {
+    override fun updateById(id: UUID, dto: UserDtoRequest): UserDtoResponse {
         if (!userRepository.existsById(id))
             throw EntityNotFoundException("User with id=$id not found")
 
         val user = userMapper.toUser(dto)
         user.id = id
-        return userRepository.save(user)
+        val updatedUser = userRepository.save(user)
+        return userMapper.toDto(updatedUser)
     }
 
     @Transactional
-    override fun findByUsername(username: String): User = userRepository.findUserByUsername(username)
-        .orElseThrow { EntityNotFoundException("User with username=$username not found") }
+    override fun findByUsername(username: String): UserDtoResponse{
+        val user = userRepository.findUserByUsername(username)
+            .orElseThrow { EntityNotFoundException("User with username=$username not found") }
+        return userMapper.toDto(user)
+    }
 }

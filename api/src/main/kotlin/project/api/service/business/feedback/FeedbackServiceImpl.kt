@@ -3,7 +3,7 @@ package project.api.service.business.feedback
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.FeedbackDtoRequest
-import project.api.entity.Feedback
+import project.api.dto.response.business.FeedbackDtoResponse
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.feedback.FeedbackMapper
@@ -24,28 +24,32 @@ class FeedbackServiceImpl(
     }
 
     @Transactional
-    override fun save(dto: FeedbackDtoRequest, user: User): Feedback {
+    override fun save(dto: FeedbackDtoRequest, user: User): FeedbackDtoResponse {
         val feedback = feedbackMapper.toFeedback(dto, user)
-        return feedbackRepository.save(feedback)
+        val savedFeedback = feedbackRepository.save(feedback)
+        return feedbackMapper.toDto(savedFeedback)
     }
 
     @Transactional
-    override fun findAll() = feedbackRepository.findAll()
+    override fun findAll() = feedbackRepository.findAll().map{feedbackMapper.toDto(it)}
 
     @Transactional
-    override fun findAllForUser(user: User) = user.feedbacks.toList()
+    override fun findAllForUser(user: User) = user.feedbacks.map { feedbackMapper.toDto(it) }.toList()
 
     @Transactional
-    override fun findById(id: UUID) = feedbackRepository.findById(id).orElseThrow {
-        EntityNotFoundException("Feedback with id=$id not found")
+    override fun findById(id: UUID): FeedbackDtoResponse {
+        val feedback = feedbackRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Feedback with id=$id not found") }
+        return feedbackMapper.toDto(feedback)
     }
 
     @Transactional
-    override fun updateById(id: UUID, feedbackDtoRequest: FeedbackDtoRequest, user: User): Feedback {
+    override fun updateById(id: UUID, feedbackDtoRequest: FeedbackDtoRequest, user: User): FeedbackDtoResponse {
         if (!feedbackRepository.existsById(id))
             throw EntityNotFoundException("Feedback with id=$id not found")
         val updateFeedback = feedbackMapper.toFeedback(feedbackDtoRequest, user)
         updateFeedback.id = id
-        return feedbackRepository.save(updateFeedback)
+        val updatedFeedback = feedbackRepository.save(updateFeedback)
+        return feedbackMapper.toDto(updatedFeedback)
     }
 }

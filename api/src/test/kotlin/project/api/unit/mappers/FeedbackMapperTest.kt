@@ -15,6 +15,7 @@ import project.api.repository.product.ProductRepository
 import java.util.*
 import org.mockito.Mockito.`when`
 import project.api.entity.Category
+import project.api.entity.Feedback
 import project.api.mapper.business.feedback.FeedbackMapperImpl
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -103,5 +104,50 @@ class FeedbackMapperTest {
         assertNull(feedback.review)
         verify(productRepository).findById(productId)
     }
+
+    @Test
+    fun toDtoShouldMapCorrectly() {
+        val feedbackId = UUID.randomUUID()
+        val feedback = Feedback(
+            id = feedbackId,
+            review = "Great product!",
+            rate = 5,
+            user = testUser,
+            product = testProduct
+        )
+
+        val dto = feedbackMapper.toDto(feedback)
+
+        assertEquals(feedbackId, dto.id)
+        assertEquals("Great product!", dto.review)
+        assertEquals(5, dto.rate)
+
+        // user subdto
+        assertEquals(testUser.id, dto.user.id)
+        assertEquals(testUser.username, dto.user.username)
+        assertEquals(testUser.email, dto.user.email)
+
+        // product subdto
+        assertEquals(testProduct.id, dto.product.id)
+        assertEquals(testProduct.name, dto.product.name)
+        assertEquals(testProduct.price, dto.product.price)
+    }
+
+    @Test
+    fun toDtoShouldThrowExceptionWhenIdIsNull() {
+        val feedback = Feedback(
+            id = null,
+            review = "No id",
+            rate = 3,
+            user = testUser,
+            product = testProduct
+        )
+
+        val exception = assertFailsWith<IllegalArgumentException> {
+            feedbackMapper.toDto(feedback)
+        }
+        assertEquals("Id is not provided", exception.message)
+    }
+
 
 }

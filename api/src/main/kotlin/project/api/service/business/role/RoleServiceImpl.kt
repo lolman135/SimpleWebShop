@@ -2,6 +2,7 @@ package project.api.service.business.role
 
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.RoleDtoRequest
+import project.api.dto.response.business.RoleDtoResponse
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.role.RoleMapper
@@ -22,27 +23,31 @@ class RoleServiceImpl(
         return true
     }
 
-    override fun save(dto: RoleDtoRequest): Role {
+    override fun save(dto: RoleDtoRequest): RoleDtoResponse {
         val role = roleMapper.toRole(dto)
-        return roleRepository.save(role)
+        val savedRole = roleRepository.save(role)
+        return roleMapper.toDto(savedRole)
     }
 
-    override fun findAll(): List<Role> = roleRepository.findAll()
+    override fun findAll(): List<RoleDtoResponse> = roleRepository.findAll().map { roleMapper.toDto(it) }
 
-    override fun findById(id: UUID): Role = roleRepository.findById(id).orElseThrow {
-        EntityNotFoundException("Role with id=$id not found")
+    override fun findById(id: UUID): RoleDtoResponse {
+        val role = roleRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Role with id=$id not found") }
+        return roleMapper.toDto(role)
     }
 
-    override fun updateById(id: UUID, dto: RoleDtoRequest): Role {
+    override fun updateById(id: UUID, dto: RoleDtoRequest): RoleDtoResponse {
         if (!roleRepository.existsById(id))
             throw EntityNotFoundException("Role with id=$id not found")
 
         val role = roleMapper.toRole(dto)
         role.id = id
-        return roleRepository.save(role)
+        val updatedRole = roleRepository.save(role)
+        return roleMapper.toDto(updatedRole)
     }
 
     override fun getDefaultRole(): Role =
-         roleRepository.findRoleByName("ROLE_USER")
-             .orElseThrow { EntityNotFoundException("Default role not found") }
+        roleRepository.findRoleByName("ROLE_USER")
+            .orElseThrow { EntityNotFoundException("Default role not found") }
 }

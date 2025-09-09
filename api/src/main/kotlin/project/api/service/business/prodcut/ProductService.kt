@@ -2,14 +2,14 @@ package project.api.service.business.prodcut
 
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.request.business.ProductDtoRequest
-import project.api.entity.Product
+import project.api.dto.response.business.ProductDtoResponse
 import java.util.*
 
 interface ProductService {
-    fun save(dto: ProductDtoRequest): Product
-    fun findAll(): List<Product>
-    fun findById(id: UUID): Product
-    fun updateById(id: UUID, dto: ProductDtoRequest): Product
+    fun save(dto: ProductDtoRequest): ProductDtoResponse
+    fun findAll(): List<ProductDtoResponse>
+    fun findById(id: UUID): ProductDtoResponse
+    fun updateById(id: UUID, dto: ProductDtoRequest): ProductDtoResponse
     fun deleteById(id: UUID): Boolean
-    fun findProductsByCategory(dto: CategoryDtoRequest): List<Product>
+    fun findProductsByCategory(dto: CategoryDtoRequest): List<ProductDtoResponse>
 }

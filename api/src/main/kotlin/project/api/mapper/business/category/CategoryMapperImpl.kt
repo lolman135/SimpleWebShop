@@ -2,7 +2,7 @@ package project.api.mapper.business.category
 
 import org.springframework.stereotype.Component
 import project.api.dto.request.business.CategoryDtoRequest
-import project.api.dto.response.business.subDto.CategoryDtoResponse
+import project.api.dto.response.business.CategoryDtoResponse
 import project.api.entity.Category
 
 @Component

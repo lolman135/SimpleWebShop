@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.request.business.ProductDtoRequest
-import project.api.entity.Product
+import project.api.dto.response.business.ProductDtoResponse
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.product.ProductMapper
@@ -26,32 +26,36 @@ class ProductServiceImpl(
     }
 
     @Transactional
-    override fun save(dto: ProductDtoRequest): Product {
+    override fun save(dto: ProductDtoRequest): ProductDtoResponse {
         val product = productMapper.toProduct(dto)
-        return productRepository.save(product)
+        val savedProduct = productRepository.save(product)
+        return productMapper.toDto(savedProduct)
     }
 
     @Transactional
-    override fun findAll(): List<Product> = productRepository.findAll()
+    override fun findAll(): List<ProductDtoResponse> = productRepository.findAll().map { productMapper.toDto(it) }
 
     @Transactional
-    override fun findById(id: UUID): Product = productRepository.findById(id).orElseThrow{
-        EntityNotFoundException("Product with id=$id not found")
+    override fun findById(id: UUID): ProductDtoResponse {
+        val product = productRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Product with id=$id not found") }
+        return productMapper.toDto(product)
     }
 
     @Transactional
-    override fun updateById(id: UUID, dto: ProductDtoRequest): Product {
+    override fun updateById(id: UUID, dto: ProductDtoRequest): ProductDtoResponse {
         if (!productRepository.existsById(id))
             throw EntityNotFoundException("Product with id=$id not found")
 
         val product = productMapper.toProduct(dto)
         product.id = id
-        return productRepository.save(product)
+        val updatedProduct = productRepository.save(product)
+        return productMapper.toDto(updatedProduct)
     }
 
     @Transactional
-    override fun findProductsByCategory(dto: CategoryDtoRequest): List<Product> {
+    override fun findProductsByCategory(dto: CategoryDtoRequest): List<ProductDtoResponse> {
         val category = categoryMapper.toCategory(dto)
-        return productRepository.findProductsByCategory(category)
+        return productRepository.findProductsByCategory(category).map { productMapper.toDto(it) }
     }
 }

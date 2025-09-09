@@ -4,6 +4,6 @@ import java.util.UUID
 
 data class FeedbackSubDto(
     val id: UUID,
-    val review: String = "",
+    val review: String,
     val rate: Int
 )

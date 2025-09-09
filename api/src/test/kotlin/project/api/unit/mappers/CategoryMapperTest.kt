@@ -9,11 +9,10 @@ import project.api.dto.request.business.CategoryDtoRequest
 import project.api.entity.Category
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.category.CategoryMapperImpl
+import java.util.*
 
-@SpringBootTest
+
 class CategoryMapperTest {
-
-    @Autowired
     private lateinit var categoryMapper: CategoryMapper
 
     @BeforeEach
@@ -49,5 +48,32 @@ class CategoryMapperTest {
         val category = categoryMapper.toCategory(dto)
 
         assertEquals("Category-Name_123", category.name)
+    }
+
+    @Test
+    fun toDtoShouldMapIdAndNameCorrectly() {
+        val category = Category(
+            id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            name = "Electronics"
+        )
+
+        val dto = categoryMapper.toDto(category)
+
+        assertEquals(category.id, dto.id)
+        assertEquals("Electronics", dto.name)
+    }
+
+    @Test
+    fun toDtoShouldThrowExceptionWhenIdIsNull() {
+        val category = Category(
+            id = null,
+            name = "Unnamed"
+        )
+
+        val exception = org.junit.jupiter.api.assertThrows<IllegalArgumentException> {
+            categoryMapper.toDto(category)
+        }
+
+        assertEquals("Id is not provided", exception.message)
     }
 }

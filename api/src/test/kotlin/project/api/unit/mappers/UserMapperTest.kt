@@ -203,4 +203,57 @@ class UserMapperTest {
         }
         verify(feedbackRepository).findById(invalidFeedbackId)
     }
+
+    @Test
+    fun toDtoShouldMapCorrectly() {
+        val userId = UUID.randomUUID()
+        val role = Role(id = UUID.randomUUID(), name = "USER_ROLE")
+        val order = testOrder
+        val feedback = testFeedback
+
+        val user = User(
+            id = userId,
+            username = "dtoUser",
+            email = "dto@mail.com",
+            password = "pass",
+            roles = mutableSetOf(role),
+            orders = mutableSetOf(order),
+            feedbacks = mutableSetOf(feedback)
+        )
+
+        val dto = userMapper.toDto(user)
+
+        assertEquals(userId, dto.id)
+        assertEquals("dtoUser", dto.username)
+        assertEquals("dto@mail.com", dto.email)
+
+        assertEquals(1, dto.roles.size)
+        assertEquals("USER_ROLE", dto.roles.first())
+
+        assertEquals(1, dto.orders.size)
+        val orderDto = dto.orders.first()
+        assertEquals(order.id, orderDto.id)
+        assertEquals(order.totalCost, orderDto.totalCost)
+        assertEquals(order.products.map { it.id }, orderDto.productIds)
+
+        assertEquals(1, dto.feedbacks.size)
+        val feedbackDto = dto.feedbacks.first()
+        assertEquals(feedback.id, feedbackDto.id)
+        assertEquals(feedback.review, feedbackDto.review)
+        assertEquals(feedback.rate, feedbackDto.rate)
+    }
+
+    @Test
+    fun toDtoShouldThrowExceptionWhenIdIsNull() {
+        val user = User(
+            id = null,
+            username = "noIdUser",
+            email = "noid@mail.com",
+            password = "123"
+        )
+
+        assertFailsWith<IllegalArgumentException> {
+            userMapper.toDto(user)
+        }
+    }
 }

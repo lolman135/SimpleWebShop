@@ -6,14 +6,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.ProductDtoRequest
 import project.api.mapper.business.product.ProductMapperImpl
 import project.api.repository.feedback.FeedbackRepository
 import kotlin.test.Test
-import org.mockito.Mockito.`when`
 import project.api.entity.Category
+import project.api.entity.Feedback
+import project.api.entity.Product
+import project.api.entity.User
 import project.api.repository.category.CategoryRepository
 import java.util.*
 import kotlin.test.assertFailsWith
@@ -45,7 +47,7 @@ class ProductMapperTest {
             categoryId = categoryId
         )
         category = Category(categoryId, "Test category")
-        `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
+        lenient().`when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
     }
 
     @Test
@@ -115,4 +117,71 @@ class ProductMapperTest {
         assertTrue(product.feedbacks.isEmpty())
         verify(categoryRepository).findById(categoryId)
     }
+
+    @Test
+    fun toDtoShouldMapCorrectly() {
+        val productId = UUID.randomUUID()
+        val feedbackId = UUID.randomUUID()
+        val testFeedback = Feedback(
+            id = feedbackId,
+            review = "Good product",
+            rate = 5,
+            user = User(
+                id = UUID.randomUUID(),
+                username = "tester",
+                email = "tester@email.com",
+                password = "1234"
+            ),
+            product = Product(
+                id = productId,
+                name = "dummy",
+                price = 10,
+                imageUrl = "url",
+                description = "desc",
+                category = category
+            )
+        )
+
+        val product = Product(
+            id = productId,
+            name = "Test product",
+            description = "Test description",
+            price = 30,
+            imageUrl = "https://imgBase:/testImg.com",
+            category = category,
+            feedbacks = mutableSetOf(testFeedback)
+        )
+
+        val dto = productMapper.toDto(product)
+
+        assertEquals(productId, dto.id)
+        assertEquals("Test product", dto.name)
+        assertEquals(30, dto.price)
+        assertEquals("https://imgBase:/testImg.com", dto.imageUrl)
+        assertEquals("Test description", dto.description)
+        assertEquals(category.name, dto.category)
+
+        assertEquals(1, dto.feedbacks.size)
+        val feedbackDto = dto.feedbacks.first()
+        assertEquals(feedbackId, feedbackDto.id)
+        assertEquals("Good product", feedbackDto.review)
+        assertEquals(5, feedbackDto.rate)
+    }
+
+    @Test
+    fun toDtoShouldThrowExceptionWhenIdIsNull() {
+        val product = Product(
+            id = null,
+            name = "No id",
+            description = "desc",
+            price = 10,
+            imageUrl = "url",
+            category = category
+        )
+
+        assertFailsWith<IllegalArgumentException> {
+            productMapper.toDto(product)
+        }
+    }
+
 }

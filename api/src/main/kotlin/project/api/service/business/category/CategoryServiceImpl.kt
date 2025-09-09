@@ -2,7 +2,7 @@ package project.api.service.business.category
 
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.CategoryDtoRequest
-import project.api.entity.Category
+import project.api.dto.response.business.CategoryDtoResponse
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.repository.category.CategoryRepository
@@ -13,6 +13,7 @@ class CategoryServiceImpl(
     private val categoryRepository: CategoryRepository,
     private val categoryMapper: CategoryMapper
 ): CategoryService {
+
     override fun deleteById(id: UUID): Boolean {
         if (!categoryRepository.existsById(id))
             throw EntityNotFoundException("Category with id=$id not found")
@@ -20,21 +21,27 @@ class CategoryServiceImpl(
         return true
     }
 
-    override fun save(dto: CategoryDtoRequest): Category {
+    override fun save(dto: CategoryDtoRequest): CategoryDtoResponse {
         val category = categoryMapper.toCategory(dto)
-        return categoryRepository.save(category)
+        val savedCategory = categoryRepository.save(category)
+        return categoryMapper.toDto(savedCategory)
     }
 
-    override fun findAll(): List<Category> = categoryRepository.findAll()
+    override fun findAll(): List<CategoryDtoResponse> = categoryRepository.findAll().map { categoryMapper.toDto(it) }
 
-    override fun findById(id: UUID): Category = categoryRepository.findById(id)
-        .orElseThrow{ EntityNotFoundException("Entity with id=$id not found") }
+    override fun findById(id: UUID): CategoryDtoResponse {
 
-    override fun updateById(id: UUID, dto: CategoryDtoRequest): Category {
+        val category = categoryRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Entity with id=$id not found") }
+        return categoryMapper.toDto(category)
+    }
+
+    override fun updateById(id: UUID, dto: CategoryDtoRequest): CategoryDtoResponse {
         if (!categoryRepository.existsById(id))
             throw EntityNotFoundException("Category with id=$id not found")
         val category = categoryMapper.toCategory(dto)
         category.id = id
-        return categoryRepository.save(category)
+        val updatedCategory = categoryRepository.save(category)
+        return categoryMapper.toDto(updatedCategory)
     }
 }

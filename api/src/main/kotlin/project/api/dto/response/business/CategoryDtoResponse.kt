@@ -1,4 +1,4 @@
-package project.api.dto.response.business.subDto
+package project.api.dto.response.business
 
 import java.util.*
 

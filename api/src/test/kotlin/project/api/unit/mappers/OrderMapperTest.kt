@@ -10,10 +10,12 @@ import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.ItemDto
 import project.api.dto.request.business.OrderDtoRequest
 import project.api.entity.Category
+import project.api.entity.Order
 import project.api.entity.Product
 import project.api.entity.User
 import project.api.mapper.business.order.OrderMapperImpl
 import project.api.repository.product.ProductRepository
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -39,7 +41,7 @@ class OrderMapperTest {
         productId = UUID.randomUUID()
         category = Category(
             id = UUID.randomUUID(),
-            name = "Test category" // описание можно не указывать
+            name = "Test category"
         )
 
         testUser = User(
@@ -55,7 +57,7 @@ class OrderMapperTest {
             description = "TestDesc",
             imageUrl = "https://imgBase:/testImg.com",
             price = 10,
-            category = category // добавляем категорию
+            category = category
         )
 
         orderDto = OrderDtoRequest(
@@ -93,5 +95,47 @@ class OrderMapperTest {
         assertFailsWith<IllegalArgumentException> {
             orderMapper.toOrder(invalidOrderDto, testUser)
         }
+    }
+
+    @Test
+    fun toDtoShouldMapCorrectly() {
+        val orderId = UUID.randomUUID()
+        val order = Order(
+            id = orderId,
+            createdAt = java.time.LocalDateTime.now(),
+            totalCost = 30,
+            user = testUser,
+            products = mutableSetOf(testProduct)
+        )
+
+        val dto = orderMapper.toDto(order)
+
+        assertEquals(orderId, dto.id)
+        assertEquals(30, dto.totalCost)
+        assertEquals(testUser.id, dto.user.id)
+        assertEquals(testUser.username, dto.user.username)
+        assertEquals(testUser.email, dto.user.email)
+
+        assertEquals(1, dto.products.size)
+        val productDto = dto.products.first()
+        assertEquals(testProduct.id, productDto.id)
+        assertEquals(testProduct.name, productDto.name)
+        assertEquals(testProduct.price, productDto.price)
+    }
+
+    @Test
+    fun toDtoShouldThrowExceptionWhenIdIsNull() {
+        val order = Order(
+            id = null,
+            createdAt = LocalDateTime.now(),
+            totalCost = 10,
+            user = testUser,
+            products = mutableSetOf(testProduct)
+        )
+
+        val exception = assertFailsWith<IllegalArgumentException> {
+            orderMapper.toDto(order)
+        }
+        assertEquals("Id is not provided", exception.message)
     }
 }
