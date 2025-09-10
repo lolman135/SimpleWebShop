@@ -1,5 +1,6 @@
 package project.api.controller.business
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,20 +20,20 @@ import java.util.UUID
 class ProductController(private val productService: ProductService) {
 
     @PostMapping
-    fun addProduct(@RequestBody request: ProductDtoRequest) = ResponseEntity.ok(productService.save(request))
+    fun addProduct(@RequestBody @Valid request: ProductDtoRequest) = ResponseEntity.ok(productService.save(request))
 
     @GetMapping
     fun getAllProducts() = ResponseEntity.ok(productService.findAll())
 
     @GetMapping("/by-category")
-    fun getProductsByCategory(@RequestBody request: CategoryDtoRequest) =
+    fun getProductsByCategory(@RequestBody @Valid request: CategoryDtoRequest) =
         ResponseEntity.ok(productService.findProductsByCategory(request))
 
     @GetMapping("/{id}")
     fun getProductById(@PathVariable id: UUID) = ResponseEntity.ok(productService.findById(id))
 
     @PutMapping("/{id}")
-    fun updateProductById(@PathVariable id: UUID, @RequestBody request: ProductDtoRequest) =
+    fun updateProductById(@PathVariable id: UUID, @RequestBody @Valid request: ProductDtoRequest) =
         ResponseEntity.ok(productService.updateById(id, request))
 
     @DeleteMapping("/{id}")

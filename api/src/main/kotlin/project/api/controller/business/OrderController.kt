@@ -1,5 +1,6 @@
 package project.api.controller.business
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -23,7 +24,7 @@ class OrderController(private val orderService: OrderService, ) {
 
     @PostMapping
     fun createOrder(
-        @RequestBody request: OrderDtoRequest,
+        @RequestBody @Valid request: OrderDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<OrderDtoResponse> {
         val response = orderService.save(request, userDetails.user)
@@ -39,7 +40,7 @@ class OrderController(private val orderService: OrderService, ) {
     @PutMapping("/{id}")
     fun updateOrderById(
         @PathVariable id: UUID,
-        @RequestBody request: OrderDtoRequest,
+        @RequestBody @Valid request: OrderDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<OrderDtoResponse> {
         val response = orderService.updateById(id, request, userDetails.user)

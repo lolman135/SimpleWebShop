@@ -1,5 +1,6 @@
 package project.api.controller.business
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +19,7 @@ import java.util.UUID
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
-    fun addCategory(@RequestBody request: CategoryDtoRequest) = ResponseEntity.ok(categoryService.save(request))
+    fun addCategory(@RequestBody request: @Valid CategoryDtoRequest) = ResponseEntity.ok(categoryService.save(request))
 
     @GetMapping
     fun getAllCategories() = ResponseEntity.ok(categoryService.findAll())
@@ -27,7 +28,7 @@ class CategoryController(private val categoryService: CategoryService) {
     fun getCategoryById(@PathVariable id:UUID) = ResponseEntity.ok(categoryService.findById(id))
 
     @PutMapping("/{id}")
-    fun updateCategoryById(@PathVariable id:UUID, @RequestBody request: CategoryDtoRequest) =
+    fun updateCategoryById(@PathVariable id:UUID, @RequestBody @Valid request: CategoryDtoRequest) =
         ResponseEntity.ok(categoryService.updateById(id, request))
 
     @DeleteMapping("/{id}")

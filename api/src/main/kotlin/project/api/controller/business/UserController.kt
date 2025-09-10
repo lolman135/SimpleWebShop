@@ -1,10 +1,12 @@
 package project.api.controller.business
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -26,7 +28,7 @@ class UserController(private val userService: UserService) {
     fun getUserByName(@RequestParam username: String) = ResponseEntity.ok(userService.findByUsername(username))
 
     @PutMapping("/{id}")
-    fun updateUserById(@PathVariable id: UUID, @RequestParam request: UserDtoUpdateRequest) =
+    fun updateUserById(@PathVariable id: UUID, @RequestBody @Valid  request: UserDtoUpdateRequest) =
         ResponseEntity.ok(userService.updateById(id, request))
 
     @DeleteMapping("/{id}")

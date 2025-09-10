@@ -1,5 +1,6 @@
 package project.api.controller.business
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,7 +25,7 @@ class FeedbackController(private val feedbackService: FeedbackService) {
     @PostMapping
     fun leaveFeedback(
         @RequestBody request: FeedbackDtoRequest,
-        @AuthenticationPrincipal userDetails: CustomUserDetails
+        @AuthenticationPrincipal @Valid userDetails: CustomUserDetails
     ): ResponseEntity<FeedbackDtoResponse> {
         val response = feedbackService.save(request, userDetails.user)
         return ResponseEntity.ok(response)
@@ -39,7 +40,7 @@ class FeedbackController(private val feedbackService: FeedbackService) {
     @PutMapping("/{id}")
     fun updateFeedbackById(
         @PathVariable id: UUID,
-        @RequestBody request: FeedbackDtoRequest,
+        @RequestBody @Valid request: FeedbackDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<FeedbackDtoResponse> {
         val response = feedbackService.updateById(id, request, userDetails.user)
