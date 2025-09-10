@@ -1,15 +1,19 @@
 package project.api.service.business.user
 
 import jakarta.transaction.Transactional
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import project.api.dto.request.auth.RegisterRequest
-import project.api.dto.request.business.UserDtoRequest
+import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.exception.UserAlreadyExistsException
 import project.api.mapper.auth.toUser
 import project.api.mapper.business.user.UserMapper
+import project.api.repository.feedback.FeedbackRepository
+import project.api.repository.order.OrderRepository
+import project.api.repository.role.RoleRepository
 import project.api.repository.user.UserRepository
 import project.api.service.business.role.RoleService
 import java.util.*
@@ -18,7 +22,11 @@ import java.util.*
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val userMapper: UserMapper,
-    private val roleService: RoleService
+    private val roleService: RoleService,
+    private val passwordEncoder: PasswordEncoder,
+    private val roleRepository: RoleRepository,
+    private val orderRepository: OrderRepository,
+    private val feedbackRepository: FeedbackRepository
 ) : UserService {
 
     override fun deleteById(id: UUID): Boolean {
@@ -53,12 +61,28 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun updateById(id: UUID, dto: UserDtoRequest): UserDtoResponse {
-        if (!userRepository.existsById(id))
-            throw EntityNotFoundException("User with id=$id not found")
+    override fun updateById(id: UUID, request: UserDtoUpdateRequest): UserDtoResponse {
+        val user = userRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("User with id=$id not found") }
 
-        val user = userMapper.toUser(dto)
-        user.id = id
+        request.username?.let {user.username = it}
+        request.password?.let {user.password = passwordEncoder.encode(it)}
+        request.email?.let { user.email = it }
+        request.roleIds?.let { user.roles = it.map{
+            id -> roleRepository.findById(id)
+                .orElseThrow { EntityNotFoundException("Role with id=$id not found") }
+        }.toMutableSet()}
+
+        request.orderIds?.let {user.orders = it.map{
+            id -> orderRepository.findById(id)
+                .orElseThrow { EntityNotFoundException("Order with id=$id not found") }
+        }.toMutableSet()}
+
+        request.feedbackIds?.let{user.feedbacks = it.map{
+            id -> feedbackRepository.findById(id)
+                .orElseThrow { EntityNotFoundException("Feedback with id=$id not found") }
+        }.toMutableSet()}
+
         val updatedUser = userRepository.save(user)
         return userMapper.toDto(updatedUser)
     }

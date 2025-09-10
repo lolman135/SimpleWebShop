@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.request.business.FeedbackDtoRequest
+import project.api.dto.response.business.FeedbackDtoResponse
 import project.api.entity.Feedback
 import project.api.security.CustomUserDetails
 import project.api.service.business.feedback.FeedbackService
@@ -24,9 +25,9 @@ class FeedbackController(private val feedbackService: FeedbackService) {
     fun leaveFeedback(
         @RequestBody request: FeedbackDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
-    ): ResponseEntity<Feedback> {
-        val feedback = feedbackService.save(request, userDetails.user)
-        return ResponseEntity.ok(feedback)
+    ): ResponseEntity<FeedbackDtoResponse> {
+        val response = feedbackService.save(request, userDetails.user)
+        return ResponseEntity.ok(response)
     }
 
     @GetMapping("/{id}")
@@ -40,9 +41,9 @@ class FeedbackController(private val feedbackService: FeedbackService) {
         @PathVariable id: UUID,
         @RequestBody request: FeedbackDtoRequest,
         @AuthenticationPrincipal userDetails: CustomUserDetails
-    ) : ResponseEntity<Feedback> {
-        val feedback = feedbackService.updateById(id, request, userDetails.user)
-        return ResponseEntity.ok(feedback)
+    ) : ResponseEntity<FeedbackDtoResponse> {
+        val response = feedbackService.updateById(id, request, userDetails.user)
+        return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{id}")

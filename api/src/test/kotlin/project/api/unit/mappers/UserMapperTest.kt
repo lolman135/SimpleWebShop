@@ -5,34 +5,27 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import project.api.dto.request.business.UserDtoRequest
+import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.entity.*
 import project.api.mapper.business.user.UserMapperImpl
 import project.api.repository.feedback.FeedbackRepository
 import project.api.repository.order.OrderRepository
 import project.api.repository.role.RoleRepository
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import org.mockito.Mockito.`when`
 import java.util.*
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockitoExtension::class)
 class UserMapperTest {
 
-    @Mock
-    private lateinit var orderRepository: OrderRepository
-    @Mock
-    private lateinit var roleRepository: RoleRepository
-    @Mock
-    private lateinit var feedbackRepository: FeedbackRepository
+    @Mock private lateinit var orderRepository: OrderRepository
+    @Mock private lateinit var roleRepository: RoleRepository
+    @Mock private lateinit var feedbackRepository: FeedbackRepository
 
-    @InjectMocks
-    private lateinit var userMapper: UserMapperImpl
+    @InjectMocks private lateinit var userMapper: UserMapperImpl
 
-    private lateinit var userDtoRequest: UserDtoRequest
+    private lateinit var userDtoUpdateRequest: UserDtoUpdateRequest
     private lateinit var roleId: UUID
     private lateinit var orderId: UUID
     private lateinit var feedbackId: UUID
@@ -45,12 +38,13 @@ class UserMapperTest {
 
     @BeforeEach
     fun setUp(){
+
         testCategory = Category(
             id = UUID.randomUUID(),
             name = "Test category"
         )
 
-        userDtoRequest = UserDtoRequest(
+        userDtoUpdateRequest = UserDtoUpdateRequest(
             username = "test_username",
             password = "testPassword123",
             email = "testuser123@email.com"
@@ -71,7 +65,7 @@ class UserMapperTest {
             price = 300,
             description = "Test description",
             imageUrl = "https://imgBase:/testImg.com",
-            category = testCategory        // <-- добавили
+            category = testCategory
         )
 
         testProduct2 = Product(
@@ -80,7 +74,7 @@ class UserMapperTest {
             price = 200,
             description = "Test description 2",
             imageUrl = "https://imgBase:/testImg2.com",
-            category = testCategory        // <-- добавили
+            category = testCategory
         )
 
         val testUser = User(
@@ -107,101 +101,6 @@ class UserMapperTest {
             product = testProduct1,
             user = testUser
         )
-    }
-
-    @Test
-    fun toRoleShouldReturnNewUserWithValidData(){
-        val user = userMapper.toUser(userDtoRequest)
-
-        assertEquals("test_username", user.username)
-        assertEquals("testPassword123", user.password)
-        assertEquals("testuser123@email.com", user.email)
-
-        assertTrue(user.orders.isEmpty())
-        assertTrue(user.feedbacks.isEmpty())
-        assertTrue(user.roles.isEmpty())
-    }
-
-    @Test
-    fun testUserMapperShouldReturnExistingUserWithAllDependencies(){
-        `when`(orderRepository.findById(orderId)).thenReturn(Optional.of(testOrder))
-        `when`(feedbackRepository.findById(feedbackId)).thenReturn(Optional.of(testFeedback))
-        `when`(roleRepository.findById(roleId)).thenReturn(Optional.of(testRole))
-
-        val existUserDtoRequest = UserDtoRequest(
-            username = "test_username",
-            password = "testPassword123",
-            email = "testuser123@email.com",
-            orderIds = listOf(orderId),
-            feedbackIds = listOf(feedbackId),
-            roleIds = listOf(roleId)
-        )
-
-        val user = userMapper.toUser(existUserDtoRequest)
-
-        assertEquals("test_username", user.username)
-        assertEquals("testPassword123", user.password)
-        assertEquals("testuser123@email.com", user.email)
-
-        assertTrue(user.feedbacks.isNotEmpty())
-        assertEquals(orderId, user.orders.first().id)
-        assertEquals("TEST_USER", user.roles.first().name)
-
-        assertEquals("Test name", user.orders.first().products.first().name)
-        verify(orderRepository).findById(orderId)
-        verify(feedbackRepository).findById(feedbackId)
-        verify(roleRepository).findById(roleId)
-    }
-
-    @Test
-    fun testUserMapperShouldFailsByWrongOrderId(){
-        val invalidOrderId = UUID.randomUUID()
-        `when`(orderRepository.findById(invalidOrderId)).thenThrow(IllegalArgumentException("Wrong Id!"))
-
-        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
-            username = "test_username",
-            password = "testPassword123",
-            email = "testuser123@email.com",
-            orderIds = listOf(invalidOrderId),
-        )
-        assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDtoRequest)
-        }
-        verify(orderRepository).findById(invalidOrderId)
-    }
-
-    @Test
-    fun testUserMapperShouldFailsByWrongRoleId(){
-        val invalidRoleId = UUID.randomUUID()
-        `when`(roleRepository.findById(invalidRoleId)).thenThrow(IllegalArgumentException("Wrong Id!"))
-
-        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
-            username = "test_username",
-            password = "testPassword123",
-            email = "testuser123@email.com",
-            roleIds = listOf(invalidRoleId),
-        )
-        assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDtoRequest)
-        }
-        verify(roleRepository).findById(invalidRoleId)
-    }
-
-    @Test
-    fun testUserMapperShouldFailsByWrongFeedbackId(){
-        val invalidFeedbackId = UUID.randomUUID()
-        `when`(feedbackRepository.findById(invalidFeedbackId)).thenThrow(IllegalArgumentException("Wrong Id!"))
-
-        val invalidOrderIdsUserDtoRequest = UserDtoRequest(
-            username = "test_username",
-            password = "testPassword123",
-            email = "testuser123@email.com",
-            feedbackIds = listOf(invalidFeedbackId),
-        )
-        assertFailsWith<IllegalArgumentException> {
-            userMapper.toUser(invalidOrderIdsUserDtoRequest)
-        }
-        verify(feedbackRepository).findById(invalidFeedbackId)
     }
 
     @Test

@@ -10,6 +10,8 @@ import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.ItemDto
 import project.api.dto.request.business.OrderDtoRequest
+import project.api.dto.response.business.OrderDtoResponse
+import project.api.dto.response.business.subDto.UserSubDto
 import project.api.entity.Order
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
@@ -24,13 +26,10 @@ import kotlin.test.assertEquals
 @ExtendWith(MockitoExtension::class)
 class OrderServiceTest {
 
-    @Mock
-    private lateinit var orderRepository: OrderRepository
-    @Mock
-    private lateinit var orderMapper: OrderMapper
+    @Mock private lateinit var orderRepository: OrderRepository
+    @Mock private lateinit var orderMapper: OrderMapper
 
-    @InjectMocks
-    private lateinit var orderService: OrderServiceImpl
+    @InjectMocks private lateinit var orderService: OrderServiceImpl
 
     private lateinit var orderId: UUID
     private lateinit var productId: UUID
@@ -38,7 +37,7 @@ class OrderServiceTest {
     private lateinit var orderDto: OrderDtoRequest
     private lateinit var user: User
     private lateinit var order: Order
-
+    private lateinit var orderDtoResponse: OrderDtoResponse
 
     @BeforeEach
     fun setUp(){
@@ -61,37 +60,53 @@ class OrderServiceTest {
             totalCost = 3000,
             user = user
         )
+
+        orderDtoResponse = OrderDtoResponse(
+            id = orderId,
+            createdAt = order.createdAt,
+            totalCost = order.totalCost,
+            products = emptyList(),
+            user = UserSubDto(user.id!!, user.username, user.email)
+        )
     }
 
     @Test
     fun saveShouldMapDtoToOrderAndSaveEntity(){
         `when`(orderMapper.toOrder(orderDto, user)).thenReturn(order)
         `when`(orderRepository.save(order)).thenReturn(order)
+        `when`(orderMapper.toDto(order)).thenReturn(orderDtoResponse)
 
         val result = orderService.save(orderDto, user)
-        assertEquals(order, result)
+
+        assertEquals(orderDtoResponse, result)
         verify(orderMapper).toOrder(orderDto, user)
         verify(orderRepository).save(order)
+        verify(orderMapper).toDto(order)
     }
 
     @Test
-    fun findAllShouldReturnListOfOrders(){
+    fun findAllShouldReturnListOfOrderDtoResponses(){
         val orders = listOf(order)
         `when`(orderRepository.findAll()).thenReturn(orders)
+        `when`(orderMapper.toDto(order)).thenReturn(orderDtoResponse)
 
         val result = orderService.findAll()
-        assertEquals(orders, result)
+
+        assertEquals(listOf(orderDtoResponse), result)
         verify(orderRepository).findAll()
+        verify(orderMapper).toDto(order)
     }
 
     @Test
-    fun findByIdShouldReturnOrderIfExists() {
+    fun findByIdShouldReturnOrderDtoResponseIfExists() {
         `when`(orderRepository.findById(orderId)).thenReturn(Optional.of(order))
+        `when`(orderMapper.toDto(order)).thenReturn(orderDtoResponse)
 
         val result = orderService.findById(orderId)
 
-        assertEquals(order, result)
+        assertEquals(orderDtoResponse, result)
         verify(orderRepository).findById(orderId)
+        verify(orderMapper).toDto(order)
     }
 
     @Test
@@ -101,7 +116,9 @@ class OrderServiceTest {
         assertThrows<EntityNotFoundException> {
             orderService.findById(orderId)
         }
+
         verify(orderRepository).findById(orderId)
+        verify(orderMapper, never()).toDto(order)
     }
 
     @Test
@@ -109,13 +126,15 @@ class OrderServiceTest {
         `when`(orderRepository.existsById(orderId)).thenReturn(true)
         `when`(orderMapper.toOrder(orderDto, user)).thenReturn(order)
         `when`(orderRepository.save(order)).thenReturn(order)
+        `when`(orderMapper.toDto(order)).thenReturn(orderDtoResponse)
 
         val result = orderService.updateById(orderId, orderDto, user)
 
-        assertEquals(order, result)
+        assertEquals(orderDtoResponse, result)
         verify(orderRepository).existsById(orderId)
         verify(orderMapper).toOrder(orderDto, user)
         verify(orderRepository).save(order)
+        verify(orderMapper).toDto(order)
     }
 
     @Test
@@ -129,6 +148,7 @@ class OrderServiceTest {
         verify(orderRepository).existsById(orderId)
         verify(orderMapper, never()).toOrder(orderDto, user)
         verify(orderRepository, never()).save(order)
+        verify(orderMapper, never()).toDto(order)
     }
 
     @Test

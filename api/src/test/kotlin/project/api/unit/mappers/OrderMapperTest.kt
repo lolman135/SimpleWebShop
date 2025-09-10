@@ -24,11 +24,9 @@ import kotlin.test.assertFailsWith
 @ExtendWith(MockitoExtension::class)
 class OrderMapperTest {
 
-    @Mock
-    lateinit var productRepository: ProductRepository
+    @Mock lateinit var productRepository: ProductRepository
 
-    @InjectMocks
-    lateinit var orderMapper: OrderMapperImpl
+    @InjectMocks lateinit var orderMapper: OrderMapperImpl
 
     private lateinit var testUser: User
     private lateinit var testProduct: Product

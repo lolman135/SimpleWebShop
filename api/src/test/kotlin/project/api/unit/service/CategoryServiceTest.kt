@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.CategoryDtoRequest
+import project.api.dto.response.business.CategoryDtoResponse
 import project.api.entity.Category
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
@@ -21,17 +22,15 @@ import kotlin.test.assertTrue
 @ExtendWith(MockitoExtension::class)
 class CategoryServiceTest {
 
-    @Mock
-    private lateinit var categoryRepository: CategoryRepository
-    @Mock
-    private lateinit var categoryMapper: CategoryMapper
+    @Mock private lateinit var categoryRepository: CategoryRepository
+    @Mock private lateinit var categoryMapper: CategoryMapper
 
-    @InjectMocks
-    private lateinit var categoryService: CategoryServiceImpl
+    @InjectMocks private lateinit var categoryService: CategoryServiceImpl
 
     private lateinit var categoryId: UUID
     private lateinit var categoryDtoRequest: CategoryDtoRequest
     private lateinit var category: Category
+    private lateinit var categoryDtoResponse: CategoryDtoResponse
     private lateinit var categoryList: List<Category>
 
     @BeforeEach
@@ -39,6 +38,7 @@ class CategoryServiceTest {
         categoryId = UUID.randomUUID()
         categoryDtoRequest = CategoryDtoRequest(name = "Test Category")
         category = Category(id = categoryId, name = "Test Category")
+        categoryDtoResponse = CategoryDtoResponse(id = categoryId, name = "Test Category")
         categoryList = listOf(category)
     }
 
@@ -46,35 +46,41 @@ class CategoryServiceTest {
     fun saveShouldMapDtoAndSaveCategory() {
         `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(categoryRepository.save(category)).thenReturn(category)
+        `when`(categoryMapper.toDto(category)).thenReturn(categoryDtoResponse)
 
         val result = categoryService.save(categoryDtoRequest)
 
-        assertEquals(category, result)
+        assertEquals(categoryDtoResponse, result)
         verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(categoryRepository).save(category)
+        verify(categoryMapper).toDto(category)
         verifyNoMoreInteractions(categoryMapper, categoryRepository)
     }
 
     @Test
-    fun findAllShouldReturnListOfCategories() {
+    fun findAllShouldReturnListOfCategoryDtoResponse() {
         `when`(categoryRepository.findAll()).thenReturn(categoryList)
+        `when`(categoryMapper.toDto(category)).thenReturn(categoryDtoResponse)
 
         val result = categoryService.findAll()
 
-        assertEquals(categoryList, result)
+        assertEquals(listOf(categoryDtoResponse), result)
         verify(categoryRepository).findAll()
-        verifyNoMoreInteractions(categoryRepository)
+        verify(categoryMapper).toDto(category)
+        verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }
 
     @Test
-    fun findByIdShouldReturnCategoryIfExists() {
+    fun findByIdShouldReturnCategoryDtoResponseIfExists() {
         `when`(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category))
+        `when`(categoryMapper.toDto(category)).thenReturn(categoryDtoResponse)
 
         val result = categoryService.findById(categoryId)
 
-        assertEquals(category, result)
+        assertEquals(categoryDtoResponse, result)
         verify(categoryRepository).findById(categoryId)
-        verifyNoMoreInteractions(categoryRepository)
+        verify(categoryMapper).toDto(category)
+        verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }
 
     @Test
@@ -87,6 +93,7 @@ class CategoryServiceTest {
 
         verify(categoryRepository).findById(categoryId)
         verifyNoMoreInteractions(categoryRepository)
+        verifyNoInteractions(categoryMapper)
     }
 
     @Test
@@ -94,14 +101,16 @@ class CategoryServiceTest {
         `when`(categoryRepository.existsById(categoryId)).thenReturn(true)
         `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
         `when`(categoryRepository.save(category)).thenReturn(category)
+        `when`(categoryMapper.toDto(category)).thenReturn(categoryDtoResponse)
 
         val result = categoryService.updateById(categoryId, categoryDtoRequest)
 
-        assertEquals(category, result)
+        assertEquals(categoryDtoResponse, result)
         assertEquals(categoryId, category.id)
         verify(categoryRepository).existsById(categoryId)
         verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(categoryRepository).save(category)
+        verify(categoryMapper).toDto(category)
         verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }
 
@@ -114,9 +123,8 @@ class CategoryServiceTest {
         }
 
         verify(categoryRepository).existsById(categoryId)
-        verify(categoryMapper, never()).toCategory(categoryDtoRequest)
+        verifyNoInteractions(categoryMapper)
         verify(categoryRepository, never()).save(category)
-        verifyNoMoreInteractions(categoryRepository, categoryMapper)
     }
 
     @Test

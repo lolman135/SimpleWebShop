@@ -10,6 +10,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.RoleDtoRequest
+import project.api.dto.response.business.OrderDtoResponse
+import project.api.dto.response.business.RoleDtoResponse
 import project.api.entity.Role
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.role.RoleMapper
@@ -22,54 +24,60 @@ import kotlin.test.assertTrue
 @ExtendWith(MockitoExtension::class)
 class RoleServiceTest {
 
-    @Mock
-    private lateinit var roleRepository: RoleRepository
-    @Mock
-    private lateinit var roleMapper: RoleMapper
+    @Mock private lateinit var roleRepository: RoleRepository
+    @Mock private lateinit var roleMapper: RoleMapper
 
-    @InjectMocks
-    private lateinit var roleService: RoleServiceImpl
+    @InjectMocks private lateinit var roleService: RoleServiceImpl
 
     private lateinit var roleId: UUID
     private lateinit var roleDtoRequest: RoleDtoRequest
     private lateinit var role: Role
+    private lateinit var roleDtoResponse: RoleDtoResponse
 
     @BeforeEach
     fun setUp() {
         roleId = UUID.randomUUID()
         roleDtoRequest = RoleDtoRequest(name = "TEST_ROLE")
         role = Role(id = roleId, name = "TEST_ROLE")
+        roleDtoResponse = RoleDtoResponse(id = roleId, name = "TEST_ROLE")
     }
 
     @Test
     fun saveShouldMapDtoToRoleAndSaveEntity() {
         `when`(roleMapper.toRole(roleDtoRequest)).thenReturn(role)
+        `when`(roleMapper.toDto(role)).thenReturn(roleDtoResponse)
         `when`(roleRepository.save(role)).thenReturn(role)
 
         val savedRole = roleService.save(roleDtoRequest)
-        assertEquals(role, savedRole)
+        assertEquals(roleDtoResponse, savedRole)
         verify(roleMapper).toRole(roleDtoRequest)
+
+        verify(roleMapper).toRole(roleDtoRequest)
+        verify(roleMapper).toDto(role)
         verify(roleRepository).save(role)
     }
 
     @Test
     fun findAllShouldReturnListOfRoles() {
         val roles = listOf(role)
+        val responseList = listOf(roleDtoResponse)
         `when`(roleRepository.findAll()).thenReturn(roles)
+        `when`(roleMapper.toDto(role)).thenReturn(roleDtoResponse)
 
         val result = roleService.findAll()
-        assertEquals(roles, result)
+        assertEquals(responseList, result)
         verify(roleRepository).findAll()
     }
 
     @Test
     fun findByIdShouldReturnRoleIfExist() {
         `when`(roleRepository.findById(roleId)).thenReturn(Optional.of(role))
-
+        `when`(roleMapper.toDto(role)).thenReturn(roleDtoResponse)
         val result = roleService.findById(roleId)
 
-        assertEquals(role, result)
+        assertEquals(roleDtoResponse, result)
         verify(roleRepository).findById(roleId)
+        verify(roleMapper).toDto(role)
     }
 
     @Test
@@ -86,13 +94,15 @@ class RoleServiceTest {
     fun updateByIdShouldUpdateRoleWhenExists() {
         `when`(roleRepository.existsById(roleId)).thenReturn(true)
         `when`(roleMapper.toRole(roleDtoRequest)).thenReturn(role)
+        `when`(roleMapper.toDto(role)).thenReturn(roleDtoResponse)
         `when`(roleRepository.save(role)).thenReturn(role)
 
         val result = roleService.updateById(roleId, roleDtoRequest)
 
-        Assertions.assertEquals(role, result)
+        Assertions.assertEquals(roleDtoResponse, result)
         verify(roleRepository).existsById(roleId)
         verify(roleMapper).toRole(roleDtoRequest)
+        verify(roleMapper).toDto(role)
         verify(roleRepository).save(role)
     }
 
@@ -105,6 +115,7 @@ class RoleServiceTest {
         }
         verify(roleRepository).existsById(roleId)
         verify(roleMapper, never()).toRole(roleDtoRequest)
+        verify(roleMapper, never()).toDto(role)
         verify(roleRepository, never()).save(any(Role::class.java))
     }
 

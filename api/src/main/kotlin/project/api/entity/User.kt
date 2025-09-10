@@ -23,7 +23,7 @@ class User(
     @get:OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     open var orders: MutableSet<Order> = mutableSetOf(),
 
-    @get:ManyToMany
+    @get:ManyToMany(fetch = FetchType.EAGER)
     @get:JoinTable(
         name = "user_role",
         joinColumns = [JoinColumn(name = "user_id")],

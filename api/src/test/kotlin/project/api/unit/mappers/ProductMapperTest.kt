@@ -24,13 +24,10 @@ import kotlin.test.assertFailsWith
 @ExtendWith(MockitoExtension::class)
 class ProductMapperTest {
 
-    @Mock
-    private lateinit var feedbackRepository: FeedbackRepository
-    @Mock
-    private lateinit var categoryRepository: CategoryRepository
+    @Mock private lateinit var feedbackRepository: FeedbackRepository
+    @Mock private lateinit var categoryRepository: CategoryRepository
 
-    @InjectMocks
-    private lateinit var productMapper: ProductMapperImpl
+    @InjectMocks private lateinit var productMapper: ProductMapperImpl
 
     private lateinit var productDtoRequest: ProductDtoRequest
     private lateinit var categoryId: UUID

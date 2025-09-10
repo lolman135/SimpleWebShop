@@ -10,6 +10,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import project.api.dto.request.business.FeedbackDtoRequest
+import project.api.dto.response.business.FeedbackDtoResponse
+import project.api.dto.response.business.subDto.ProductSubDto
+import project.api.dto.response.business.subDto.UserSubDto
 import project.api.entity.*
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.feedback.FeedbackMapper
@@ -21,13 +24,10 @@ import kotlin.test.assertEquals
 @ExtendWith(MockitoExtension::class)
 class FeedbackServiceTest {
 
-    @Mock
-    private lateinit var feedbackMapper: FeedbackMapper
-    @Mock
-    private lateinit var feedbackRepository: FeedbackRepository
+    @Mock private lateinit var feedbackMapper: FeedbackMapper
+    @Mock private lateinit var feedbackRepository: FeedbackRepository
 
-    @InjectMocks
-    private lateinit var feedbackService: FeedbackServiceImpl
+    @InjectMocks private lateinit var feedbackService: FeedbackServiceImpl
 
     private lateinit var feedbackId: UUID
     private lateinit var userId: UUID
@@ -38,18 +38,16 @@ class FeedbackServiceTest {
     private lateinit var category: Category
     private lateinit var product: Product
     private lateinit var feedback: Feedback
+    private lateinit var feedbackDtoResponse: FeedbackDtoResponse
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         feedbackId = UUID.randomUUID()
         productId = UUID.randomUUID()
         userId = UUID.randomUUID()
         categoryId = UUID.randomUUID()
 
-        category = Category(
-            id = categoryId,
-            name = "Test category",
-        )
+        category = Category(id = categoryId, name = "Test category")
 
         feedbackDtoRequest = FeedbackDtoRequest(
             productId = productId,
@@ -61,7 +59,7 @@ class FeedbackServiceTest {
             id = userId,
             username = "JohnDoe",
             email = "john@example.com",
-            password = "securePass123",
+            password = "securePass123"
         )
 
         product = Product(
@@ -70,7 +68,7 @@ class FeedbackServiceTest {
             description = "Test description",
             price = 10,
             imageUrl = "https://imgBase:/testImg.com",
-            category = category // добавляем обязательную категорию
+            category = category
         )
 
         feedback = Feedback(
@@ -80,39 +78,53 @@ class FeedbackServiceTest {
             rate = 5,
             review = "Test review"
         )
+
+        feedbackDtoResponse = FeedbackDtoResponse(
+            id = feedbackId,
+            review = "Test review",
+            rate = 5,
+            user = UserSubDto(user.id!!, user.username, user.email),
+            product = ProductSubDto(product.id!!, product.name, product.price)
+        )
     }
 
     @Test
-    fun saveShouldMapDtoToFeedbackAndSaveEntity(){
+    fun saveShouldMapDtoToFeedbackAndSaveEntity() {
         `when`(feedbackMapper.toFeedback(feedbackDtoRequest, user)).thenReturn(feedback)
         `when`(feedbackRepository.save(feedback)).thenReturn(feedback)
+        `when`(feedbackMapper.toDto(feedback)).thenReturn(feedbackDtoResponse)
 
         val result = feedbackService.save(feedbackDtoRequest, user)
 
-        assertEquals(feedback, result)
-        verify(feedbackRepository).save(feedback)
+        assertEquals(feedbackDtoResponse, result)
         verify(feedbackMapper).toFeedback(feedbackDtoRequest, user)
+        verify(feedbackRepository).save(feedback)
+        verify(feedbackMapper).toDto(feedback)
     }
 
     @Test
-    fun findAllShouldReturnListOfFeedbacks() {
+    fun findAllShouldReturnListOfFeedbackDtoResponses() {
         val feedbacks = listOf(feedback)
         `when`(feedbackRepository.findAll()).thenReturn(feedbacks)
+        `when`(feedbackMapper.toDto(feedback)).thenReturn(feedbackDtoResponse)
 
         val result = feedbackService.findAll()
 
-        assertEquals(feedbacks, result)
+        assertEquals(listOf(feedbackDtoResponse), result)
         verify(feedbackRepository).findAll()
+        verify(feedbackMapper).toDto(feedback)
     }
 
     @Test
-    fun findByIdShouldReturnFeedbackIfExists() {
+    fun findByIdShouldReturnFeedbackDtoResponseIfExists() {
         `when`(feedbackRepository.findById(feedbackId)).thenReturn(Optional.of(feedback))
+        `when`(feedbackMapper.toDto(feedback)).thenReturn(feedbackDtoResponse)
 
         val result = feedbackService.findById(feedbackId)
 
-        assertEquals(feedback, result)
+        assertEquals(feedbackDtoResponse, result)
         verify(feedbackRepository).findById(feedbackId)
+        verify(feedbackMapper).toDto(feedback)
     }
 
     @Test
@@ -124,6 +136,7 @@ class FeedbackServiceTest {
         }
 
         verify(feedbackRepository).findById(feedbackId)
+        verifyNoInteractions(feedbackMapper)
     }
 
     @Test
@@ -131,13 +144,15 @@ class FeedbackServiceTest {
         `when`(feedbackRepository.existsById(feedbackId)).thenReturn(true)
         `when`(feedbackMapper.toFeedback(feedbackDtoRequest, user)).thenReturn(feedback)
         `when`(feedbackRepository.save(feedback)).thenReturn(feedback)
+        `when`(feedbackMapper.toDto(feedback)).thenReturn(feedbackDtoResponse)
 
         val result = feedbackService.updateById(feedbackId, feedbackDtoRequest, user)
 
-        assertEquals(feedback, result)
+        assertEquals(feedbackDtoResponse, result)
         verify(feedbackRepository).existsById(feedbackId)
         verify(feedbackMapper).toFeedback(feedbackDtoRequest, user)
         verify(feedbackRepository).save(feedback)
+        verify(feedbackMapper).toDto(feedback)
     }
 
     @Test
@@ -151,6 +166,7 @@ class FeedbackServiceTest {
         verify(feedbackRepository).existsById(feedbackId)
         verify(feedbackMapper, never()).toFeedback(feedbackDtoRequest, user)
         verify(feedbackRepository, never()).save(feedback)
+        verify(feedbackMapper, never()).toDto(feedback)
     }
 
     @Test
