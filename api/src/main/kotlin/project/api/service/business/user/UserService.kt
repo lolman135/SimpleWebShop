@@ -14,4 +14,6 @@ interface UserService {
     fun deleteById(id: UUID): Boolean
     fun findByUsername(username: String): UserDtoResponse
     fun findMe(user: User): UserDtoResponse
+    fun findRawUserById(id: UUID): User
+    fun findAllUsersByUsernamePrefix(prefix: String): List<UserDtoResponse>
 }

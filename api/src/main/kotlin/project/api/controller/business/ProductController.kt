@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.request.business.ProductDtoRequest
@@ -38,4 +39,8 @@ class ProductController(private val productService: ProductService) {
 
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(productService.deleteById(id))
+
+    @GetMapping("/name")
+    fun getProductsByNamePrefix(@RequestParam prefix: String) =
+        ResponseEntity.ok(productService.findProductByNamePrefix(prefix))
 }

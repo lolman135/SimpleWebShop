@@ -16,11 +16,12 @@ import project.api.dto.response.business.OrderDtoResponse
 import project.api.entity.Order
 import project.api.security.CustomUserDetails
 import project.api.service.business.order.OrderService
+import project.api.service.business.user.UserService
 import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/orders")
-class OrderController(private val orderService: OrderService, ) {
+class OrderController(private val orderService: OrderService, private val userService: UserService) {
 
     @PostMapping
     fun createOrder(
@@ -36,6 +37,10 @@ class OrderController(private val orderService: OrderService, ) {
 
     @GetMapping
     fun getAllOrders() = ResponseEntity.ok(orderService.findAll())
+
+    @GetMapping("/my")
+    fun getAllProductsForUser(@AuthenticationPrincipal userDetails: CustomUserDetails) =
+        ResponseEntity.ok(orderService.findAllForUser(userService.findRawUserById(userDetails.getId()!!)))
 
     @PutMapping("/{id}")
     fun updateOrderById(

@@ -14,4 +14,5 @@ class CustomUserDetails(val user: User) : UserDetails{
     override fun isCredentialsNonExpired() = true
     override fun isEnabled() = true
     override fun isAccountNonExpired() = true
+    fun getId() = user.id
 }

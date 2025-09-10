@@ -58,4 +58,7 @@ class ProductServiceImpl(
         val category = categoryMapper.toCategory(dto)
         return productRepository.findProductsByCategory(category).map { productMapper.toDto(it) }
     }
+
+    override fun findProductByNamePrefix(prefix: String) =
+        productRepository.findProductByNamePrefix(prefix).map { productMapper.toDto(it) }
 }

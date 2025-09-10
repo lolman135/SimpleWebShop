@@ -12,4 +12,5 @@ interface ProductService {
     fun updateById(id: UUID, dto: ProductDtoRequest): ProductDtoResponse
     fun deleteById(id: UUID): Boolean
     fun findProductsByCategory(dto: CategoryDtoRequest): List<ProductDtoResponse>
+    fun findProductByNamePrefix(prefix: String): List<ProductDtoResponse>
 }

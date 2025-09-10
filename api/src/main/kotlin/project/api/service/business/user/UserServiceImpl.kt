@@ -26,7 +26,7 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val roleRepository: RoleRepository,
     private val orderRepository: OrderRepository,
-    private val feedbackRepository: FeedbackRepository
+    private val feedbackRepository: FeedbackRepository,
 ) : UserService {
 
     override fun deleteById(id: UUID): Boolean {
@@ -55,8 +55,7 @@ class UserServiceImpl(
 
     @Transactional
     override fun findById(id: UUID): UserDtoResponse {
-        val user = userRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("User with id=$id not found") }
+        val user = findRawUserById(id)
         return userMapper.toDto(user)
     }
 
@@ -98,4 +97,13 @@ class UserServiceImpl(
     override fun findMe(user: User): UserDtoResponse {
         return userMapper.toDto(user)
     }
+
+    @Transactional
+    override fun findRawUserById(id: UUID): User = userRepository.findById(id)
+        .orElseThrow {EntityNotFoundException("User with id=$id not found")}
+
+    @Transactional
+    override fun findAllUsersByUsernamePrefix(prefix: String) =
+        userRepository.findUsersByUsernamePrefix(prefix).map{userMapper.toDto(it)}
+
 }
