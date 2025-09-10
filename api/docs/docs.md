@@ -63,6 +63,14 @@
     Feedback.rate --* Feedback
     Feedback.review --* Feedback
     }
+
+    together {
+    entity Category #FF8269
+    entity Category.id #FFC4C4
+    entity Category.name #FFC4C4
+    Category.id --* Category
+    Category.name --* Category
+    }
     
     ' ==================== link_entities=============
     entity User_Role #CDEF60
@@ -82,5 +90,9 @@
     
     Product "1,1" -- "0,*" Feedback
     User "1,1" -- "0,*" Feedback
+
+    Category "1,1" -- "0,*" Product
+
+
 
 @enduml
