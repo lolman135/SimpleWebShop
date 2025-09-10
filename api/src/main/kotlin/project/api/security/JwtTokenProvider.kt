@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
+import java.util.UUID
 import javax.crypto.SecretKey
 
 @Component
@@ -15,17 +16,26 @@ class JwtTokenProvider(
 ) {
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
 
-    fun generateToken(username: String): String{
+    fun generateToken(userId: UUID): String{
         val now = Date()
         val expiryDate = Date(now.time + jwtExpirationMs)
 
         return Jwts.builder()
-            .setSubject(username)
+            .setSubject(userId.toString())
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
+
+    fun getUserIdFromToken(token: String): UUID = UUID.fromString(
+        Jwts.parserBuilder()
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .body
+            .subject
+    )
 
     fun getUsernameFromToken(token: String): String = Jwts.parserBuilder()
             .setSigningKey(secretKey)

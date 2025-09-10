@@ -93,4 +93,9 @@ class UserServiceImpl(
             .orElseThrow { EntityNotFoundException("User with username=$username not found") }
         return userMapper.toDto(user)
     }
+
+    @Transactional
+    override fun findMe(user: User): UserDtoResponse {
+        return userMapper.toDto(user)
+    }
 }

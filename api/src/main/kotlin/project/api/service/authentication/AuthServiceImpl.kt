@@ -25,7 +25,9 @@ class AuthServiceImpl(
                 UsernamePasswordAuthenticationToken(request.username, request.password)
             )
             SecurityContextHolder.getContext().authentication = authentication
-            return jwtTokenProvider.generateToken(request.username)
+
+            val authorizedUser = userService.findByUsername(request.username)
+            return jwtTokenProvider.generateToken(authorizedUser.id)
         } catch (ex: Exception){
             throw InvalidCredentialsException("Invalid username or password")
         }
@@ -34,6 +36,6 @@ class AuthServiceImpl(
     override fun register(request: RegisterRequest): String {
         val encryptedRequest = request.copy(password = passwordEncoder.encode(request.password))
         val registeredUser = userService.save(encryptedRequest)
-        return jwtTokenProvider.generateToken(registeredUser.username)
+        return jwtTokenProvider.generateToken(registeredUser.id!!)
     }
 }
