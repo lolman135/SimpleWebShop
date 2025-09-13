@@ -5,8 +5,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import project.api.dto.request.auth.LoginRequest
-import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.authentication.LoginRequest
+import project.api.dto.request.authentication.RegisterRequest
 import project.api.exception.InvalidCredentialsException
 import project.api.security.JwtTokenProvider
 import project.api.service.business.user.UserService

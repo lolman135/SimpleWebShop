@@ -3,13 +3,13 @@ package project.api.service.business.user
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.authentication.RegisterRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
 import project.api.exception.UserAlreadyExistsException
-import project.api.mapper.auth.toUser
+import project.api.mapper.authentication.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.feedback.FeedbackRepository
 import project.api.repository.order.OrderRepository

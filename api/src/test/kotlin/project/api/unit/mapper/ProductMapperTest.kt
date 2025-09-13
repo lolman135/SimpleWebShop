@@ -1,4 +1,4 @@
-package project.api.unit.mappers
+package project.api.unit.mapper
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

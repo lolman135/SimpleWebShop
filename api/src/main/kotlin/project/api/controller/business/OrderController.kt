@@ -53,5 +53,8 @@ class OrderController(private val orderService: OrderService, private val userSe
     }
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(orderService.deleteById(id))
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void> {
+        orderService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 }

@@ -24,8 +24,8 @@ class FeedbackController(private val feedbackService: FeedbackService) {
 
     @PostMapping
     fun leaveFeedback(
-        @RequestBody request: FeedbackDtoRequest,
-        @AuthenticationPrincipal @Valid userDetails: CustomUserDetails
+        @RequestBody @Valid request: FeedbackDtoRequest,
+        @AuthenticationPrincipal userDetails: CustomUserDetails
     ): ResponseEntity<FeedbackDtoResponse> {
         val response = feedbackService.save(request, userDetails.user)
         return ResponseEntity.ok(response)
@@ -48,5 +48,8 @@ class FeedbackController(private val feedbackService: FeedbackService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(feedbackService.deleteById(id))
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void> {
+        feedbackService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 }

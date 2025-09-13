@@ -42,11 +42,15 @@ class UserController(private val userService: UserService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteUserById(@PathVariable id: UUID) = ResponseEntity.ok(userService.deleteById(id))
+    fun deleteUserById(@PathVariable id: UUID): ResponseEntity<Void>{
+        userService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 
     @DeleteMapping("/me")
-    fun deleteMe(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<Boolean> {
+    fun deleteMe(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<Void> {
         val id = userDetails.getId()
-        return ResponseEntity.ok(userService.deleteById(id!!))
+        userService.deleteById(id!!)
+        return ResponseEntity.noContent().build()
     }
 }

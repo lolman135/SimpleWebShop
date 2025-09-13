@@ -1,6 +1,6 @@
 package project.api.service.business.user
 
-import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.authentication.RegisterRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User

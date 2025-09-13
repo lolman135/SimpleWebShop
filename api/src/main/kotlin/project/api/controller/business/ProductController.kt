@@ -38,7 +38,10 @@ class ProductController(private val productService: ProductService) {
         ResponseEntity.ok(productService.updateById(id, request))
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: UUID) = ResponseEntity.ok(productService.deleteById(id))
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void>{
+        productService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 
     @GetMapping("/name")
     fun getProductsByNamePrefix(@RequestParam prefix: String) =

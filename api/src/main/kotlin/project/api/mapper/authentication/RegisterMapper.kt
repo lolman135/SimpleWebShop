@@ -1,6 +1,6 @@
-package project.api.mapper.auth
+package project.api.mapper.authentication
 
-import project.api.dto.request.auth.RegisterRequest
+import project.api.dto.request.authentication.RegisterRequest
 import project.api.entity.User
 
 fun RegisterRequest.toUser(): User = this.toUserInternal()

@@ -32,5 +32,8 @@ class CategoryController(private val categoryService: CategoryService) {
         ResponseEntity.ok(categoryService.updateById(id, request))
 
     @DeleteMapping("/{id}")
-    fun deleteCategoryById(@PathVariable id:UUID) = ResponseEntity.ok(categoryService.deleteById(id))
+    fun deleteCategoryById(@PathVariable id:UUID): ResponseEntity<Void> {
+        categoryService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
 }

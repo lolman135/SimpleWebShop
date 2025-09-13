@@ -1,4 +1,4 @@
-package project.api.unit.mappers
+package project.api.unit.mapper
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
