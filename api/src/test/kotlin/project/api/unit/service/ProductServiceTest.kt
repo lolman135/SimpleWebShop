@@ -17,10 +17,12 @@ import project.api.entity.Product
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.product.ProductMapper
+import project.api.repository.category.CategoryRepository
 import project.api.repository.product.ProductRepository
 import project.api.service.business.prodcut.ProductServiceImpl
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 @ExtendWith(MockitoExtension::class)
@@ -29,6 +31,8 @@ class ProductServiceTest {
     @Mock private lateinit var productRepository: ProductRepository
     @Mock private lateinit var productMapper: ProductMapper
     @Mock private lateinit var categoryMapper: CategoryMapper
+    @Mock private lateinit var categoryRepository: CategoryRepository
+
 
     @InjectMocks private lateinit var productService: ProductServiceImpl
 
@@ -38,6 +42,9 @@ class ProductServiceTest {
     private lateinit var productDtoRequest: ProductDtoRequest
     private lateinit var product: Product
     private lateinit var categoryDtoRequest: CategoryDtoRequest
+    private lateinit var categoryName: String
+
+
     private lateinit var feedbacks: List<FeedbackSubDto>
     private lateinit var productDtoResponse: ProductDtoResponse
     private lateinit var productDtoResponseList: List<ProductDtoResponse>
@@ -47,6 +54,7 @@ class ProductServiceTest {
         productId = UUID.randomUUID()
         categoryId = UUID.randomUUID()
         categoryDtoRequest = CategoryDtoRequest(name = "Test category")
+        categoryName = "Test Category"
         category = Category(
             id = categoryId,
             name = "Test category",
@@ -189,32 +197,59 @@ class ProductServiceTest {
         verifyNoMoreInteractions(productRepository)
     }
 
+
     @Test
-    fun findProductsByCategoryShouldReturnListOfProducts() {
-        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
+    fun findProductsByCategoryShouldReturnListWhenCategoryExists() {
+        `when`(categoryRepository.findCategoryByName(categoryName)).thenReturn(Optional.of(category))
         `when`(productRepository.findProductsByCategory(category)).thenReturn(listOf(product))
         `when`(productMapper.toDto(product)).thenReturn(productDtoResponse)
 
-        val result = productService.findProductsByCategory(categoryDtoRequest)
+        val result = productService.findProductsByCategory(categoryName)
 
         assertEquals(productDtoResponseList, result)
-        verify(categoryMapper).toCategory(categoryDtoRequest)
+        verify(categoryRepository).findCategoryByName(categoryName)
         verify(productRepository).findProductsByCategory(category)
         verify(productMapper).toDto(product)
-        verifyNoMoreInteractions(categoryMapper, productRepository, productMapper)
+        verifyNoMoreInteractions(categoryRepository, productRepository, productMapper)
     }
 
     @Test
-    fun findProductsByCategoryShouldReturnEmptyListWhenNoProducts() {
-        `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
-        `when`(productRepository.findProductsByCategory(category)).thenReturn(emptyList())
+    fun findProductsByCategoryShouldThrowExceptionWhenCategoryDoesNotExist() {
+        `when`(categoryRepository.findCategoryByName(categoryName)).thenReturn(Optional.empty())
 
-        val result = productService.findProductsByCategory(categoryDtoRequest)
+        assertFailsWith<EntityNotFoundException> {
+            productService.findProductsByCategory(categoryName)
+        }
+
+        verify(categoryRepository).findCategoryByName(categoryName)
+        verifyNoInteractions(productRepository, productMapper)
+    }
+
+    @Test
+    fun findProductByNamePrefixShouldReturnListOfProducts() {
+        val prefix = "Test"
+        `when`(productRepository.findProductByNamePrefix(prefix)).thenReturn(listOf(product))
+        `when`(productMapper.toDto(product)).thenReturn(productDtoResponse)
+
+        val result = productService.findProductByNamePrefix(prefix)
+
+        assertEquals(productDtoResponseList, result)
+        verify(productRepository).findProductByNamePrefix(prefix)
+        verify(productMapper).toDto(product)
+        verifyNoMoreInteractions(productRepository, productMapper)
+    }
+
+    @Test
+    fun findProductByNamePrefixShouldReturnEmptyListWhenNoMatches() {
+        val prefix = "None"
+        `when`(productRepository.findProductByNamePrefix(prefix)).thenReturn(emptyList())
+
+        val result = productService.findProductByNamePrefix(prefix)
 
         assertTrue(result.isEmpty())
-        verify(categoryMapper).toCategory(categoryDtoRequest)
-        verify(productRepository).findProductsByCategory(category)
-        verifyNoMoreInteractions(categoryMapper, productRepository)
+        verify(productRepository).findProductByNamePrefix(prefix)
         verifyNoInteractions(productMapper)
+        verifyNoMoreInteractions(productRepository)
     }
+
 }

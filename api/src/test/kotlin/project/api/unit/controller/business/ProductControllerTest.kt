@@ -136,17 +136,18 @@ class ProductControllerTest(
 
     @Test
     fun getProductsByCategoryReturnsList() {
-        given(productService.findProductsByCategory(categoryRequest)).willReturn(listOf(productResponse))
+        val categoryName = "Fast Food"
+        given(productService.findProductsByCategory(categoryName)).willReturn(listOf(productResponse))
 
         mockMvc.perform(
-            get("/api/v1/products/by-category")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(categoryRequest))
+            get("/api/v1/products/category")
+                .param("name", categoryName)
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id").value(productId.toString()))
+            .andExpect(jsonPath("$[0].name").value("Burger"))
 
-        verify(productService).findProductsByCategory(categoryRequest)
+        verify(productService).findProductsByCategory(categoryName)
     }
 
     @Test

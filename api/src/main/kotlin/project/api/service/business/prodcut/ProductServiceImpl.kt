@@ -2,12 +2,12 @@ package project.api.service.business.prodcut
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.request.business.ProductDtoRequest
 import project.api.dto.response.business.ProductDtoResponse
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.product.ProductMapper
+import project.api.repository.category.CategoryRepository
 import project.api.repository.product.ProductRepository
 import java.util.*
 
@@ -15,7 +15,7 @@ import java.util.*
 class ProductServiceImpl(
     private val productRepository: ProductRepository,
     private val productMapper: ProductMapper,
-    private val categoryMapper: CategoryMapper
+    private val categoryRepository: CategoryRepository
 ) : ProductService {
 
     override fun deleteById(id: UUID): Boolean {
@@ -54,8 +54,9 @@ class ProductServiceImpl(
     }
 
     @Transactional
-    override fun findProductsByCategory(dto: CategoryDtoRequest): List<ProductDtoResponse> {
-        val category = categoryMapper.toCategory(dto)
+    override fun findProductsByCategory(categoryName: String): List<ProductDtoResponse> {
+        val category = categoryRepository.findCategoryByName(categoryName)
+            .orElseThrow {EntityNotFoundException("Category with name $categoryName not found")}
         return productRepository.findProductsByCategory(category).map { productMapper.toDto(it) }
     }
 

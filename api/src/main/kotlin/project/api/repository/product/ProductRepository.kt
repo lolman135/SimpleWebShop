@@ -12,6 +12,6 @@ import java.util.*
 interface ProductRepository : JpaRepository<Product, UUID>{
     fun findProductsByCategory(category: Category): List<Product>
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE CONCAT(:prefix, '%') ")
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE CONCAT(LOWER(:prefix), '%') ")
     fun findProductByNamePrefix(@Param("prefix") prefix: String): List<Product>
 }

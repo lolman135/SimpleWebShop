@@ -26,9 +26,9 @@ class ProductController(private val productService: ProductService) {
     @GetMapping
     fun getAllProducts() = ResponseEntity.ok(productService.findAll())
 
-    @GetMapping("/by-category")
-    fun getProductsByCategory(@RequestBody @Valid request: CategoryDtoRequest) =
-        ResponseEntity.ok(productService.findProductsByCategory(request))
+    @GetMapping("/category")
+    fun getProductsByCategory(@RequestParam name: String) =
+        ResponseEntity.ok(productService.findProductsByCategory(name))
 
     @GetMapping("/{id}")
     fun getProductById(@PathVariable id: UUID) = ResponseEntity.ok(productService.findById(id))
