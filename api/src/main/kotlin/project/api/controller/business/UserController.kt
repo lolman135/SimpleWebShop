@@ -38,7 +38,13 @@ class UserController(private val userService: UserService) {
         @RequestBody @Valid request: UserDtoUpdateRequest
     ): ResponseEntity<UserDtoResponse> {
         val id = userDetails.getId()
-        return ResponseEntity.ok(userService.updateById(id!!, request))
+
+        val safeRequest = request.copy(
+            roleIds = null,
+            feedbackIds = null,
+            orderIds = null
+        )
+        return ResponseEntity.ok(userService.updateById(id!!, safeRequest))
     }
 
     @DeleteMapping("/{id}")
