@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import project.api.controller.business.UserController
+import project.api.dto.request.business.UserDtoUpdateMeRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.dto.response.business.subDto.FeedbackSubDto
@@ -52,6 +53,7 @@ class UserControllerTest(
     private lateinit var userId: UUID
     private lateinit var userResponse: UserDtoResponse
     private lateinit var updateRequest: UserDtoUpdateRequest
+    private lateinit var updateMeRequest: UserDtoUpdateMeRequest
 
     @BeforeEach
     fun setUp() {
@@ -75,6 +77,7 @@ class UserControllerTest(
         )
 
         updateRequest = UserDtoUpdateRequest(username = "updatedUser", email = "updated@test.com")
+        updateMeRequest = UserDtoUpdateMeRequest(username = "updatedUser", email = "updated@test.com")
 
         val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
         SecurityContextHolder.getContext().authentication = authentication
@@ -144,7 +147,7 @@ class UserControllerTest(
 
     @Test
     fun updateMeReturnsUpdatedUser() {
-        given(userService.updateById(userId, updateRequest)).willReturn(userResponse.copy(username = "updatedUser"))
+        given(userService.updateMeById(userId, updateMeRequest)).willReturn(userResponse.copy(username = "updatedUser"))
 
         mockMvc.perform(
             patch("/api/v1/users/me")
@@ -154,7 +157,7 @@ class UserControllerTest(
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.username").value("updatedUser"))
 
-        verify(userService).updateById(userId, updateRequest)
+        verify(userService).updateMeById(userId, updateMeRequest)
     }
 
     @Test

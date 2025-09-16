@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import project.api.dto.request.business.UserDtoUpdateMeRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.security.CustomUserDetails
@@ -35,17 +36,10 @@ class UserController(private val userService: UserService) {
     @PatchMapping("/me")
     fun updateMe(
         @AuthenticationPrincipal userDetails: CustomUserDetails,
-        @RequestBody @Valid request: UserDtoUpdateRequest
+        @RequestBody @Valid request: UserDtoUpdateMeRequest
     ): ResponseEntity<UserDtoResponse> {
         val id = userDetails.getId()
-
-        //TODO: Add new dto to transfer only important data
-        val safeRequest = request.copy(
-            roleIds = null,
-            feedbackIds = null,
-            orderIds = null
-        )
-        return ResponseEntity.ok(userService.updateById(id!!, safeRequest))
+        return ResponseEntity.ok(userService.updateMeById(id!!, request))
     }
 
     @DeleteMapping("/{id}")

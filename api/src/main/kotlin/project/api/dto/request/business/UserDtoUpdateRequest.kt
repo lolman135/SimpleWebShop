@@ -6,7 +6,7 @@ import java.util.*
 
 data class UserDtoUpdateRequest(
 
-    @field:Pattern(regexp = "^[a-zA-Z-_\\d]{3,40}\$", message = "Invalid username")
+    @field:Pattern(regexp = "^[a-zA-Zа-яА-ЯіїІЇ_\\d\\s-]{3,40}\$", message = "Invalid username")
     val username: String? = null,
 
     @field:Email(message = "Invalid Email")

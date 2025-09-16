@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.*
 import project.api.config.TestSecurityConfig
+import project.api.dto.request.business.UserDtoUpdateMeRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.entity.User
 import project.api.repository.user.UserRepository
@@ -61,7 +62,7 @@ class UserControllerIntegrationTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(username = "testuser", roles = ["ADMIN"])
+    @WithMockUser(username = "testuser", roles = ["USER"])
     fun getMeReturnsCurrentUser() {
         mockMvc.get("/api/v1/users/me")
             .andExpect {
@@ -90,9 +91,9 @@ class UserControllerIntegrationTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(username = "testuser", roles = ["ADMIN"])
+    @WithMockUser(username = "testuser", roles = ["USER"])
     fun updateMeUpdatesCurrentUser() {
-        val request = UserDtoUpdateRequest(
+        val request = UserDtoUpdateMeRequest(
             username = "meUpdated",
             email = "meupdated@example.com"
         )
@@ -117,7 +118,7 @@ class UserControllerIntegrationTest @Autowired constructor(
     }
 
     @Test
-    @WithMockUser(username = "testuser", roles = ["ADMIN"])
+    @WithMockUser(username = "testuser", roles = ["USER"])
     fun deleteMeDeletesCurrentUser() {
         mockMvc.delete("/api/v1/users/me")
             .andExpect {
@@ -125,7 +126,7 @@ class UserControllerIntegrationTest @Autowired constructor(
             }
     }
     @Test
-    @WithMockUser(username = "testuser", roles = ["ADMIN"])
+    @WithMockUser(username = "testuser", roles = ["USER"])
     fun getUsersByUsernamePrefixReturnsMatchingUsers() {
         val anotherUser = userRepository.save(
             User(username = "anotherUser", email = "another@example.com", password = "pass")

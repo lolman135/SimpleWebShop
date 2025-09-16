@@ -35,6 +35,7 @@ class SecurityConfig(
                 //Users
                 authorize("/api/v1/users/me", hasAnyRole("USER", "ADMIN"))
                 authorize("/api/v1/users/**", hasRole("ADMIN"))
+                authorize(HttpMethod.GET,"/api/v1/users/name", hasAnyRole("USER", "ADMIN"))
                 //Roles
                 authorize("/api/v1/roles/**", hasRole("ADMIN"))
                 //Order
