@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import project.api.dto.request.authentication.RegisterRequest
+import project.api.dto.request.business.UserDtoUpdateMeRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User
@@ -61,13 +62,9 @@ class UserServiceImpl(
 
     @Transactional
     override fun updateById(id: UUID, request: UserDtoUpdateRequest): UserDtoResponse {
-        val user = userRepository.findById(id)
-            .orElseThrow { EntityNotFoundException("User with id=$id not found") }
+        val user = findRawUserById(id)
 
-        request.username?.let {user.username = it}
-        request.password?.let {user.password = passwordEncoder.encode(it)}
-        request.email?.let { user.email = it }
-
+        updateBasicUserFields(user, request.username, request.password, request.email)
         request.roleIds?.let { user.roles = it.map{
             id -> roleRepository.findById(id)
                 .orElseThrow { EntityNotFoundException("Role with id=$id not found") }
@@ -83,6 +80,15 @@ class UserServiceImpl(
                 .orElseThrow { EntityNotFoundException("Feedback with id=$id not found") }
         }.toMutableSet()}
 
+        val updatedUser = userRepository.save(user)
+        return userMapper.toDto(updatedUser)
+    }
+
+    @Transactional
+    override fun updateMeById(id: UUID, request: UserDtoUpdateMeRequest): UserDtoResponse {
+        val user = findRawUserById(id)
+
+        updateBasicUserFields(user, request.username, request.password, request.email)
         val updatedUser = userRepository.save(user)
         return userMapper.toDto(updatedUser)
     }
@@ -107,4 +113,10 @@ class UserServiceImpl(
     override fun findAllUsersByUsernamePrefix(prefix: String) =
         userRepository.findUsersByUsernamePrefix(prefix).map{userMapper.toDto(it)}
 
+
+    private fun updateBasicUserFields(user: User, username: String?, password: String?, email: String?){
+        username?.let { user.username = it }
+        password?.let { user.password = passwordEncoder.encode(it) }
+        email?.let { user.email = it }
+    }
 }

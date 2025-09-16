@@ -39,6 +39,7 @@ class UserController(private val userService: UserService) {
     ): ResponseEntity<UserDtoResponse> {
         val id = userDetails.getId()
 
+        //TODO: Add new dto to transfer only important data
         val safeRequest = request.copy(
             roleIds = null,
             feedbackIds = null,

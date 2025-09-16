@@ -12,6 +12,7 @@ import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.security.crypto.password.PasswordEncoder
 import project.api.dto.request.authentication.RegisterRequest
+import project.api.dto.request.business.UserDtoUpdateMeRequest
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.dto.response.business.subDto.FeedbackSubDto
@@ -51,6 +52,7 @@ class UserServiceTest {
     private lateinit var updateRequest: UserDtoUpdateRequest
     private lateinit var registerRequest: RegisterRequest
     private lateinit var userDtoResponse: UserDtoResponse
+    private lateinit var updateMeRequest: UserDtoUpdateMeRequest
 
     private lateinit var orderId: UUID
     private lateinit var feedbackId: UUID
@@ -113,6 +115,12 @@ class UserServiceTest {
             roleIds = listOf(roleId),
             orderIds = listOf(orderId),
             feedbackIds = listOf(feedbackId)
+        )
+
+        updateMeRequest = UserDtoUpdateMeRequest(
+            username = "UpdatedName",
+            email = "updated@example.com",
+            password = "newPass",
         )
 
         userDtoResponse = UserDtoResponse(
@@ -241,6 +249,37 @@ class UserServiceTest {
         `when`(userRepository.findById(userId)).thenReturn(Optional.empty())
 
         assertThrows<EntityNotFoundException> { userService.updateById(userId, updateRequest) }
+
+        verify(userRepository).findById(userId)
+        verify(userRepository, never()).save(user)
+        verify(userMapper, never()).toDto(user)
+    }
+
+    @Test
+    fun updateMeByIdShouldShouldUpdateAllFields(){
+        `when`(userRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(passwordEncoder.encode("newPass")).thenReturn("hashedPass")
+        `when`(userRepository.save(user)).thenReturn(user)
+        `when`(userMapper.toDto(user)).thenReturn(userDtoResponse)
+
+        val result = userService.updateMeById(userId, updateMeRequest)
+
+        assertEquals(userDtoResponse, result)
+        assertEquals("UpdatedName", user.username)
+        assertEquals("updated@example.com", user.email)
+        assertEquals("hashedPass", user.password)
+
+        verify(userRepository).findById(userId)
+        verify(passwordEncoder).encode("newPass")
+        verify(userRepository).save(user)
+        verify(userMapper).toDto(user)
+    }
+
+    @Test
+    fun updateMeByIdShouldThrowWhenUserNotFound() {
+        `when`(userRepository.findById(userId)).thenReturn(Optional.empty())
+
+        assertThrows<EntityNotFoundException> { userService.updateMeById(userId, updateMeRequest) }
 
         verify(userRepository).findById(userId)
         verify(userRepository, never()).save(user)
