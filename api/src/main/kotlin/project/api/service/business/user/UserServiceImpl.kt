@@ -67,6 +67,7 @@ class UserServiceImpl(
         request.username?.let {user.username = it}
         request.password?.let {user.password = passwordEncoder.encode(it)}
         request.email?.let { user.email = it }
+
         request.roleIds?.let { user.roles = it.map{
             id -> roleRepository.findById(id)
                 .orElseThrow { EntityNotFoundException("Role with id=$id not found") }

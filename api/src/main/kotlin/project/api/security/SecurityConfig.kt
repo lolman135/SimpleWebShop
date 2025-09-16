@@ -2,7 +2,6 @@ package project.api.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -15,7 +14,9 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
-    private val userDetailService: CustomUserDetailService
+    private val userDetailService: CustomUserDetailService,
+    private val jsonAccessDeniedHandler: JsonAccessDeniedHandler,
+    private val jsonAuthenticationEntryPoint: JsonAuthenticationEntryPoint
 ){
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain{
@@ -46,6 +47,10 @@ class SecurityConfig(
                 authorize("/api/v1/feedbacks/**", hasAnyRole("USER", "ADMIN"))
                 //Other requests
                 authorize(anyRequest, authenticated)
+            }
+            exceptionHandling {
+                accessDeniedHandler = jsonAccessDeniedHandler
+                authenticationEntryPoint = jsonAuthenticationEntryPoint
             }
             sessionManagement {
                 sessionCreationPolicy = org.springframework.security.config.http.SessionCreationPolicy.STATELESS
