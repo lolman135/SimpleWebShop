@@ -32,8 +32,6 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class UserServiceTest {
-
-
     @Mock private lateinit var userRepository: UserRepository
     @Mock private lateinit var userMapper: UserMapper
     @Mock private lateinit var roleService: RoleService

@@ -132,7 +132,7 @@ class UserControllerTest(
         given(userService.updateById(userId, updateRequest)).willReturn(userResponse.copy(username = "updatedUser"))
 
         mockMvc.perform(
-            put("/api/v1/users/{id}", userId)
+            patch("/api/v1/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest))
         )
@@ -147,7 +147,7 @@ class UserControllerTest(
         given(userService.updateById(userId, updateRequest)).willReturn(userResponse.copy(username = "updatedUser"))
 
         mockMvc.perform(
-            put("/api/v1/users/me")
+            patch("/api/v1/users/me")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest))
         )

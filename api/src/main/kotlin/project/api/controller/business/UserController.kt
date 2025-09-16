@@ -28,11 +28,11 @@ class UserController(private val userService: UserService) {
     @GetMapping
     fun getAllUsers() = ResponseEntity.ok(userService.findAll())
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateUserById(@PathVariable id: UUID, @RequestBody @Valid request: UserDtoUpdateRequest) =
         ResponseEntity.ok(userService.updateById(id, request))
 
-    @PutMapping("/me")
+    @PatchMapping("/me")
     fun updateMe(
         @AuthenticationPrincipal userDetails: CustomUserDetails,
         @RequestBody @Valid request: UserDtoUpdateRequest

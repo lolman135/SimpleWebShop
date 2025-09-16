@@ -12,10 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 import project.api.config.TestSecurityConfig
 import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.entity.User
@@ -82,7 +79,7 @@ class UserControllerIntegrationTest @Autowired constructor(
             email = "updated@example.com"
         )
 
-        mockMvc.put("/api/v1/users/${existingUser.id}") {
+        mockMvc.patch("/api/v1/users/${existingUser.id}") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
@@ -100,7 +97,7 @@ class UserControllerIntegrationTest @Autowired constructor(
             email = "meupdated@example.com"
         )
 
-        mockMvc.put("/api/v1/users/me") {
+        mockMvc.patch("/api/v1/users/me") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
