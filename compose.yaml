@@ -11,6 +11,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    restart: always
 
   api:
     build:
@@ -18,7 +19,7 @@ services:
 #    image: lolman135/simple-shop
     container_name: api
     depends_on:
-      - postgres
+      - redis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/test_task
       SPRING_DATASOURCE_USERNAME: postgres
@@ -26,8 +27,25 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_HIBERNATE_DLL_AUTO: update
       LOADING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: DEBUG
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     ports:
       - '8080:8080'
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    depends_on:
+      - postgres
+    ports:
+      - '6379:6379'
+#    volumes:
+#      - redis-data/data
+    command:
+      ["redis-server"]
+    restart: always
 
 volumes:
   postgres-data:
+#  redis-data:

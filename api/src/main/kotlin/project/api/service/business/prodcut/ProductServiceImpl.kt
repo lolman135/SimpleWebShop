@@ -24,7 +24,7 @@ class ProductServiceImpl(
 
     @Caching(
         evict = [
-            CacheEvict(value = ["productList"], key ="#SimpleKey.EMPTY" ),
+            CacheEvict(value = ["productList"], allEntries = true ),
             CacheEvict(value = ["products"], key = "#id"),
             CacheEvict(value = ["productsByCategory"], allEntries = true)
         ]
@@ -40,7 +40,7 @@ class ProductServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["productsByCategory"], key = "#result.category.toLowerCase()"),
-            CacheEvict(value = ["productList"], key ="#SimpleKey.EMPTY" )
+            CacheEvict(value = ["productList"], allEntries = true )
         ]
     )
     override fun save(dto: ProductDtoRequest): ProductDtoResponse {
@@ -63,10 +63,10 @@ class ProductServiceImpl(
 
     @Transactional
     @Caching(
-        put = [CachePut(value = ["products"], key = "#root.returnValue.id")],
+        put = [CachePut(value = ["products"], key = "#id")],
         evict = [
-            CacheEvict(value = ["productList"], key = "#SimpleKey.EMPTY"  ),
-            CacheEvict(value = ["productsByCategory"], key = "#product.category.name.toLowerCase()")
+            CacheEvict(value = ["productList"], allEntries = true  ),
+            CacheEvict(value = ["productsByCategory"], key = "#result.category.toLowerCase()")
         ]
     )
     override fun updateById(id: UUID, dto: ProductDtoRequest): ProductDtoResponse {

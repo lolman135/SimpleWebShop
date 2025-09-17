@@ -22,7 +22,7 @@ class OrderServiceImpl (
 
     @Caching(
         evict = [
-            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["orderList"], allEntries = true),
             CacheEvict(value = ["orderForUser"], allEntries = true),
             CacheEvict(value = ["orders"], key = "#id")
         ]
@@ -37,7 +37,7 @@ class OrderServiceImpl (
     @Transactional
     @Caching(
         evict = [
-            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["orderList"], allEntries = true),
             CacheEvict(value = ["orderForUser"], key = "#user.username")
         ]
     )
@@ -67,7 +67,7 @@ class OrderServiceImpl (
     @Caching(
         put = [CachePut(value = ["orders"], key = "#id")],
         evict = [
-            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"  ),
+            CacheEvict(value = ["orderList"], allEntries = true),
             CacheEvict(value = ["ordersForUser"], key = "#user.username")
         ]
     )

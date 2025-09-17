@@ -21,7 +21,7 @@ class RoleServiceImpl(
 
     @Caching(
         evict = [
-            CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["roleList"], allEntries = true),
             CacheEvict(value = ["roles"], key = "#id")
         ]
     )
@@ -32,7 +32,7 @@ class RoleServiceImpl(
         return true
     }
 
-    @CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY")
+    @CacheEvict(value = ["roleList"], allEntries = true)
     override fun save(dto: RoleDtoRequest): RoleDtoResponse {
         val role = roleMapper.toRole(dto)
         val savedRole = roleRepository.save(role)
@@ -51,7 +51,7 @@ class RoleServiceImpl(
 
     @Caching(
         put = [CachePut(value = ["roles"], key = "#id")],
-        evict = [CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY")]
+        evict = [CacheEvict(value = ["roleList"], allEntries = true)]
     )
     override fun updateById(id: UUID, dto: RoleDtoRequest): RoleDtoResponse {
         if (!roleRepository.existsById(id))

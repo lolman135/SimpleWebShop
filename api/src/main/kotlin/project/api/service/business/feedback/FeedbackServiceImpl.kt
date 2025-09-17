@@ -22,7 +22,7 @@ class FeedbackServiceImpl(
 
     @Caching(
         evict = [
-            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
             CacheEvict(value = ["feedbackForUser"], allEntries = true),
             CacheEvict(value = ["feedbacks"], key = "#id")
         ]
@@ -37,7 +37,7 @@ class FeedbackServiceImpl(
     @Transactional
     @Caching(
         evict = [
-            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
             CacheEvict(value = ["feedbackForUser"], key = "#user.username")
         ]
     )
@@ -67,7 +67,7 @@ class FeedbackServiceImpl(
     @Caching(
         put = [CachePut(value = ["feedbacks"], key = "#id")],
         evict = [
-            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
             CacheEvict(value = ["feedbackForUser"], key = "#user.username")
         ]
     )

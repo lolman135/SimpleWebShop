@@ -1,15 +1,22 @@
 package project.api.integration.auth
 
+import TestCacheConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cache.CacheManager
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 import project.api.dto.request.authentication.LoginRequest
@@ -22,6 +29,7 @@ import project.api.repository.user.UserRepository
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
+@Import(TestCacheConfig::class)
 class AuthControllerIntegrationTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
@@ -29,6 +37,9 @@ class AuthControllerIntegrationTest @Autowired constructor(
     val roleRepository: RoleRepository,
     val passwordEncoder: PasswordEncoder
 ) {
+
+//    @MockitoBean
+//    private lateinit var cacheManager: CacheManager
     private lateinit var existingUser: User
 
     @BeforeEach

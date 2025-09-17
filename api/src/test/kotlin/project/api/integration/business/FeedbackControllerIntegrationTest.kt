@@ -1,5 +1,6 @@
 package project.api.integration.business
 
+import TestCacheConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,7 +33,7 @@ import project.api.security.CustomUserDetails
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Import(TestSecurityConfig::class)
+@Import(TestSecurityConfig::class, TestCacheConfig::class)
 class FeedbackControllerIntegrationTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,

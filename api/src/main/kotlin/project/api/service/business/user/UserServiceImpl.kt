@@ -37,7 +37,7 @@ class UserServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["users"], key = "#id"),
-            CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")
+            CacheEvict(value = ["userList"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -49,7 +49,7 @@ class UserServiceImpl(
     }
 
     @Transactional
-    @CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")
+    @CacheEvict(value = ["userList"], allEntries = true)
     override fun save(request: RegisterRequest): User {
         if (userRepository.existsUserByUsername(request.username))
             throw UserAlreadyExistsException("User with username ${request.username} already exists")
@@ -76,7 +76,7 @@ class UserServiceImpl(
     @Transactional
     @Caching(
         put = [CachePut(value = ["users"], key = "#id")],
-        evict = [CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")]
+        evict = [CacheEvict(value = ["userList"], allEntries = true)]
     )
     override fun updateById(id: UUID, request: UserDtoUpdateRequest): UserDtoResponse {
         val user = findRawUserById(id)
@@ -104,7 +104,7 @@ class UserServiceImpl(
     @Transactional
     @Caching(
         put = [CachePut(value = ["users"], key = "#id")],
-        evict = [CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")]
+        evict = [CacheEvict(value = ["userList"], allEntries = true)]
     )
     override fun updateMeById(id: UUID, request: UserDtoUpdateMeRequest): UserDtoResponse {
         val user = findRawUserById(id)

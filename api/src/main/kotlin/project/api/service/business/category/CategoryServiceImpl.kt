@@ -20,7 +20,7 @@ class CategoryServiceImpl(
 
     @Caching(
         evict = [
-            CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["categoryList"], allEntries = true),
             CacheEvict(value = ["categories"], key = "#id")
         ]
     )
@@ -31,7 +31,7 @@ class CategoryServiceImpl(
         return true
     }
 
-    @CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY")
+    @CacheEvict(value = ["categoryList"], allEntries = true)
     override fun save(dto: CategoryDtoRequest): CategoryDtoResponse {
         val category = categoryMapper.toCategory(dto)
         val savedCategory = categoryRepository.save(category)
@@ -50,7 +50,7 @@ class CategoryServiceImpl(
 
     @Caching(
         put = [CachePut(value = ["categories"], key = "#id")],
-        evict = [CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY")]
+        evict = [CacheEvict(value = ["categoryList"], allEntries = true)]
     )
     override fun updateById(id: UUID, dto: CategoryDtoRequest): CategoryDtoResponse {
         if (!categoryRepository.existsById(id))
