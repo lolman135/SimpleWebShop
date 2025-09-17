@@ -1,6 +1,10 @@
 package project.api.service.business.user
 
 import jakarta.transaction.Transactional
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.Caching
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import project.api.dto.request.authentication.RegisterRequest
@@ -30,6 +34,12 @@ class UserServiceImpl(
     private val feedbackRepository: FeedbackRepository,
 ) : UserService {
 
+    @Caching(
+        evict = [
+            CacheEvict(value = ["users"], key = "#id"),
+            CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")
+        ]
+    )
     override fun deleteById(id: UUID): Boolean {
         if (!userRepository.existsById(id))
             throw EntityNotFoundException("User with id=$id not found")
@@ -39,6 +49,7 @@ class UserServiceImpl(
     }
 
     @Transactional
+    @CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")
     override fun save(request: RegisterRequest): User {
         if (userRepository.existsUserByUsername(request.username))
             throw UserAlreadyExistsException("User with username ${request.username} already exists")
@@ -52,15 +63,21 @@ class UserServiceImpl(
     }
 
     @Transactional
+    @Cacheable(value = ["userList"])
     override fun findAll(): List<UserDtoResponse> = userRepository.findAll().map { userMapper.toDto(it) }
 
     @Transactional
+    @Cacheable(value = ["users"], key = "#id")
     override fun findById(id: UUID): UserDtoResponse {
         val user = findRawUserById(id)
         return userMapper.toDto(user)
     }
 
     @Transactional
+    @Caching(
+        put = [CachePut(value = ["users"], key = "#id")],
+        evict = [CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")]
+    )
     override fun updateById(id: UUID, request: UserDtoUpdateRequest): UserDtoResponse {
         val user = findRawUserById(id)
 
@@ -85,6 +102,10 @@ class UserServiceImpl(
     }
 
     @Transactional
+    @Caching(
+        put = [CachePut(value = ["users"], key = "#id")],
+        evict = [CacheEvict(value = ["userList"], key = "#SimpleKey.EMPTY")]
+    )
     override fun updateMeById(id: UUID, request: UserDtoUpdateMeRequest): UserDtoResponse {
         val user = findRawUserById(id)
 
@@ -101,6 +122,7 @@ class UserServiceImpl(
     }
 
     @Transactional
+    @Cacheable(value = ["users"], key = "#user.id")
     override fun findMe(user: User): UserDtoResponse {
         return userMapper.toDto(user)
     }

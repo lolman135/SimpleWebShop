@@ -1,5 +1,9 @@
 package project.api.service.business.role
 
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.RoleDtoRequest
 import project.api.dto.response.business.RoleDtoResponse
@@ -15,28 +19,40 @@ class RoleServiceImpl(
     private val roleMapper: RoleMapper,
 ) : RoleService {
 
+    @Caching(
+        evict = [
+            CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["roles"], key = "#id")
+        ]
+    )
     override fun deleteById(id: UUID): Boolean {
         if (!roleRepository.existsById(id))
             throw EntityNotFoundException("Role with id=$id not found")
-
         roleRepository.deleteById(id)
         return true
     }
 
+    @CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY")
     override fun save(dto: RoleDtoRequest): RoleDtoResponse {
         val role = roleMapper.toRole(dto)
         val savedRole = roleRepository.save(role)
         return roleMapper.toDto(savedRole)
     }
 
+    @Cacheable(value = ["roleList"])
     override fun findAll(): List<RoleDtoResponse> = roleRepository.findAll().map { roleMapper.toDto(it) }
 
+    @Cacheable(value = ["roles"], key = "#id")
     override fun findById(id: UUID): RoleDtoResponse {
         val role = roleRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Role with id=$id not found") }
         return roleMapper.toDto(role)
     }
 
+    @Caching(
+        put = [CachePut(value = ["roles"], key = "#id")],
+        evict = [CacheEvict(value = ["roleList"], key = "#SimpleKey.EMPTY")]
+    )
     override fun updateById(id: UUID, dto: RoleDtoRequest): RoleDtoResponse {
         if (!roleRepository.existsById(id))
             throw EntityNotFoundException("Role with id=$id not found")

@@ -1,6 +1,10 @@
 package project.api.service.business.feedback
 
 import jakarta.transaction.Transactional
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.FeedbackDtoRequest
 import project.api.dto.response.business.FeedbackDtoResponse
@@ -16,6 +20,13 @@ class FeedbackServiceImpl(
     private val feedbackRepository: FeedbackRepository,
 ) : FeedbackService {
 
+    @Caching(
+        evict = [
+            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], key = "#id")
+        ]
+    )
     override fun deleteById(id: UUID): Boolean {
         if (!feedbackRepository.existsById(id))
             throw EntityNotFoundException("Feedback with id=$id not found")
@@ -24,6 +35,12 @@ class FeedbackServiceImpl(
     }
 
     @Transactional
+    @Caching(
+        evict = [
+            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackForUser"], key = "#user.username")
+        ]
+    )
     override fun save(dto: FeedbackDtoRequest, user: User): FeedbackDtoResponse {
         val feedback = feedbackMapper.toFeedback(dto, user)
         val savedFeedback = feedbackRepository.save(feedback)
@@ -31,12 +48,15 @@ class FeedbackServiceImpl(
     }
 
     @Transactional
+    @Cacheable(value = ["feedbackList"])
     override fun findAll() = feedbackRepository.findAll().map{feedbackMapper.toDto(it)}
 
     @Transactional
+    @Cacheable(value = ["feedbackForUser"], key = "#user.username")
     override fun findAllForUser(user: User) = user.feedbacks.map { feedbackMapper.toDto(it) }.toList()
 
     @Transactional
+    @Cacheable(value = ["feedbacks"], key = "#id")
     override fun findById(id: UUID): FeedbackDtoResponse {
         val feedback = feedbackRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Feedback with id=$id not found") }
@@ -44,6 +64,13 @@ class FeedbackServiceImpl(
     }
 
     @Transactional
+    @Caching(
+        put = [CachePut(value = ["feedbacks"], key = "#id")],
+        evict = [
+            CacheEvict(value = ["feedbackList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["feedbackForUser"], key = "#user.username")
+        ]
+    )
     override fun updateById(id: UUID, feedbackDtoRequest: FeedbackDtoRequest, user: User): FeedbackDtoResponse {
         if (!feedbackRepository.existsById(id))
             throw EntityNotFoundException("Feedback with id=$id not found")

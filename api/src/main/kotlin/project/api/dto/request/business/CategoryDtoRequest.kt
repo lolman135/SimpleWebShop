@@ -1,5 +1,6 @@
 package project.api.dto.request.business
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import jakarta.validation.constraints.Pattern
 
 data class CategoryDtoRequest(

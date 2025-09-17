@@ -1,6 +1,10 @@
 package project.api.service.business.order
 
 import jakarta.transaction.Transactional
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.OrderDtoRequest
 import project.api.dto.response.business.OrderDtoResponse
@@ -16,6 +20,13 @@ class OrderServiceImpl (
     private val orderRepository: OrderRepository
 ): OrderService {
 
+    @Caching(
+        evict = [
+            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], key = "#id")
+        ]
+    )
     override fun deleteById(id: UUID): Boolean {
         if (!orderRepository.existsById(id))
             throw EntityNotFoundException("Order with id=$id not found")
@@ -24,6 +35,12 @@ class OrderServiceImpl (
     }
 
     @Transactional
+    @Caching(
+        evict = [
+            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["orderForUser"], key = "#user.username")
+        ]
+    )
     override fun save(dto: OrderDtoRequest, user: User): OrderDtoResponse {
         val order = orderMapper.toOrder(dto, user)
         val savedOrder = orderRepository.save(order)
@@ -31,12 +48,15 @@ class OrderServiceImpl (
     }
 
     @Transactional
+    @Cacheable(value = ["orderList"])
     override fun findAll() = orderRepository.findAll().map { orderMapper.toDto(it) }
 
     @Transactional
+    @Cacheable(value = ["ordersForUser"], key = "#user.username")
     override fun findAllForUser(user: User) = user.orders.map{ orderMapper.toDto(it) }.toList()
 
     @Transactional
+    @Cacheable(value = ["orders"], key = "#id")
     override fun findById(id: UUID): OrderDtoResponse {
         val order = orderRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Order with id=$id not found") }
@@ -44,6 +64,13 @@ class OrderServiceImpl (
     }
 
     @Transactional
+    @Caching(
+        put = [CachePut(value = ["orders"], key = "#id")],
+        evict = [
+            CacheEvict(value = ["orderList"], key = "#SimpleKey.EMPTY"  ),
+            CacheEvict(value = ["ordersForUser"], key = "#user.username")
+        ]
+    )
     override fun updateById(id: UUID, dto: OrderDtoRequest, user: User): OrderDtoResponse {
         if (!orderRepository.existsById(id))
             throw EntityNotFoundException("Order with id=$id not found")

@@ -1,5 +1,9 @@
 package project.api.service.business.category
 
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.response.business.CategoryDtoResponse
@@ -14,6 +18,12 @@ class CategoryServiceImpl(
     private val categoryMapper: CategoryMapper
 ): CategoryService {
 
+    @Caching(
+        evict = [
+            CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY"),
+            CacheEvict(value = ["categories"], key = "#id")
+        ]
+    )
     override fun deleteById(id: UUID): Boolean {
         if (!categoryRepository.existsById(id))
             throw EntityNotFoundException("Category with id=$id not found")
@@ -21,21 +31,27 @@ class CategoryServiceImpl(
         return true
     }
 
+    @CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY")
     override fun save(dto: CategoryDtoRequest): CategoryDtoResponse {
         val category = categoryMapper.toCategory(dto)
         val savedCategory = categoryRepository.save(category)
         return categoryMapper.toDto(savedCategory)
     }
 
+    @Cacheable(value = ["categoryList"])
     override fun findAll(): List<CategoryDtoResponse> = categoryRepository.findAll().map { categoryMapper.toDto(it) }
 
+    @Cacheable(value = ["categories"], key = "#id")
     override fun findById(id: UUID): CategoryDtoResponse {
-
         val category = categoryRepository.findById(id)
             .orElseThrow { EntityNotFoundException("Entity with id=$id not found") }
         return categoryMapper.toDto(category)
     }
 
+    @Caching(
+        put = [CachePut(value = ["categories"], key = "#id")],
+        evict = [CacheEvict(value = ["categoryList"], key = "#SimpleKey.EMPTY")]
+    )
     override fun updateById(id: UUID, dto: CategoryDtoRequest): CategoryDtoResponse {
         if (!categoryRepository.existsById(id))
             throw EntityNotFoundException("Category with id=$id not found")
