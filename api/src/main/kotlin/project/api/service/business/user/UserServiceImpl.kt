@@ -13,7 +13,7 @@ import project.api.dto.request.business.UserDtoUpdateRequest
 import project.api.dto.response.business.UserDtoResponse
 import project.api.entity.User
 import project.api.exception.EntityNotFoundException
-import project.api.exception.UserAlreadyExistsException
+import project.api.exception.EntityAlreadyExistsException
 import project.api.mapper.authentication.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.feedback.FeedbackRepository
@@ -52,10 +52,10 @@ class UserServiceImpl(
     @CacheEvict(value = ["userList"], allEntries = true)
     override fun save(request: RegisterRequest): User {
         if (userRepository.existsUserByUsername(request.username))
-            throw UserAlreadyExistsException("User with username ${request.username} already exists")
+            throw EntityAlreadyExistsException("User with username ${request.username} already exists")
 
         if (userRepository.existsUserByEmail(request.email))
-            throw UserAlreadyExistsException("User with email ${request.email} already exists")
+            throw EntityAlreadyExistsException("User with email ${request.email} already exists")
 
         val user = request.toUser()
         user.roles = mutableSetOf(roleService.getDefaultRole())

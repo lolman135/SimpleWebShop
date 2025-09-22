@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.ProductDtoRequest
 import project.api.dto.response.business.ProductDtoResponse
+import project.api.exception.EntityAlreadyExistsException
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.mapper.business.product.ProductMapper
@@ -44,6 +45,9 @@ class ProductServiceImpl(
         ]
     )
     override fun save(dto: ProductDtoRequest): ProductDtoResponse {
+        if (productRepository.existsProductByName(dto.name))
+            throw EntityAlreadyExistsException("This product is already exists")
+
         val product = productMapper.toProduct(dto)
         val savedProduct = productRepository.save(product)
         return productMapper.toDto(savedProduct)

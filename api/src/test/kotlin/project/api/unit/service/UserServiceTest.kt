@@ -19,7 +19,7 @@ import project.api.dto.response.business.subDto.FeedbackSubDto
 import project.api.dto.response.business.subDto.OrderSubDto
 import project.api.entity.*
 import project.api.exception.EntityNotFoundException
-import project.api.exception.UserAlreadyExistsException
+import project.api.exception.EntityAlreadyExistsException
 import project.api.mapper.authentication.toUser
 import project.api.mapper.business.user.UserMapper
 import project.api.repository.feedback.FeedbackRepository
@@ -160,7 +160,7 @@ class UserServiceTest {
     fun saveShouldThrowWhenUsernameExists() {
         `when`(userRepository.existsUserByUsername(registerRequest.username)).thenReturn(true)
 
-        assertThrows<UserAlreadyExistsException> { userService.save(registerRequest) }
+        assertThrows<EntityAlreadyExistsException> { userService.save(registerRequest) }
 
         verify(userRepository).existsUserByUsername(registerRequest.username)
         verify(userRepository, never()).existsUserByEmail(registerRequest.email)
@@ -173,7 +173,7 @@ class UserServiceTest {
         `when`(userRepository.existsUserByUsername(registerRequest.username)).thenReturn(false)
         `when`(userRepository.existsUserByEmail(registerRequest.email)).thenReturn(true)
 
-        assertThrows<UserAlreadyExistsException> { userService.save(registerRequest) }
+        assertThrows<EntityAlreadyExistsException> { userService.save(registerRequest) }
 
         verify(userRepository).existsUserByUsername(registerRequest.username)
         verify(userRepository).existsUserByEmail(registerRequest.email)

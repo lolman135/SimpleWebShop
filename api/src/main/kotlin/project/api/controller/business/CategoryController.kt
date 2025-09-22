@@ -1,5 +1,8 @@
 package project.api.controller.business
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -21,6 +24,14 @@ import java.util.UUID
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
+    @Operation(summary = "Adding new category", description = "Creates new category and returns 201 if created")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Success authentication, returns JWT"),
+            ApiResponse(responseCode = "400", description = "Validation error"),
+            ApiResponse(responseCode = "401", description = "Invalid username or password")
+        ]
+    )
     fun addCategory(@RequestBody request: @Valid CategoryDtoRequest): ResponseEntity<CategoryDtoResponse> {
         val response = categoryService.save(request)
         val location = URI.create("/categories/${response.id}")

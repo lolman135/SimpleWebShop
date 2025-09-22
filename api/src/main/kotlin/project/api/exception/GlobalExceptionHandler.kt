@@ -20,8 +20,8 @@ class GlobalExceptionHandler {
         return ResponseEntity(response, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleUserExists(ex: UserAlreadyExistsException): ResponseEntity<ErrorResponse>{
+    @ExceptionHandler(EntityAlreadyExistsException::class)
+    fun handleUserExists(ex: EntityAlreadyExistsException): ResponseEntity<ErrorResponse>{
         val response = ErrorResponse(
             status = HttpStatus.CONFLICT.value(),
             error = "Conflict",

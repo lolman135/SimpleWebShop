@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 import project.api.dto.request.business.RoleDtoRequest
 import project.api.dto.response.business.RoleDtoResponse
 import project.api.entity.Role
+import project.api.exception.EntityAlreadyExistsException
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.role.RoleMapper
 import project.api.repository.role.RoleRepository
@@ -34,6 +35,9 @@ class RoleServiceImpl(
 
     @CacheEvict(value = ["roleList"], allEntries = true)
     override fun save(dto: RoleDtoRequest): RoleDtoResponse {
+        if(roleRepository.existsRoleByName(dto.name))
+            throw EntityAlreadyExistsException("This role is already exists")
+
         val role = roleMapper.toRole(dto)
         val savedRole = roleRepository.save(role)
         return roleMapper.toDto(savedRole)

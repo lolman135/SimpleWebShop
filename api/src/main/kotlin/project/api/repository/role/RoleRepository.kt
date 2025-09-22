@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface RoleRepository : JpaRepository<Role, UUID> {
     fun findRoleByName(name: String): Optional<Role>
+    fun existsRoleByName(name: String): Boolean
 }

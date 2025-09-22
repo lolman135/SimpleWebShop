@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Service
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.response.business.CategoryDtoResponse
+import project.api.exception.EntityAlreadyExistsException
 import project.api.exception.EntityNotFoundException
 import project.api.mapper.business.category.CategoryMapper
 import project.api.repository.category.CategoryRepository
@@ -33,6 +34,9 @@ class CategoryServiceImpl(
 
     @CacheEvict(value = ["categoryList"], allEntries = true)
     override fun save(dto: CategoryDtoRequest): CategoryDtoResponse {
+        if(categoryRepository.existsCategoryByName(dto.name ))
+            throw EntityAlreadyExistsException("This category is already exists")
+
         val category = categoryMapper.toCategory(dto)
         val savedCategory = categoryRepository.save(category)
         return categoryMapper.toDto(savedCategory)
