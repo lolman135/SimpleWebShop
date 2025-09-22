@@ -24,6 +24,10 @@ class SecurityConfig(
         http {
             csrf { disable() }
             authorizeHttpRequests {
+                // Swagger
+                authorize("/v3/api-docs/**", permitAll)
+                authorize("/swagger-ui/**", permitAll)
+                authorize("/swagger-ui.html", permitAll)
                 //Authentication
                 authorize("/api/v1/auth/*", permitAll)
                 //Products
