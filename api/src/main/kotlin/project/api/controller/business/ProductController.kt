@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.request.business.CategoryDtoRequest
 import project.api.dto.request.business.ProductDtoRequest
+import project.api.dto.response.business.ProductDtoResponse
 import project.api.service.business.prodcut.ProductService
+import java.net.URI
 import java.util.UUID
 
 @RestController
@@ -21,7 +23,11 @@ import java.util.UUID
 class ProductController(private val productService: ProductService) {
 
     @PostMapping
-    fun addProduct(@RequestBody @Valid request: ProductDtoRequest) = ResponseEntity.ok(productService.save(request))
+    fun addProduct(@RequestBody @Valid request: ProductDtoRequest): ResponseEntity<ProductDtoResponse>{
+        val response = productService.save(request)
+        val location = URI.create("/products/${response.id}")
+        return ResponseEntity.created(location).body(response)
+    }
 
     @GetMapping
     fun getAllProducts() = ResponseEntity.ok(productService.findAll())

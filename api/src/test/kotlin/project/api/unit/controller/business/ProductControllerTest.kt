@@ -94,7 +94,7 @@ class ProductControllerTest(
     }
 
     @Test
-    fun addProductReturns200AndSavedProduct() {
+    fun addProductReturns201AndSavedProduct() {
         given(productService.save(productRequest)).willReturn(productResponse)
 
         mockMvc.perform(
@@ -102,7 +102,8 @@ class ProductControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productRequest))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/products/$productId"))
             .andExpect(jsonPath("$.id").value(productId.toString()))
             .andExpect(jsonPath("$.name").value("Burger"))
             .andExpect(jsonPath("$.price").value(100))

@@ -89,7 +89,8 @@ class OrderControllerIntegrationTest @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
+            header { exists("Location") }
             jsonPath("$.user.username") { value("testuser") }
             jsonPath("$.products[0].name") { value("CocaCola") }
             jsonPath("$.products[0].price") { value(20) }

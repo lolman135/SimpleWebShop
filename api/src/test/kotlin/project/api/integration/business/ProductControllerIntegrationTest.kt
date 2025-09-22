@@ -115,7 +115,8 @@ class ProductControllerIntegrationTest @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
+            header { exists("Location") }
             jsonPath("$.name") { value("Pepsi") }
         }
     }

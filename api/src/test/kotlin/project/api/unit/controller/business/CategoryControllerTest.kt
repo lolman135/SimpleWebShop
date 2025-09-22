@@ -54,7 +54,7 @@ class CategoryControllerTest(
     }
 
     @Test
-    fun addCategoryReturns200AndSavedCategory() {
+    fun addCategoryReturns201AndSavedCategory() {
         given(categoryService.save(categoryRequest)).willReturn(categoryResponse)
 
         mockMvc.perform(
@@ -62,7 +62,8 @@ class CategoryControllerTest(
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(categoryRequest))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/categories/$categoryId"))
             .andExpect(jsonPath("$.id").value(categoryId.toString()))
             .andExpect(jsonPath("$.name").value("Drinks"))
 

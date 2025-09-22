@@ -16,6 +16,7 @@ import project.api.dto.response.business.FeedbackDtoResponse
 import project.api.entity.Feedback
 import project.api.security.CustomUserDetails
 import project.api.service.business.feedback.FeedbackService
+import java.net.URI
 import java.util.UUID
 
 @RestController
@@ -28,7 +29,8 @@ class FeedbackController(private val feedbackService: FeedbackService) {
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ): ResponseEntity<FeedbackDtoResponse> {
         val response = feedbackService.save(request, userDetails.user)
-        return ResponseEntity.ok(response)
+        val location = URI.create("/feedbacks/${response.id}")
+        return ResponseEntity.created(location).body(response)
     }
 
     @GetMapping("/{id}")

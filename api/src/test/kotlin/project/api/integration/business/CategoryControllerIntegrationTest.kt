@@ -68,7 +68,8 @@ class CategoryControllerIntegrationTest @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
+            header { exists("Location")}
         }.andReturn()
 
         val responseJson = result.response.contentAsString

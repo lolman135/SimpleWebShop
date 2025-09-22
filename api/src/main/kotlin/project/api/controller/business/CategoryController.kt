@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.request.business.CategoryDtoRequest
+import project.api.dto.response.business.CategoryDtoResponse
 import project.api.service.business.category.CategoryService
+import java.net.URI
 import java.util.UUID
 
 @RestController
@@ -19,7 +21,11 @@ import java.util.UUID
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
-    fun addCategory(@RequestBody request: @Valid CategoryDtoRequest) = ResponseEntity.ok(categoryService.save(request))
+    fun addCategory(@RequestBody request: @Valid CategoryDtoRequest): ResponseEntity<CategoryDtoResponse> {
+        val response = categoryService.save(request)
+        val location = URI.create("/categories/${response.id}")
+        return ResponseEntity.created(location).body(response)
+    }
 
     @GetMapping
     fun getAllCategories() = ResponseEntity.ok(categoryService.findAll())

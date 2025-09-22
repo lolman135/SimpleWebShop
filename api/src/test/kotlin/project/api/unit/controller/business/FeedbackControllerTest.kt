@@ -94,7 +94,7 @@ class FeedbackControllerTest(
     }
 
     @Test
-    fun leaveFeedbackReturns200AndSavedFeedback() {
+    fun leaveFeedbackReturns201AndSavedFeedback() {
         given(feedbackService.save(feedbackRequest, userDetails.user)).willReturn(feedbackResponse)
 
         mockMvc.perform(
@@ -102,7 +102,8 @@ class FeedbackControllerTest(
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(feedbackRequest))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/feedbacks/$feedbackId"))
             .andExpect(jsonPath("$.id").value(feedbackId.toString()))
             .andExpect(jsonPath("$.review").value("Great product"))
             .andExpect(jsonPath("$.rate").value(5))

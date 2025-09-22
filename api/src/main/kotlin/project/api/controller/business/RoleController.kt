@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import project.api.dto.request.business.RoleDtoRequest
+import project.api.dto.response.business.RoleDtoResponse
 import project.api.service.business.role.RoleService
+import java.net.URI
 import java.util.UUID
 
 @RestController
@@ -19,7 +21,11 @@ import java.util.UUID
 class RoleController(private val roleService: RoleService) {
 
     @PostMapping
-    fun addRole(@RequestBody @Valid request: RoleDtoRequest) = ResponseEntity.ok(roleService.save(request))
+    fun addRole(@RequestBody @Valid request: RoleDtoRequest): ResponseEntity<RoleDtoResponse> {
+        val response = roleService.save(request)
+        val location = URI.create("/roles/${response.id}")
+        return ResponseEntity.created(location).body(response)
+    }
 
     @GetMapping("/{id}")
     fun getRoleById(@PathVariable id: UUID) = ResponseEntity.ok(roleService.findById(id))

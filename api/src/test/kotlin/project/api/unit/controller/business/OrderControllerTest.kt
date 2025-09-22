@@ -93,7 +93,7 @@ class OrderControllerTest(
     }
 
     @Test
-    fun createOrderReturns200AndSavedOrder() {
+    fun createOrderReturns201AndSavedOrder() {
         given(orderService.save(request, userDetails.user)).willReturn(response)
 
         mockMvc.perform(
@@ -101,7 +101,8 @@ class OrderControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/orders/$orderId"))
             .andExpect(jsonPath("$.id").value(orderId.toString()))
             .andExpect(jsonPath("$.user.username").value("testUser"))
 

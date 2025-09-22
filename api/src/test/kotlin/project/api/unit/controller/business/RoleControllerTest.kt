@@ -52,7 +52,7 @@ class RoleControllerTest(
     }
 
     @Test
-    fun addRoleReturns200AndSavedRole() {
+    fun addRoleReturns201AndSavedRole() {
         given(roleService.save(request)).willReturn(response)
 
         mockMvc.perform(
@@ -60,7 +60,8 @@ class RoleControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
+            .andExpect(header().string("Location", "/roles/$roleId"))
             .andExpect(jsonPath("$.id").value(roleId.toString()))
             .andExpect(jsonPath("$.name").value("ADMIN"))
 

@@ -17,6 +17,7 @@ import project.api.entity.Order
 import project.api.security.CustomUserDetails
 import project.api.service.business.order.OrderService
 import project.api.service.business.user.UserService
+import java.net.URI
 import java.util.UUID
 
 @RestController
@@ -29,7 +30,8 @@ class OrderController(private val orderService: OrderService, private val userSe
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) : ResponseEntity<OrderDtoResponse> {
         val response = orderService.save(request, userDetails.user)
-        return ResponseEntity.ok(response)
+        val location = URI.create("/orders/${response.id}")
+        return ResponseEntity.created(location).body(response)
     }
 
     @GetMapping("/{id}")

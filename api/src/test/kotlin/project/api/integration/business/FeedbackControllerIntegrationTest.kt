@@ -103,7 +103,8 @@ class FeedbackControllerIntegrationTest @Autowired constructor(
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
+            header { exists("Location") }
             jsonPath("$.review") { value("Nice product") }
             jsonPath("$.rate") { value(4) }
             jsonPath("$.user.username") { value("testuser") }
