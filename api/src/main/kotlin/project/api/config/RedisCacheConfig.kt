@@ -28,13 +28,7 @@ class RedisCacheConfig {
     @Bean
     fun cacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
         val ptv = BasicPolymorphicTypeValidator.builder()
-            .allowIfSubType("project.api.dto.response.business")
-            .allowIfSubType("project.api.dto.response.business.subDto")
-            .allowIfSubType(List::class.java)
-            .allowIfSubType(Map::class.java)
-            .allowIfSubType(LocalDateTime::class.java)
-            .allowIfSubType(UUID::class.java)
-            .allowIfSubType(String::class.java)
+            .allowIfSubType(Any::class.java)
             .build()
 
         val baseObjectMapper: ObjectMapper = jacksonObjectMapper().apply {
