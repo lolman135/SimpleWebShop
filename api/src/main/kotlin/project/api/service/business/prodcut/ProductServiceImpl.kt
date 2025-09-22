@@ -27,7 +27,13 @@ class ProductServiceImpl(
         evict = [
             CacheEvict(value = ["productList"], allEntries = true ),
             CacheEvict(value = ["products"], key = "#id"),
-            CacheEvict(value = ["productsByCategory"], allEntries = true)
+            CacheEvict(value = ["productsByCategory"], allEntries = true),
+            CacheEvict(value = ["orderList"], allEntries = true),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], allEntries = true),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -70,7 +76,14 @@ class ProductServiceImpl(
         put = [CachePut(value = ["products"], key = "#id")],
         evict = [
             CacheEvict(value = ["productList"], allEntries = true  ),
-            CacheEvict(value = ["productsByCategory"], key = "#result.category.toLowerCase()")
+            CacheEvict(value = ["productsByCategory"], key = "#result.category.toLowerCase()"),
+            CacheEvict(value = ["productsByCategory"], allEntries = true),
+            CacheEvict(value = ["orderList"], allEntries = true),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], allEntries = true),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], allEntries = true)
         ]
     )
     override fun updateById(id: UUID, dto: ProductDtoRequest): ProductDtoResponse {

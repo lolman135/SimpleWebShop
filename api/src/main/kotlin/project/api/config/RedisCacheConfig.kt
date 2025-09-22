@@ -41,7 +41,7 @@ class RedisCacheConfig {
         val defaultSerializer = GenericJackson2JsonRedisSerializer(baseObjectMapper)
         val defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(defaultSerializer))
-            .entryTtl(Duration.ofMinutes(40))
+            .entryTtl(Duration.ofMinutes(10))
             .disableCachingNullValues()
 
         val userSerializer = Jackson2JsonRedisSerializer(baseObjectMapper, UserDtoResponse::class.java)

@@ -24,7 +24,9 @@ class OrderServiceImpl (
         evict = [
             CacheEvict(value = ["orderList"], allEntries = true),
             CacheEvict(value = ["orderForUser"], allEntries = true),
-            CacheEvict(value = ["orders"], key = "#id")
+            CacheEvict(value = ["orders"], key = "#id"),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -38,7 +40,9 @@ class OrderServiceImpl (
     @Caching(
         evict = [
             CacheEvict(value = ["orderList"], allEntries = true),
-            CacheEvict(value = ["orderForUser"], key = "#user.username")
+            CacheEvict(value = ["orderForUser"], key = "#user.username"),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], key = "#user.id")
         ]
     )
     override fun save(dto: OrderDtoRequest, user: User): OrderDtoResponse {
@@ -68,7 +72,9 @@ class OrderServiceImpl (
         put = [CachePut(value = ["orders"], key = "#id")],
         evict = [
             CacheEvict(value = ["orderList"], allEntries = true),
-            CacheEvict(value = ["ordersForUser"], key = "#user.username")
+            CacheEvict(value = ["ordersForUser"], key = "#user.username"),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], key = "#user.id")
         ]
     )
     override fun updateById(id: UUID, dto: OrderDtoRequest, user: User): OrderDtoResponse {

@@ -9,19 +9,19 @@ class User(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID? = null,
+    var id: UUID? = null,
 
     @get:Column(name = "username", nullable = false)
-    open var username: String,
+    var username: String,
 
     @get:Column(name = "email", nullable = false)
-    open var email: String,
+    var email: String,
 
     @get:Column(name = "password", nullable = false)
-    open var password: String,
+    var password: String,
 
     @get:OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    open var orders: MutableSet<Order> = mutableSetOf(),
+    var orders: MutableSet<Order> = mutableSetOf(),
 
     @get:ManyToMany(fetch = FetchType.EAGER)
     @get:JoinTable(
@@ -29,10 +29,10 @@ class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    open var roles: MutableSet<Role> = mutableSetOf(),
+    var roles: MutableSet<Role> = mutableSetOf(),
 
     @get:OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    open var feedbacks: MutableSet<Feedback> = mutableSetOf()
+    var feedbacks: MutableSet<Feedback> = mutableSetOf()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

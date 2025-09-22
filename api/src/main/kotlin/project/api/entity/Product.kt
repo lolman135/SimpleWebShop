@@ -9,27 +9,27 @@ class Product(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID? = null,
+    var id: UUID? = null,
 
     @get:Column(name = "name")
-    open var name: String,
+    var name: String,
 
     //the price is indicated in cents
     @get:Column(name = "price")
-    open var price: Int,
+    var price: Int,
 
     @get:Column(name = "image_url")
-    open var imageUrl: String,
+    var imageUrl: String,
 
     @get:Column(name = "description")
-    open var description: String,
+    var description: String,
 
     @get:OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    open var feedbacks: MutableSet<Feedback> = mutableSetOf(),
+    var feedbacks: MutableSet<Feedback> = mutableSetOf(),
 
     @get:ManyToOne()
     @get:JoinColumn(name = "category_id", nullable = false)
-    open var category: Category
+    var category: Category
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

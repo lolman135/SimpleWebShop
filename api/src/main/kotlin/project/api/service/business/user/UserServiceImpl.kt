@@ -37,7 +37,13 @@ class UserServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["users"], key = "#id"),
-            CacheEvict(value = ["userList"], allEntries = true)
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["orderList"], allEntries = true),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], allEntries = true),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -76,7 +82,15 @@ class UserServiceImpl(
     @Transactional
     @Caching(
         put = [CachePut(value = ["users"], key = "#id")],
-        evict = [CacheEvict(value = ["userList"], allEntries = true)]
+        evict = [
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["orderList"], allEntries = true),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], allEntries = true),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], allEntries = true)
+        ]
     )
     override fun updateById(id: UUID, request: UserDtoUpdateRequest): UserDtoResponse {
         val user = findRawUserById(id)
@@ -104,7 +118,15 @@ class UserServiceImpl(
     @Transactional
     @Caching(
         put = [CachePut(value = ["users"], key = "#id")],
-        evict = [CacheEvict(value = ["userList"], allEntries = true)]
+        evict = [
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["orderList"], allEntries = true),
+            CacheEvict(value = ["orderForUser"], allEntries = true),
+            CacheEvict(value = ["orders"], allEntries = true),
+            CacheEvict(value = ["feedbackList"], allEntries = true),
+            CacheEvict(value = ["feedbackForUser"], allEntries = true),
+            CacheEvict(value = ["feedbacks"], allEntries = true)
+        ]
     )
     override fun updateMeById(id: UUID, request: UserDtoUpdateMeRequest): UserDtoResponse {
         val user = findRawUserById(id)

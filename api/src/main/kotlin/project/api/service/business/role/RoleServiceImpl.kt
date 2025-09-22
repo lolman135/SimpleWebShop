@@ -23,7 +23,9 @@ class RoleServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["roleList"], allEntries = true),
-            CacheEvict(value = ["roles"], key = "#id")
+            CacheEvict(value = ["roles"], key = "#id"),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -55,7 +57,11 @@ class RoleServiceImpl(
 
     @Caching(
         put = [CachePut(value = ["roles"], key = "#id")],
-        evict = [CacheEvict(value = ["roleList"], allEntries = true)]
+        evict = [
+            CacheEvict(value = ["roleList"], allEntries = true),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], allEntries = true)
+        ]
     )
     override fun updateById(id: UUID, dto: RoleDtoRequest): RoleDtoResponse {
         if (!roleRepository.existsById(id))

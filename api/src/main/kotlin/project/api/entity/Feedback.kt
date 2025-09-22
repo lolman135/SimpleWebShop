@@ -9,21 +9,21 @@ class Feedback(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID? = null,
+    var id: UUID? = null,
 
     @get:Column(name = "review")
-    open var review: String? = null,
+    var review: String? = null,
 
     @get:Column(name = "rate")
-    open var rate: Int,
+    var rate: Int,
 
     @get:ManyToOne
     @get:JoinColumn(name = "user_id", nullable = false)
-    open var user: User,
+    var user: User,
 
     @get:ManyToOne
     @get:JoinColumn(name = "product_id", nullable = false)
-    open var product: Product
+    var product: Product
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

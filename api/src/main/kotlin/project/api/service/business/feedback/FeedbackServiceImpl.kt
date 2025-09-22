@@ -24,7 +24,11 @@ class FeedbackServiceImpl(
         evict = [
             CacheEvict(value = ["feedbackList"], allEntries = true),
             CacheEvict(value = ["feedbackForUser"], allEntries = true),
-            CacheEvict(value = ["feedbacks"], key = "#id")
+            CacheEvict(value = ["feedbacks"], key = "#id"),
+            CacheEvict(value = ["productList"], allEntries = true),
+            CacheEvict(value = ["productsByCategory"], allEntries = true),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -38,7 +42,11 @@ class FeedbackServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["feedbackList"], allEntries = true),
-            CacheEvict(value = ["feedbackForUser"], key = "#user.username")
+            CacheEvict(value = ["feedbackForUser"], key = "#user.username"),
+            CacheEvict(value = ["productList"], allEntries = true),
+            CacheEvict(value = ["productsByCategory"], allEntries = true),
+            CacheEvict(value = ["userList"], allEntries = true),
+            CacheEvict(value = ["users"], key = "#user.id")
         ]
     )
     override fun save(dto: FeedbackDtoRequest, user: User): FeedbackDtoResponse {
@@ -68,7 +76,11 @@ class FeedbackServiceImpl(
         put = [CachePut(value = ["feedbacks"], key = "#id")],
         evict = [
             CacheEvict(value = ["feedbackList"], allEntries = true),
-            CacheEvict(value = ["feedbackForUser"], key = "#user.username")
+            CacheEvict(value = ["feedbackForUser"], key = "#user.username"),
+            CacheEvict(value = ["productList"], allEntries = true),
+            CacheEvict(value = ["productsByCategory"], allEntries = true),
+            CacheEvict(value = ["users"], key = "#user.id"),
+            CacheEvict(value = ["userList"], allEntries = true)
         ]
     )
     override fun updateById(id: UUID, feedbackDtoRequest: FeedbackDtoRequest, user: User): FeedbackDtoResponse {

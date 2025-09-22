@@ -24,12 +24,14 @@ import java.util.UUID
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
-    @Operation(summary = "Adding new category", description = "Creates new category and returns 201 if created")
+    @Operation(summary = "Creating new category", description = "Creates new category if not exists yet")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Success authentication, returns JWT"),
+            ApiResponse(responseCode = "201", description = "Created successfully. Returns created category"),
             ApiResponse(responseCode = "400", description = "Validation error"),
-            ApiResponse(responseCode = "401", description = "Invalid username or password")
+            ApiResponse(responseCode = "401", description = "Unauthorized"),
+            ApiResponse(responseCode = "403", description = "Forbidden"),
+            ApiResponse(responseCode = "409", description = "Conflict")
         ]
     )
     fun addCategory(@RequestBody request: @Valid CategoryDtoRequest): ResponseEntity<CategoryDtoResponse> {
@@ -39,16 +41,48 @@ class CategoryController(private val categoryService: CategoryService) {
     }
 
     @GetMapping
+    @Operation(
+        summary = "Returns all categories",
+        description = "Returns all categories as list. If nothing to return, than returns empty list")
+    @ApiResponses(
+        value = [ApiResponse(responseCode = "200", description = "Successfully returns list of categories")]
+    )
     fun getAllCategories() = ResponseEntity.ok(categoryService.findAll())
 
     @GetMapping("/{id}")
+    @Operation(summary = "Returns category", description = "Returns category by id if exists")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Successfully returns category"),
+            ApiResponse(responseCode = "404", description = "Not found")
+        ]
+    )
     fun getCategoryById(@PathVariable id:UUID) = ResponseEntity.ok(categoryService.findById(id))
 
     @PutMapping("/{id}")
+    @Operation(summary = "Updating existed category", description = "Updates category and returns it in response")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Updated successfully. Returns updated category"),
+            ApiResponse(responseCode = "400", description = "Validation error"),
+            ApiResponse(responseCode = "401", description = "Unauthorized"),
+            ApiResponse(responseCode = "403", description = "Forbidden"),
+            ApiResponse(responseCode = "404", description = "Not found")
+        ]
+    )
     fun updateCategoryById(@PathVariable id:UUID, @RequestBody @Valid request: CategoryDtoRequest) =
         ResponseEntity.ok(categoryService.updateById(id, request))
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deleting existed category", description = "Deletes category. Returns nothing")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "204", description = "Deleted successfully. No contend"),
+            ApiResponse(responseCode = "401", description = "Unauthorized"),
+            ApiResponse(responseCode = "403", description = "Forbidden"),
+            ApiResponse(responseCode = "404", description = "Not found")
+        ]
+    )
     fun deleteCategoryById(@PathVariable id:UUID): ResponseEntity<Void> {
         categoryService.deleteById(id)
         return ResponseEntity.noContent().build()

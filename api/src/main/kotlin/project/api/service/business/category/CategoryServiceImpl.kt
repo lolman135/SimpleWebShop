@@ -22,7 +22,9 @@ class CategoryServiceImpl(
     @Caching(
         evict = [
             CacheEvict(value = ["categoryList"], allEntries = true),
-            CacheEvict(value = ["categories"], key = "#id")
+            CacheEvict(value = ["categories"], key = "#id"),
+            CacheEvict(value = ["productList"], allEntries = true),
+            CacheEvict(value = ["productsByCategory"], allEntries = true)
         ]
     )
     override fun deleteById(id: UUID): Boolean {
@@ -54,7 +56,11 @@ class CategoryServiceImpl(
 
     @Caching(
         put = [CachePut(value = ["categories"], key = "#id")],
-        evict = [CacheEvict(value = ["categoryList"], allEntries = true)]
+        evict = [
+            CacheEvict(value = ["categoryList"], allEntries = true),
+            CacheEvict(value = ["productList"], allEntries = true),
+            CacheEvict(value = ["productsByCategory"], allEntries = true)
+        ]
     )
     override fun updateById(id: UUID, dto: CategoryDtoRequest): CategoryDtoResponse {
         if (!categoryRepository.existsById(id))

@@ -9,10 +9,10 @@ class Role(
     @get:Id
     @get:Column(name = "id", nullable = false)
     @get:GeneratedValue()
-    open var id: UUID? = null,
+    var id: UUID? = null,
 
     @get:Column(name = "name", nullable = false)
-    open var name: String,
+    var name: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

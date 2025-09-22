@@ -10,18 +10,18 @@ class Order(
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.UUID)
     @get:Column(name = "id")
-    open var id: UUID? = null,
+    var id: UUID? = null,
 
     @get:Column(name = "created_at", nullable = false)
-    open var createdAt: LocalDateTime = LocalDateTime.now(),
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
     //the price is indicated in cents
     @get:Column(name = "total_cost", nullable = false)
-    open var totalCost: Int = 0,
+    var totalCost: Int = 0,
 
     @get:ManyToOne
     @get:JoinColumn(name = "user_id", nullable = false)
-    open var user: User,
+    var user: User,
 
     @get:ManyToMany
     @get:JoinTable(
@@ -29,7 +29,7 @@ class Order(
         joinColumns = [JoinColumn(name = "order_id")],
         inverseJoinColumns = [JoinColumn(name = "product_id")]
     )
-    open var products: MutableSet<Product> = mutableSetOf()
+    var products: MutableSet<Product> = mutableSetOf()
 
 ) {
     override fun equals(other: Any?): Boolean {
