@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import project.api.dto.request.business.CategoryDtoRequest
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import project.api.dto.response.error.ErrorResponse
 import project.api.dto.request.business.ProductDtoRequest
 import project.api.dto.response.business.ProductDtoResponse
 import project.api.service.business.prodcut.ProductService
@@ -29,14 +31,49 @@ class ProductController(private val productService: ProductService) {
     @Operation(summary = "Creating new product", description = "Creates new product if not exists yet")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "201", description = "Created successfully. Returns created order"),
-            ApiResponse(responseCode = "400", description = "Validation error"),
-            ApiResponse(responseCode = "401", description = "Unauthorized"),
-            ApiResponse(responseCode = "403", description = "Forbidden"),
-            ApiResponse(responseCode = "409", description = "Conflict")
+            ApiResponse(
+                responseCode = "201",
+                description = "Created successfully. Returns created product",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ProductDtoResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Validation error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "409",
+                description = "Conflict",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            )
         ]
     )
-    fun addProduct(@RequestBody @Valid request: ProductDtoRequest): ResponseEntity<ProductDtoResponse>{
+    fun addProduct(@RequestBody @Valid request: ProductDtoRequest): ResponseEntity<ProductDtoResponse> {
         val response = productService.save(request)
         val location = URI.create("/products/${response.id}")
         return ResponseEntity.created(location).body(response)
@@ -45,18 +82,42 @@ class ProductController(private val productService: ProductService) {
     @GetMapping
     @Operation(
         summary = "Returns all products",
-        description = "Returns all products as list. If nothing to return, than returns empty list")
+        description = "Returns all products as list. If nothing to return, returns empty list"
+    )
     @ApiResponses(
-        value = [ApiResponse(responseCode = "200", description = "Successfully returns list of products")]
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Successfully returns list of products",
+                content = [Content(
+                    mediaType = "application/json",
+                    array = io.swagger.v3.oas.annotations.media.ArraySchema(
+                        schema = Schema(implementation = ProductDtoResponse::class)
+                    )
+                )]
+            )
+        ]
     )
     fun getAllProducts() = ResponseEntity.ok(productService.findAll())
 
     @GetMapping("/category")
     @Operation(
         summary = "Returns all products of this category",
-        description = "Returns all products for current category as list. If nothing to return, than returns empty list")
+        description = "Returns all products for current category as list"
+    )
     @ApiResponses(
-        value = [ApiResponse(responseCode = "200", description = "Successfully returns list of products")]
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Successfully returns list of products",
+                content = [Content(
+                    mediaType = "application/json",
+                    array = io.swagger.v3.oas.annotations.media.ArraySchema(
+                        schema = Schema(implementation = ProductDtoResponse::class)
+                    )
+                )]
+            )
+        ]
     )
     fun getProductsByCategory(@RequestParam name: String) =
         ResponseEntity.ok(productService.findProductsByCategory(name))
@@ -65,8 +126,22 @@ class ProductController(private val productService: ProductService) {
     @Operation(summary = "Returns product", description = "Returns product by id if exists")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Successfully returns product"),
-            ApiResponse(responseCode = "404", description = "Not found")
+            ApiResponse(
+                responseCode = "200",
+                description = "Successfully returns product",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ProductDtoResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not found",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            )
         ]
     )
     fun getProductById(@PathVariable id: UUID) = ResponseEntity.ok(productService.findById(id))
@@ -75,23 +150,98 @@ class ProductController(private val productService: ProductService) {
     @Operation(summary = "Updating existed product", description = "Updates product and returns it in response")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Updated successfully. Returns updated product"),
-            ApiResponse(responseCode = "400", description = "Validation error"),
-            ApiResponse(responseCode = "401", description = "Unauthorized"),
-            ApiResponse(responseCode = "403", description = "Forbidden"),
-            ApiResponse(responseCode = "404", description = "Not found")
+            ApiResponse(
+                responseCode = "200",
+                description = "Updated successfully. Returns updated product",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ProductDtoResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Validation error",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not found",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            )
         ]
     )
     fun updateProductById(@PathVariable id: UUID, @RequestBody @Valid request: ProductDtoRequest) =
         ResponseEntity.ok(productService.updateById(id, request))
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void>{
+    @Operation(summary = "Deleting existed product", description = "Deletes product. Returns nothing")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "204", description = "Deleted successfully. No content"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponse::class)
+                )]
+            )
+        ]
+    )
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void> {
         productService.deleteById(id)
         return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/name")
+    @Operation(
+        summary = "Returns products by name prefix",
+        description = "Returns all products whose names start with prefix"
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Successfully returns list of products",
+                content = [Content(
+                    mediaType = "application/json",
+                    array = io.swagger.v3.oas.annotations.media.ArraySchema(
+                        schema = Schema(implementation = ProductDtoResponse::class)
+                    )
+                )]
+            )
+        ]
+    )
     fun getProductsByNamePrefix(@RequestParam prefix: String) =
         ResponseEntity.ok(productService.findProductByNamePrefix(prefix))
 }

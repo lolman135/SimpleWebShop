@@ -7,6 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
+import project.api.dto.response.error.ErrorResponse
 import java.time.LocalDateTime
 
 @Component
@@ -21,12 +22,12 @@ class JsonAccessDeniedHandler(
     ) {
         response.status = HttpServletResponse.SC_FORBIDDEN
         response.contentType = MediaType.APPLICATION_JSON_VALUE
-        val body = mapOf(
-            "timestamp" to LocalDateTime.now(),
-            "status" to 403,
-            "error" to "Forbidden",
-            "message" to accessDeniedException.message,
-            "path" to request.servletPath
+        val body = ErrorResponse(
+            timestamp = LocalDateTime.now(),
+            status = HttpServletResponse.SC_FORBIDDEN,
+            error = "Forbidden",
+            message = accessDeniedException.message,
+            path = request.servletPath
         )
         response.writer.write(objectMapper.writeValueAsString(body))
     }

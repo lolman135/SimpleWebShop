@@ -7,6 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
+import project.api.dto.response.error.ErrorResponse
 import java.time.LocalDateTime
 
 @Component
@@ -21,12 +22,12 @@ class JsonAuthenticationEntryPoint(
     ) {
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.contentType = MediaType.APPLICATION_JSON_VALUE
-        val body = mapOf(
-            "timestamp" to LocalDateTime.now(),
-            "status" to 401,
-            "error" to "Unauthorized",
-            "message" to authException.message,
-            "path" to request.servletPath
+        val body = ErrorResponse(
+            timestamp = LocalDateTime.now(),
+            status = HttpServletResponse.SC_UNAUTHORIZED,
+            error = "Unauthorized",
+            message = authException.message,
+            path = request.servletPath
         )
         response.writer.write(objectMapper.writeValueAsString(body))
     }
