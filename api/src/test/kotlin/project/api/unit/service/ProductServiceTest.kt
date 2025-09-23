@@ -91,6 +91,7 @@ class ProductServiceTest {
     fun saveShouldMapToDtoAndSaveEntity() {
         `when`(productMapper.toProduct(productDtoRequest)).thenReturn(product)
         `when`(productRepository.save(product)).thenReturn(product)
+        `when`(productRepository.existsProductByName("Test name")).thenReturn(false)
         `when`(productMapper.toDto(product)).thenReturn(productDtoResponse)
 
         val savedProduct = productService.save(productDtoRequest)
@@ -98,6 +99,7 @@ class ProductServiceTest {
         assertEquals(productDtoResponse, savedProduct)
         verify(productMapper).toProduct(productDtoRequest)
         verify(productRepository).save(product)
+        verify(productRepository).existsProductByName("Test name")
         verify(productMapper).toDto(product)
         verifyNoMoreInteractions(productMapper, productRepository)
     }

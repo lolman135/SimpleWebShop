@@ -47,6 +47,7 @@ class RoleServiceTest {
         `when`(roleMapper.toRole(roleDtoRequest)).thenReturn(role)
         `when`(roleMapper.toDto(role)).thenReturn(roleDtoResponse)
         `when`(roleRepository.save(role)).thenReturn(role)
+        `when`(roleRepository.existsRoleByName("TEST_ROLE")).thenReturn(false)
 
         val savedRole = roleService.save(roleDtoRequest)
         assertEquals(roleDtoResponse, savedRole)
@@ -55,6 +56,7 @@ class RoleServiceTest {
         verify(roleMapper).toRole(roleDtoRequest)
         verify(roleMapper).toDto(role)
         verify(roleRepository).save(role)
+        verify(roleRepository).existsRoleByName("TEST_ROLE")
     }
 
     @Test

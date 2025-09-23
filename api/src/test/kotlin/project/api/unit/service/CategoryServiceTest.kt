@@ -45,6 +45,7 @@ class CategoryServiceTest {
     @Test
     fun saveShouldMapDtoAndSaveCategory() {
         `when`(categoryMapper.toCategory(categoryDtoRequest)).thenReturn(category)
+        `when`(categoryRepository.existsCategoryByName("Test Category")).thenReturn(false)
         `when`(categoryRepository.save(category)).thenReturn(category)
         `when`(categoryMapper.toDto(category)).thenReturn(categoryDtoResponse)
 
@@ -54,6 +55,7 @@ class CategoryServiceTest {
         verify(categoryMapper).toCategory(categoryDtoRequest)
         verify(categoryRepository).save(category)
         verify(categoryMapper).toDto(category)
+        verify(categoryRepository).existsCategoryByName("Test Category")
         verifyNoMoreInteractions(categoryMapper, categoryRepository)
     }
 
