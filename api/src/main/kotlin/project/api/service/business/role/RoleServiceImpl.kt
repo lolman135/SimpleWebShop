@@ -29,8 +29,6 @@ class RoleServiceImpl(
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!roleRepository.existsById(id))
-            throw EntityNotFoundException("Role with id=$id not found")
         roleRepository.deleteById(id)
         return true
     }

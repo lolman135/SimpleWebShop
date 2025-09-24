@@ -195,14 +195,6 @@ class CategoryController(private val categoryService: CategoryService) {
                     mediaType = "application/json",
                     schema = Schema(implementation = ErrorResponse::class)
                 )]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Not found",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponse::class)
-                )]
             )
         ]
     )

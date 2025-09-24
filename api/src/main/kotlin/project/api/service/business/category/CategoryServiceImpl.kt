@@ -28,8 +28,6 @@ class CategoryServiceImpl(
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!categoryRepository.existsById(id))
-            throw EntityNotFoundException("Category with id=$id not found")
         categoryRepository.deleteById(id)
         return true
     }

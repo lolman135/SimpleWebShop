@@ -32,8 +32,6 @@ class FeedbackServiceImpl(
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!feedbackRepository.existsById(id))
-            throw EntityNotFoundException("Feedback with id=$id not found")
         feedbackRepository.deleteById(id)
         return true
     }

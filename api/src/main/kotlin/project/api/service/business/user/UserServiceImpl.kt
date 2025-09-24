@@ -47,9 +47,6 @@ class UserServiceImpl(
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!userRepository.existsById(id))
-            throw EntityNotFoundException("User with id=$id not found")
-
         userRepository.deleteById(id)
         return true
     }

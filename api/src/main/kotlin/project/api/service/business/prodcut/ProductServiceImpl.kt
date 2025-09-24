@@ -37,8 +37,6 @@ class ProductServiceImpl(
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!productRepository.existsById(id))
-            throw EntityNotFoundException("Product with id=$id not found")
         productRepository.deleteById(id)
         return true
     }

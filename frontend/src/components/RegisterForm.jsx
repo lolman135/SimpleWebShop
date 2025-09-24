@@ -58,7 +58,7 @@ const RegisterForm = () => {
                 </div>
                 <button type="submit">Register</button>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p className="message">{message}</p>}
         </div>
     );
 };

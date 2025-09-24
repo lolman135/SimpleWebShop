@@ -46,7 +46,7 @@ const LoginForm = () => {
                     />
                 </div>
                 <button type="submit">Login</button>
-                {message && <p>{message}</p>}
+                {message && <p className="message">{message}</p>}
             </form>
         </div>
     );

@@ -297,14 +297,6 @@ class UserController(private val userService: UserService) {
             ApiResponse(
                 responseCode = "204",
                 description = "Deleted successfully. No content"
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponse::class)
-                )]
             )
         ]
     )

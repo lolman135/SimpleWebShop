@@ -30,8 +30,6 @@ class OrderServiceImpl (
         ]
     )
     override fun deleteById(id: UUID): Boolean {
-        if (!orderRepository.existsById(id))
-            throw EntityNotFoundException("Order with id=$id not found")
         orderRepository.deleteById(id)
         return true
     }

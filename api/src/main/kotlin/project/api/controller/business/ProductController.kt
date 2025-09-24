@@ -207,14 +207,6 @@ class ProductController(private val productService: ProductService) {
                     mediaType = "application/json",
                     schema = Schema(implementation = ErrorResponse::class)
                 )]
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Forbidden",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponse::class)
-                )]
             )
         ]
     )
